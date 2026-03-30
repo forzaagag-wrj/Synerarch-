@@ -27,7 +27,7 @@
         /* Brand logo — nav (square) and footer (rectangular)
          * Update filenames here if logo files are renamed.
          * Files must be in the same directory as index.html. */
-        logoNav:    'logo-square.png',   /* square version — nav top-left */
+        logoNav:    'logo-rect.png',   /* square version — nav top-left */
         logoFooter: 'logo-rect.png',     /* rectangular version — footer  */
 
         /* Partner / client logos (used on index.html Partners section) */

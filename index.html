@@ -22,14 +22,20 @@
             overflow-x: hidden;
         }
 
-        /* Japanese: Kozuka Gothic (system) with Noto Sans JP web fallback */
-        html[lang="jp"] body, html[lang="jp"] * {
-            font-family: 'Kozuka Gothic Pro', 'Kozuka Gothic', 'A-OTF Kozuka Gothic Pro', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+        /* Force Times on ALL elements with !important — fully overrides Tailwind CDN preflight */
+        *:not(iconify-icon):not(iconify-icon *), *::before, *::after {
+            font-family: 'Times New Roman', Times, serif !important;
+        }
+
+        /* Japanese override */
+        html[lang="jp"] *:not(iconify-icon):not(iconify-icon *),
+        html[lang="jp"] *::before, html[lang="jp"] *::after {
+            font-family: 'Kozuka Gothic Pro', 'Kozuka Gothic', 'A-OTF Kozuka Gothic Pro', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif !important;
         }
 
         /* Navigation Style */
         nav {
-            height: 88px;
+            height: 116px;
             transition: all 0.3s ease;
             z-index: 1000;
         }
@@ -449,10 +455,10 @@
 <div class="flex items-center justify-between w-full max-w-[1440px] mx-auto">
 <!-- Logo -->
 <div class="text-xl font-bold tracking-tight">
-<a href="index.html"><img src="logo-square.png" alt="SynerArch" id="sa-logo-nav" style="height:68px;width:auto;display:block;"></a>
+<a href="index.html"><img src="logo-rect.png" alt="SynerArch" id="sa-logo-nav" style="height:92px;width:auto;display:block;"></a>
 </div>
 <!-- Menu Middle -->
-<div class="hidden md:flex items-center gap-10 text-sm font-light text-gray-500 mx-auto">
+<div class="hidden md:flex items-center gap-8 text-base font-light text-gray-500 mx-auto">
 <div class="relative group">
 <a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-solutions" href="#solutions">Solutions</a>
 <!-- Dropdown Menu -->
@@ -460,7 +466,7 @@
 <!-- populated by content.js -->
 </div>
 </div>
-<a class="hover:text-black transition-colors" data-i18n="nav-platform" href="ai.html">AI</a>
+<a class="hover:text-black transition-colors" data-i18n="nav-platform" href="ai.html">Methods</a>
 <a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a>
 <div class="relative group">
 <a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-contact" href="contact.html">Contact</a>
@@ -473,8 +479,8 @@
 </div>
 <!-- Right Side -->
 <div class="flex items-center gap-6 ml-auto" id="sa-nav-right">
-<a class="px-5 py-2 bg-black text-white text-sm font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="data-bank.html" data-i18n="nav-databank">Data Bank</a>
-<a class="px-5 py-2 border border-gray-300 rounded-none text-sm font-light hover:border-black transition-all text-center" href="request-demo.html">
+<a class="px-6 py-3 bg-black text-white text-base font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="data-bank.html" data-i18n="nav-databank">Data Bank</a>
+<a class="px-6 py-3 border border-gray-300 rounded-none text-base font-light hover:border-black transition-all text-center" href="request-demo.html">
 <span data-i18n="nav-demo">Request Demo</span>
 </a>
 <div class="lang-switch flex items-center gap-2 text-xs font-medium text-gray-500">
@@ -487,11 +493,11 @@
 </nav>
 <main>
 <!-- 1. Hero / AI Agent Section -->
-<section class="flex flex-col items-center justify-center p-6 relative overflow-hidden bg-white pt-32 pb-12">
+<section class="flex flex-col items-center justify-center p-6 relative overflow-hidden bg-white pt-40 pb-12">
 <div class="z-10 w-full max-w-[850px] space-y-12 fade-in">
 <!-- Hero Text -->
 <div class="text-center space-y-6">
-<h1 class="text-5xl md:text-7xl font-light tracking-tight italic" data-i18n="hero-title">AI-native data platform for the built world.</h1>
+<h1 class="text-4xl md:text-5xl font-light tracking-tight" data-i18n="hero-title">Architecting your building data foundation</h1>
 </div>
 
 <!-- AI Agent — Minimal Input Box (Gemini style) -->
@@ -577,7 +583,7 @@
 <!-- Lifecycle Flow — 椭圆闭环结构 -->
 <div class="mb-16">
   <div class="text-center mb-10 space-y-4">
-    <h2 class="text-4xl font-light tracking-tight" data-i18n="sol-title">Solutions across the building lifecycle</h2>
+    <h2 class="text-4xl md:text-5xl font-light tracking-tight" data-i18n="sol-title">Intelligence across your building lifecycle</h2>
   </div>
 
   <!-- SVG椭圆：5节点均匀对称，坐标固定，内容顺时针从左上起 -->
@@ -588,65 +594,57 @@
     左下(192,285)=Compliance | 左上(76,126)=Materials
     → 从左上Materials顺时针读：Materials→Construction→Operations→Retrofit→Compliance
   -->
-  <div style="max-width:760px;margin:0 auto;position:relative;">
-    <svg viewBox="-10 -20 780 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+  <div style="max-width:900px;margin:0 auto;position:relative;padding-top:32px;">
+    <svg viewBox="-340 -230 1440 860" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+      <defs>
+        <filter id="node-shadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.12"/>
+        </filter>
+        <filter id="ellipse-glow" x="-5%" y="-5%" width="110%" height="110%">
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
+        </filter>
+      </defs>
 
-      <ellipse cx="380" cy="170" rx="320" ry="142" fill="none" stroke="#2A2A2A" stroke-width="1"/>
+      <ellipse cx="380" cy="170" rx="640" ry="284" fill="none" stroke="#2A2A2A" stroke-width="1.5" filter="url(#ellipse-glow)"/>
 
-      <!-- 位置:顶(380,28) — Construction, green -->
-      <g transform="translate(380,28)">
-        <circle r="46" fill="white" stroke="#2A2A2A" stroke-width="1.5"/>
-        <g transform="translate(-10,-13)" fill="none" stroke="#16a34a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="4" y1="19" x2="4" y2="4"/>
-          <line x1="4" y1="4" x2="16" y2="10"/>
-          <line x1="4" y1="8" x2="16" y2="8"/>
-          <line x1="10" y1="10" x2="10" y2="19"/>
-          <line x1="7" y1="19" x2="13" y2="19"/>
-        </g>
-        <text y="24" text-anchor="middle" font-size="6.5" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="ui-sans-serif,sans-serif">CONSTRUCTION</text>
+      <g transform="translate(380,-114)" filter="url(#node-shadow)">
+        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-42" width="64" height="64">
+          <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:crane-light" width="64" height="64" style="color:#16a34a;display:block;width:64px;height:64px;"></iconify-icon>
+        </foreignObject>
+        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">CONSTRUCTION</text>
       </g>
 
-      <!-- 位置:右上(684,126) — Operations, blue -->
-      <g transform="translate(684,126)">
-        <circle r="46" fill="white" stroke="#2A2A2A" stroke-width="1.5"/>
-        <g transform="translate(-10,-13)" fill="none" stroke="#2563eb" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="13,2 7,11 11,11 7,20 15,9 11,9 13,2"/>
-        </g>
-        <text y="24" text-anchor="middle" font-size="7.5" font-weight="700" fill="#111" letter-spacing="0.1em" font-family="ui-sans-serif,sans-serif">OPERATIONS</text>
+      <g transform="translate(988,82)" filter="url(#node-shadow)">
+        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-42" width="64" height="64">
+          <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:lightning-light" width="64" height="64" style="color:#2563eb;display:block;width:64px;height:64px;"></iconify-icon>
+        </foreignObject>
+        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">OPERATIONS</text>
       </g>
 
-      <!-- 位置:右下(568,285) — Retrofit, orange -->
-      <g transform="translate(568,285)">
-        <circle r="46" fill="white" stroke="#2A2A2A" stroke-width="1.5"/>
-        <g transform="translate(-10,-13)" fill="none" stroke="#fb923c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M10,3 L13,7 L7,7 Z"/>
-          <path d="M7,7 Q3,7 3,11 Q3,16 7,17"/>
-          <path d="M13,17 L10,21 L7,17"/>
-          <path d="M7,17 Q10,19 13,17 Q17,15 17,11 Q17,7 13,7"/>
-        </g>
-        <text y="24" text-anchor="middle" font-size="7.5" font-weight="700" fill="#111" letter-spacing="0.1em" font-family="ui-sans-serif,sans-serif">RETROFIT</text>
+      <g transform="translate(756,400)" filter="url(#node-shadow)">
+        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-42" width="64" height="64">
+          <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:recycle-light" width="64" height="64" style="color:#fb923c;display:block;width:64px;height:64px;"></iconify-icon>
+        </foreignObject>
+        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">URBAN MINING</text>
       </g>
 
-      <!-- 位置:左下(192,285) — Compliance, purple -->
-      <g transform="translate(192,285)">
-        <circle r="46" fill="white" stroke="#2A2A2A" stroke-width="1.5"/>
-        <g transform="translate(-10,-13)" fill="none" stroke="#7e22ce" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4,20 Q4,10 10,6 Q16,2 18,4 Q20,6 16,12 Q12,18 4,20 Z"/>
-          <line x1="4" y1="20" x2="14" y2="10"/>
-        </g>
-        <text y="24" text-anchor="middle" font-size="6.5" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="ui-sans-serif,sans-serif">COMPLIANCE</text>
+      <g transform="translate(4,400)" filter="url(#node-shadow)">
+        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-42" width="64" height="64">
+          <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:leaf-light" width="64" height="64" style="color:#7e22ce;display:block;width:64px;height:64px;"></iconify-icon>
+        </foreignObject>
+        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">COMPLIANCE</text>
       </g>
 
-      <!-- 位置:左上(76,126) — Materials, cyan -->
-      <g transform="translate(76,126)">
-        <circle r="46" fill="white" stroke="#2A2A2A" stroke-width="1.5"/>
-        <g transform="translate(-10,-13)" fill="none" stroke="#22d3ee" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round">
-          <polygon points="10,2 18,6.5 18,15.5 10,20 2,15.5 2,6.5"/>
-          <line x1="10" y1="20" x2="10" y2="11"/>
-          <line x1="10" y1="11" x2="18" y2="6.5"/>
-          <line x1="10" y1="11" x2="2" y2="6.5"/>
-        </g>
-        <text y="24" text-anchor="middle" font-size="7.5" font-weight="700" fill="#111" letter-spacing="0.1em" font-family="ui-sans-serif,sans-serif">MATERIALS</text>
+      <g transform="translate(-228,82)" filter="url(#node-shadow)">
+        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-42" width="64" height="64">
+          <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:cube-light" width="64" height="64" style="color:#22d3ee;display:block;width:64px;height:64px;"></iconify-icon>
+        </foreignObject>
+        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">MATERIALS</text>
       </g>
 
     </svg>
@@ -712,7 +710,7 @@
 <!-- 4. Data & AI Architecture -->
 <section class="pt-16 pb-16 px-6 max-w-[1240px] mx-auto text-center" id="platform">
 <div class="space-y-4 mb-12">
-<h2 class="text-3xl font-light tracking-tight text-black" data-i18n="data-title">AI-native data infrastructure for the lifecycle of the built world</h2>
+<h2 class="text-4xl md:text-5xl font-light tracking-tight text-black" data-i18n="data-title">Turn building data into asset intelligence</h2>
 </div>
 <!-- Architecture Diagram — 5 Layers, no connectors -->
 <div class="flex flex-col items-center" style="max-width:1000px;margin:0 auto;gap:12px;">
@@ -883,7 +881,7 @@
     window.SA.pageContent = {
         "en": {
         "nav-solutions": "Solutions",
-        "nav-platform": "AI",
+        "nav-platform": "Methods",
         "nav-about": "About",
         "nav-contact": "Contact",
         "nav-demo": "Request Demo",
@@ -901,7 +899,7 @@
         "sol-carbon-title": "LCA Compliance",
         "footer-priv": "Privacy Policy",
         "footer-terms": "Terms",
-        "hero-title": "AI-native data platform for the built world.",
+        "hero-title": "Architecting your building data foundation",
         "hero-desc": "Integrate BIM, BMS, energy, and material data across your portfolio into a unified, structured layer — making your building data computable, auditable, and continuously valuable, in alignment with compliance disclosure and carbon management requirements.",
         "hero-input-placeholder": "Ask SynerArch",
         "hero-explore": "Explore Solutions",
@@ -912,7 +910,7 @@
         "apollo-banner": "The built environment is entering its Apollo moment — the most effective way to manage atoms is to first manage the bits that describe them. That data infrastructure layer is still missing. We are building it.",
         "hero-trust": "Supports multi-building portfolios (10–1000+ assets) · Data coverage up to 90% · Audit-ready outputs",
         "agent-status": "Secure environment for enterprise data integration",
-        "sol-title": "Solutions across the building lifecycle",
+        "sol-title": "Intelligence across your building lifecycle",
         "sol-subtitle": "",
         "sol-energy-desc": "<strong>Energy savings</strong> — continuous monitoring, issue detection, and proactive optimisation<br><strong>Lower operating costs</strong> — optimise energy-saving retrofit strategies and manage building equipment effectively<br><strong>AI-driven risk prediction</strong> — algorithms improve continuously, enabling smarter decisions",
         "sol-const-desc": "<strong>Track and manage on-site construction emissions</strong> — aligned with ISO 14064, PAS 2080, EPA Tier 4, Off-Road Act, LEED, and BREEAM<br><strong>MRV-ready data collection</strong> — efficient capture via IoT, OCR, and structured mobile workflows<br><strong>Construction equipment energy monitoring</strong> — clean energy alternatives and construction equipment scheduling optimisation",
@@ -923,9 +921,9 @@
         "flow-1": "Materials",
         "flow-2": "Construction",
         "flow-3": "Operations",
-        "flow-4": "Retrofit",
+        "flow-4": "Urban Mining",
         "flow-5": "Compliance",
-        "data-title": "AI-native data infrastructure for the lifecycle of the built world",
+        "data-title": "Turn building data into asset intelligence",
         "data-subtitle": "",
         "arch-l1-label": "Application Layer",
         "arch-l2-label": "Intelligence Layer",
@@ -960,7 +958,7 @@
         },
         "jp": {
         "nav-solutions": "ソリューション",
-        "nav-platform": "AI",
+        "nav-platform": "Methods",
         "nav-about": "会社情報",
         "nav-contact": "お問い合わせ",
         "nav-databank": "データバンク",
@@ -979,7 +977,7 @@
         "sol-carbon-title": "LCAコンプライアンス",
         "footer-priv": "プライバシーポリシー",
         "footer-terms": "利用規約",
-        "hero-title": "建築・都市環境のためのAIネイティブデータプラットフォーム。",
+        "hero-title": "建物データ基盤を、ともに設計する",
         "hero-desc": "資産ポートフォリオ全体のBIM・BMS・エネルギー・材料データを統合・構造化し、一元管理する基盤を提供します。建物データを演算可能で監査に耐え、継続的に価値を高める資産へと変え、各種コンプライアンス開示およびカーボンマネジメント要件に対応します。",
         "hero-input-placeholder": "SynerArchに質問する",
         "hero-explore": "ソリューションを見る",
@@ -990,7 +988,7 @@
         "apollo-banner": "建築業界は、その「アポロの瞬間」を迎えようとしています——物理的な建物を管理する最も効果的な方法は、まずそれを記述するデジタル情報を管理することです。そのデータ基盤は、いまだ存在しない。私たちがそれを構築します。",
         "hero-trust": "複数建物対応（10〜1000棟）・データ可視化最大90%・監査対応",
         "agent-status": "エンタープライズデータ接続環境",
-        "sol-title": "建物のライフサイクル全体に対応するソリューション",
+        "sol-title": "建物ライフサイクル全体のインテリジェンス",
         "sol-subtitle": "",
         "sol-energy-desc": "<strong>省エネ</strong> — 継続監視・問題検知・プロアクティブな最適化<br><strong>運用コスト削減</strong> — 節能改造戦略の最適化と建物設備の効率的な管理<br><strong>AIリスク予測</strong> — アルゴリズムが継続進化し、より賢明な意思決定を実現",
         "sol-const-desc": "<strong>施工現場排出の追跡・管理</strong> — ISO 14064・PAS 2080・EPA Tier 4・Off-Road Act・LEED・BREEAMに準拠<br><strong>MRV対応データ収集</strong> — IoT・OCR・モバイルワークフローによる効率的なデータ取得<br><strong>施工設備エネルギー監視</strong> — クリーンエネルギー代替案と施工設備スケジュール最適化",
@@ -1001,9 +999,9 @@
         "flow-1": "材料",
         "flow-2": "施工",
         "flow-3": "運用",
-        "flow-4": "改修",
+        "flow-4": "アーバンマイニング",
         "flow-5": "コンプライアンス",
-        "data-title": "建築・都市環境のライフサイクルのためのAIネイティブデータインフラ",
+        "data-title": "建物データを資産インテリジェンスへ",
         "data-subtitle": "",
         "arch-l1-label": "アプリケーション層",
         "arch-l2-label": "インテリジェンス層",
