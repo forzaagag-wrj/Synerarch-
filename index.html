@@ -35,7 +35,7 @@
 
         /* Navigation Style */
         nav {
-            height: 116px;
+            height: 64px;
             transition: all 0.3s ease;
             z-index: 1000;
         }
@@ -450,54 +450,37 @@
     </style>
 </head>
 <body>
-<!-- Global Navigation -->
-<nav class="fixed top-0 left-0 w-full flex items-center px-8 sm:px-12 md:px-20" id="main-nav">
-<div class="flex items-center justify-between w-full max-w-[1440px] mx-auto">
-<!-- Logo -->
-<div class="text-xl font-bold tracking-tight">
-<a href="index.html"><img src="logo-rect.png" alt="SynerArch" id="sa-logo-nav" style="height:92px;width:auto;display:block;"></a>
-</div>
-<!-- Menu Middle -->
-<div class="hidden md:flex items-center gap-8 text-base font-light text-gray-500 mx-auto">
-<div class="relative group">
-<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-solutions" href="#solutions">Solutions</a>
-<!-- Dropdown Menu -->
-<div class="absolute top-full left-0 w-64 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" data-nav-dropdown="">
-<!-- populated by content.js -->
-</div>
-</div>
-<a class="hover:text-black transition-colors" data-i18n="nav-platform" href="ai.html">Methods</a>
-<a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a>
-<div class="relative group">
-<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-contact" href="contact.html">Contact</a>
-<div class="absolute top-full left-0 w-44 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" id="contact-nav-dropdown">
-<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors" href="contact.html?type=general" id="cnav-general">General</a>
-<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=careers" id="cnav-careers">Careers</a>
-<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=media" id="cnav-media">Media</a>
-</div>
-</div>
-</div>
-<!-- Right Side -->
-<div class="flex items-center gap-6 ml-auto" id="sa-nav-right">
-<a class="px-6 py-3 bg-black text-white text-base font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="data-bank.html" data-i18n="nav-databank">Data Bank</a>
-<a class="px-6 py-3 border border-gray-300 rounded-none text-base font-light hover:border-black transition-all text-center" href="request-demo.html">
-<span data-i18n="nav-demo">Request Demo</span>
-</a>
-<div class="lang-switch flex items-center gap-2 text-xs font-medium text-gray-500">
-<span id="lang-en" onclick="SA.switchLanguage('en')">EN</span>
-<span class="text-gray-500">/</span>
-<span id="lang-jp" onclick="SA.switchLanguage('jp')">JP</span>
-</div>
-</div>
-</div>
+<!-- Global Navigation — hamburger menu (index.html only) -->
+<!-- NOTE: Other pages retain their original nav. This nav is index.html-specific.
+     Future: align other pages to this new nav pattern when ready. -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-6 sm:px-10 md:px-16" id="main-nav" style="height:64px;">
+  <!-- Logo -->
+  <a href="index.html"><img src="logo-nav.png" alt="SynerArch" id="sa-logo-nav" style="height:44px;width:auto;display:block;"></a>
+  <!-- Hamburger button + dropdown — pushed to right with margin-left:auto -->
+  <div style="position:relative;margin-left:auto;">
+    <button id="sa-hamburger-btn" aria-label="Menu" style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+    </button>
+    <!-- Dropdown menu — right:0 aligns to right edge of button wrapper -->
+    <div id="sa-nav-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:white;border:1px solid #E5E5E5;box-shadow:0 8px 24px rgba(0,0,0,0.08);z-index:999;padding:8px 0;">
+      <span class="sa-nav-item" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;font-family:'Times New Roman',Times,serif;" id="sa-nav-lifecycle">Lifecycle</span>
+      <span class="sa-nav-item" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;" id="sa-nav-databank">Data Bank</span>
+      <span class="sa-nav-item" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;" id="sa-nav-intelligence">Intelligence</span>
+      <span class="sa-nav-item" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;" id="sa-nav-about">About</span>
+      <span class="sa-nav-item" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;" id="sa-nav-contact">Contact</span>
+    </div>
+  </div>
 </nav>
 <main>
 <!-- 1. Hero / AI Agent Section -->
-<section class="flex flex-col items-center justify-center p-6 relative overflow-hidden bg-white pt-40 pb-12">
+<section class="flex flex-col items-center justify-center p-6 relative overflow-hidden bg-white pt-28 pb-12">
 <div class="z-10 w-full max-w-[850px] space-y-12 fade-in">
 <!-- Hero Text -->
-<div class="text-center space-y-6">
+<div class="text-center space-y-4">
 <h1 class="text-4xl md:text-5xl font-light tracking-tight" data-i18n="hero-title">Architecting your building data foundation</h1>
+<p class="text-base font-light text-[#555] leading-relaxed max-w-[640px] mx-auto" data-i18n="hero-sub">An AI-native data foundation for the building lifecycle—to make performance computable, auditable, and continuously valuable.</p>
 </div>
 
 <!-- AI Agent — Minimal Input Box (Gemini style) -->
@@ -532,10 +515,10 @@
 
   <!-- CTAs below input -->
   <div class="flex flex-wrap gap-4 justify-center">
-    <a class="bg-black text-white px-8 py-3.5 text-sm font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="request-demo.html">
+    <span class="bg-black text-white px-8 py-3.5 text-sm font-medium text-center cursor-default">
       <span data-i18n="nav-demo">Request Demo</span>
-    </a>
-    <button id="hero-explore-btn" class="border border-gray-300 px-8 py-3.5 text-sm font-light hover:border-black transition-colors" data-i18n="hero-explore">Explore Solutions</button>
+    </span>
+    <button id="hero-explore-btn" class="border border-gray-300 px-8 py-3.5 text-sm font-light hover:border-black transition-colors" data-i18n="hero-explore">Data Bank</button>
   </div>
 
   <!-- [HIDDEN — re-enable by removing the "hidden" class below] Traction stats grid -->
@@ -595,7 +578,7 @@
     → 从左上Materials顺时针读：Materials→Construction→Operations→Retrofit→Compliance
   -->
   <div style="max-width:900px;margin:0 auto;position:relative;padding-top:32px;">
-    <svg viewBox="-340 -230 1440 860" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+    <svg viewBox="-460 -360 1700 1080" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
       <defs>
         <filter id="node-shadow" x="-30%" y="-30%" width="160%" height="160%">
           <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.12"/>
@@ -608,43 +591,74 @@
       <ellipse cx="380" cy="170" rx="640" ry="284" fill="none" stroke="#2A2A2A" stroke-width="1.5" filter="url(#ellipse-glow)"/>
 
       <g transform="translate(380,-114)" filter="url(#node-shadow)">
-        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
-        <foreignObject x="-32" y="-42" width="64" height="64">
+        <circle r="120" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-46" width="64" height="64">
           <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:crane-light" width="64" height="64" style="color:#16a34a;display:block;width:64px;height:64px;"></iconify-icon>
         </foreignObject>
-        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">CONSTRUCTION</text>
+        <text y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">CONSTRUCTION</text>
       </g>
 
       <g transform="translate(988,82)" filter="url(#node-shadow)">
-        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
-        <foreignObject x="-32" y="-42" width="64" height="64">
-          <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:lightning-light" width="64" height="64" style="color:#2563eb;display:block;width:64px;height:64px;"></iconify-icon>
+        <circle r="120" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-46" width="64" height="64">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="64" height="64" style="display:block;color:#2563eb">
+  <!-- Monitor body -->
+  <rect x="24" y="32" width="208" height="144" rx="12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Stand -->
+  <line x1="128" y1="176" x2="128" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Base -->
+  <line x1="88" y1="216" x2="168" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Gear center circle -->
+  <circle cx="128" cy="104" r="22" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="11"/>
+  <!-- Gear teeth (8 teeth) -->
+  <line x1="128" y1="68" x2="128" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="128" y1="140" x2="128" y2="152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="164" y1="104" x2="176" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="80" y1="104" x2="92" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="153" y1="79" x2="161" y2="71" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="95" y1="129" x2="103" y2="121" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="153" y1="129" x2="161" y2="137" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="95" y1="79" x2="103" y2="87" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+</svg>
         </foreignObject>
-        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">OPERATIONS</text>
+        <text y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">OPERATIONS</text>
       </g>
 
       <g transform="translate(756,400)" filter="url(#node-shadow)">
-        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
-        <foreignObject x="-32" y="-42" width="64" height="64">
+        <circle r="120" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-46" width="64" height="64">
           <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:recycle-light" width="64" height="64" style="color:#fb923c;display:block;width:64px;height:64px;"></iconify-icon>
         </foreignObject>
-        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">URBAN MINING</text>
+        <text y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">URBAN MINING</text>
       </g>
 
       <g transform="translate(4,400)" filter="url(#node-shadow)">
-        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
-        <foreignObject x="-32" y="-42" width="64" height="64">
-          <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:leaf-light" width="64" height="64" style="color:#7e22ce;display:block;width:64px;height:64px;"></iconify-icon>
+        <circle r="120" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-46" width="64" height="64">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="64" height="64" style="display:block;color:#7e22ce">
+  <!-- Document outline -->
+  <path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8H152l56,56V216A8,8,0,0,1,200,224Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Folded corner -->
+  <polyline points="152 32 152 88 208 88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Check line 1 -->
+  <polyline points="88 148 108 168 140 128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Horizontal line after check 1 -->
+  <line x1="156" y1="148" x2="176" y2="148" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Check line 2 -->
+  <polyline points="88 188 108 208 140 168" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Horizontal line after check 2 -->
+  <line x1="156" y1="188" x2="176" y2="188" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+</svg>
         </foreignObject>
-        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">COMPLIANCE</text>
+        <text y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">COMPLIANCE</text>
       </g>
 
       <g transform="translate(-228,82)" filter="url(#node-shadow)">
-        <circle r="92" fill="white" stroke="#2A2A2A" stroke-width="2"/>
-        <foreignObject x="-32" y="-42" width="64" height="64">
+        <circle r="120" fill="white" stroke="#2A2A2A" stroke-width="2"/>
+        <foreignObject x="-32" y="-46" width="64" height="64">
           <iconify-icon xmlns="http://www.w3.org/1999/xhtml" icon="ph:cube-light" width="64" height="64" style="color:#22d3ee;display:block;width:64px;height:64px;"></iconify-icon>
         </foreignObject>
-        <text y="52" text-anchor="middle" font-size="14" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">MATERIALS</text>
+        <text y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#111" letter-spacing="0.08em" font-family="'Times New Roman',Times,serif">MATERIALS</text>
       </g>
 
     </svg>
@@ -655,54 +669,95 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
 <!-- 1. Materials -->
 <div class="solution-card p-8 space-y-5">
-<iconify-icon class="text-cyan-400" icon="ph:cube-light" width="24"></iconify-icon>
-<h3 class="text-xl font-light" data-i18n="sol-mat-title">Materials &amp; Circular Supply</h3>
-<div class="text-[#444] text-sm leading-relaxed font-medium space-y-2.5">
-  <p><strong>Low-carbon material promotion</strong> — high-visibility platform for new low-carbon building materials, improving designer selection efficiency</p>
-  <p><strong>Low-carbon material library</strong> — EPD data, supplier information, and product images</p>
-  <p><strong>Re-materialisation of deconstruction waste</strong> — manufacturer database supporting low-carbon product development</p>
+<div class="flex items-center gap-3">
+<iconify-icon class="text-cyan-400" icon="ph:cube-light" width="32"></iconify-icon>
+<span class="text-xl font-light" data-i18n="flow-1">Materials</span>
+</div>
+<h3 class="text-xl font-light" data-i18n="sol-mat-title">Low-carbon material</h3>
+<div class="space-y-3">
+  <div><p class="font-bold text-black text-sm">Promotion</p><p class="text-[#444] text-sm leading-relaxed">Supply-chain efficiency matching, R&D support...</p></div>
+  <div><p class="font-bold text-black text-sm">Low-carbon Data House</p><p class="text-[#444] text-sm leading-relaxed">EPD data, supplier information, on-site photos...</p></div>
+  <div><p class="font-bold text-black text-sm">Construction Waste Recycling</p><p class="text-[#444] text-sm leading-relaxed">Cradle to cradle strategy, recycle market fit...</p></div>
 </div>
 </div>
 <!-- 2. Construction -->
 <div class="solution-card p-8 space-y-5">
-<iconify-icon class="text-green-600" icon="ph:crane-light" width="24"></iconify-icon>
+<div class="flex items-center gap-3">
+<iconify-icon class="text-green-600" icon="ph:crane-light" width="32"></iconify-icon>
+<span class="text-xl font-light" data-i18n="flow-2">Construction</span>
+</div>
 <h3 class="text-xl font-light" data-i18n="sol-const-title">Construction Decarbonization</h3>
-<div class="text-[#444] text-sm leading-relaxed font-medium space-y-2.5">
-  <p><strong>Track and manage on-site construction emissions</strong> — aligned with ISO 14064, PAS 2080, EPA Tier 4, Off-Road Act, LEED, and BREEAM</p>
-  <p><strong>MRV-ready data collection</strong> — efficient capture via IoT, OCR, and structured mobile workflows</p>
-  <p><strong>Construction equipment energy monitoring</strong> — clean energy alternatives and construction equipment scheduling optimisation</p>
+<div class="space-y-3">
+  <div><p class="font-bold text-black text-sm">Track and manage on-site construction emissions</p><p class="text-[#444] text-sm leading-relaxed">Aligned with ISO 14064, PAS 2080, EPA Tier 4, Off-Road Act...</p></div>
+  <div><p class="font-bold text-black text-sm">MRV-ready data collection</p><p class="text-[#444] text-sm leading-relaxed">Efficient capture via IoT, OCR, mobile tools...</p></div>
+  <div><p class="font-bold text-black text-sm">Construction equipment energy monitoring</p><p class="text-[#444] text-sm leading-relaxed">Clean energy alternatives, construction equipment scheduling optimization...</p></div>
 </div>
 </div>
 <!-- 3. Energy -->
 <div class="solution-card p-8 space-y-5">
-<iconify-icon class="text-blue-600" icon="ph:lightning-light" width="24"></iconify-icon>
+<div class="flex items-center gap-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="32" height="32" style="display:inline-block;color:#2563eb;vertical-align:middle">
+  <rect x="24" y="32" width="208" height="144" rx="12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <line x1="128" y1="176" x2="128" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <line x1="88" y1="216" x2="168" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <circle cx="128" cy="104" r="22" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="11"/>
+  <line x1="128" y1="68" x2="128" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="128" y1="140" x2="128" y2="152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="164" y1="104" x2="176" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="80" y1="104" x2="92" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="153" y1="79" x2="161" y2="71" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="95" y1="129" x2="103" y2="121" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="153" y1="129" x2="161" y2="137" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+  <line x1="95" y1="79" x2="103" y2="87" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+</svg>
+<span class="text-xl font-light" data-i18n="flow-3">Operations</span>
+</div>
 <h3 class="text-xl font-light" data-i18n="sol-energy-title">Energy Optimization</h3>
-<div class="text-[#444] text-sm leading-relaxed font-medium space-y-2.5">
-  <p><strong>Energy savings</strong> — continuous monitoring, issue detection, and proactive optimisation</p>
-  <p><strong>Lower operating costs</strong> — optimise energy-saving retrofit strategies and manage building equipment effectively</p>
-  <p><strong>AI-driven risk prediction</strong> — algorithms improve continuously, enabling smarter decisions</p>
+<div class="space-y-3">
+  <div><p class="font-bold text-black text-sm">Energy savings</p><p class="text-[#444] text-sm leading-relaxed">Continuous monitoring, issue detection, proactive optimization...</p></div>
+  <div><p class="font-bold text-black text-sm">Lower operating costs</p><p class="text-[#444] text-sm leading-relaxed">Energy-saving retrofit strategies, effective building equipment management...</p></div>
+  <div><p class="font-bold text-black text-sm">Smarter decisions</p><p class="text-[#444] text-sm leading-relaxed">Data-driven insights, optimal decision-making, predictive intelligence</p></div>
 </div>
 </div>
 </div>
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 <!-- 4. Retrofit -->
 <div class="solution-card p-8 space-y-5">
-<iconify-icon class="text-orange-400" icon="ph:recycle-light" width="24"></iconify-icon>
-<h3 class="text-xl font-light" data-i18n="sol-retrofit-title">Circular Retrofit &amp; Asset Recovery</h3>
-<div class="text-[#444] text-sm leading-relaxed font-medium space-y-2.5">
-  <p><strong>Sustainability optimisation</strong> — improve transparency across LCA scores, circularity indices, and resource consumption</p>
-  <p><strong>Circular retrofit strategies</strong> — empower circular economy, increase asset reuse rates</p>
-  <p><strong>Building deconstruction inventory</strong> — support material recovery operators and drive regional resource circulation</p>
+<div class="flex items-center gap-3">
+<iconify-icon class="text-orange-400" icon="ph:recycle-light" width="32"></iconify-icon>
+<span class="text-xl font-light" data-i18n="flow-4">Urban Mining</span>
+</div>
+<h3 class="text-xl font-light" data-i18n="sol-retrofit-title">Circular Renovation &amp; Asset Optimization</h3>
+<div class="space-y-3">
+  <div><p class="font-bold text-black text-sm">Sustainability Strategies</p><p class="text-[#444] text-sm leading-relaxed">Improve transparency across LCA scores, circularity indices, and resource consumption metrics...</p></div>
+  <div><p class="font-bold text-black text-sm">Circular retrofit &amp; Lifecycle Management</p><p class="text-[#444] text-sm leading-relaxed">Driving the circular economy, maximizing asset reuse rates...</p></div>
+  <div><p class="font-bold text-black text-sm">Building Deconstruction Inventory</p><p class="text-[#444] text-sm leading-relaxed">Empowering material recovery operators, accelerating regional resource circularity...</p></div>
 </div>
 </div>
 <!-- 5. LCA Compliance -->
 <div class="solution-card p-8 space-y-5">
-<iconify-icon class="text-purple-700" icon="ph:leaf-light" width="24"></iconify-icon>
+<div class="flex items-center gap-3">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="32" height="32" style="display:inline-block;color:#7e22ce;vertical-align:middle">
+  <!-- Document outline -->
+  <path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8H152l56,56V216A8,8,0,0,1,200,224Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Folded corner -->
+  <polyline points="152 32 152 88 208 88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Check line 1 -->
+  <polyline points="88 148 108 168 140 128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Horizontal line after check 1 -->
+  <line x1="156" y1="148" x2="176" y2="148" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Check line 2 -->
+  <polyline points="88 188 108 208 140 168" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+  <!-- Horizontal line after check 2 -->
+  <line x1="156" y1="188" x2="176" y2="188" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+</svg>
+<span class="text-xl font-light" data-i18n="flow-5">Compliance</span>
+</div>
 <h3 class="text-xl font-light" data-i18n="sol-carbon-title">LCA Compliance</h3>
-<div class="text-[#444] text-sm leading-relaxed font-medium space-y-2.5">
-  <p><strong>Standards compliance</strong> — ISO 14040/44, ISO 14064, ESRS, TCFD, LEED, BREEAM, ZEB, J-Credit, Carbon Credit</p>
-  <p><strong>Improve financing efficiency</strong> — transparent, data-driven decision basis for banks and project partners</p>
-  <p><strong>Maximise asset value</strong> — transform building full lifecycle data into computable, auditable, continuously appreciating assets</p>
+<div class="space-y-3">
+  <div><p class="font-bold text-black text-sm">Regulatory &amp; Standards compliance</p><p class="text-[#444] text-sm leading-relaxed">Alignment with global frameworks: ISO 14040/44, ISO 14064, ESRS, TCFD, LEED, BREEAM, ZEB, J-Credit, Carbon Credit</p></div>
+  <div><p class="font-bold text-black text-sm">Accelerated Green Financing</p><p class="text-[#444] text-sm leading-relaxed">Providing transparent, data-driven decision bases for financial institutions and project stakeholders.</p></div>
+  <div><p class="font-bold text-black text-sm">Maximizing Asset Appreciation</p><p class="text-[#444] text-sm leading-relaxed">Transforming full lifecycle building data into computable, auditable and continuously appreciating assets.</p></div>
 </div>
 </div>
 </div>
@@ -722,18 +777,17 @@
       <div class="w-[175px] py-4 border-2 border-[#999] text-xs uppercase tracking-wider text-gray-800 font-semibold text-center bg-white hover:border-black hover:bg-[#F7F7F7] transition-all" data-i18n="flow-1">Materials</div>
       <div class="w-[175px] py-4 border-2 border-[#999] text-xs uppercase tracking-wider text-gray-800 font-semibold text-center bg-white hover:border-black hover:bg-[#F7F7F7] transition-all" data-i18n="flow-2">Construction</div>
       <div class="w-[175px] py-4 border-2 border-[#999] text-xs uppercase tracking-wider text-gray-800 font-semibold text-center bg-white hover:border-black hover:bg-[#F7F7F7] transition-all" data-i18n="flow-3">Operations</div>
-      <div class="w-[175px] py-4 border-2 border-[#999] text-xs uppercase tracking-wider text-gray-800 font-semibold text-center bg-white hover:border-black hover:bg-[#F7F7F7] transition-all" data-i18n="flow-4">Retrofit</div>
+      <div class="w-[175px] py-4 border-2 border-[#999] text-xs uppercase tracking-wider text-gray-800 font-semibold text-center bg-white hover:border-black hover:bg-[#F7F7F7] transition-all" data-i18n="flow-4">Urban Mining</div>
       <div class="w-[175px] py-4 border-2 border-[#999] text-xs uppercase tracking-wider text-gray-800 font-semibold text-center bg-white hover:border-black hover:bg-[#F7F7F7] transition-all" data-i18n="flow-5">Compliance</div>
     </div>
   </div>
 
   <!-- Layer 2: Intelligence / AI Orchestration -->
   <div class="w-full">
-    <div class="text-[9px] uppercase tracking-[0.2em] text-[#555] font-semibold mb-2 text-left" data-i18n="arch-l2-label">Intelligence Layer</div>
+    <div class="text-[9px] uppercase tracking-[0.2em] text-[#555] font-semibold mb-2 text-left" data-i18n="arch-l2-label">AI Orchestration Layer</div>
     <div class="flex justify-center">
-      <div class="text-center px-12 py-5 border-2 border-[#555] bg-[#F7F7F7]" style="min-width:320px;max-width:440px;">
-        <div class="text-base font-semibold tracking-tight text-black mb-1" data-i18n="arch-l2-title">Intelligence</div>
-        <div class="text-[10px] text-[#333] tracking-[0.12em] uppercase font-medium" data-i18n="arch-l2-sub">AI Orchestration Layer</div>
+      <div class="text-center px-12 py-5 border-2 border-[#555] bg-[#F8F8F8]" style="min-width:320px;max-width:440px;">
+        <div class="text-xs uppercase tracking-[0.18em] font-bold text-black" data-i18n="arch-l2-title">Intelligence</div>
       </div>
     </div>
   </div>
@@ -772,21 +826,21 @@
     </div>
   </div>
 
-  <!-- Layer 4: AI-native Data Infrastructure Layer -->
+  <!-- Layer 4: Data Infrastructure -->
   <div class="w-full">
     <div class="text-[9px] uppercase tracking-[0.2em] text-[#555] font-semibold mb-2 text-left" data-i18n="arch-l4-label">AI-native Data Infrastructure Layer</div>
-    <div class="w-full text-left px-8 py-6 border-2 border-[#555] bg-[#F0F0F0]">
-      <div class="text-xs uppercase tracking-[0.18em] font-bold text-black mb-2" data-i18n="arch-l4-title">AI-native Data Infrastructure Layer</div>
-      <p class="text-sm font-medium text-[#333] leading-relaxed" data-i18n="arch-l4-desc">We are building the data infrastructure for the built environment. Enable data Computable, Predictable, Traceable, Auditable.</p>
+    <div class="w-full text-center px-8 py-6 border-2 border-[#555] bg-[#F8F8F8]">
+      <div class="text-xs uppercase tracking-[0.18em] font-bold text-black mb-2" data-i18n="arch-l4-title">Data Infrastructure</div>
+      <p class="text-xs font-light text-[#444] leading-relaxed" data-i18n="arch-l4-desc">Enable data Computable, Predictable, Traceable, Auditable, Transformable...</p>
     </div>
   </div>
 
-  <!-- Layer 5: Data Lake (Raw Zone) — solid black border, consistent with other layers -->
+  <!-- Layer 5: Raw Zone Layer -->
   <div class="w-full">
-    <div class="text-[9px] uppercase tracking-[0.2em] text-[#555] font-semibold mb-2 text-left" data-i18n="arch-l5-label">Data Lake (Raw Zone)</div>
-    <div class="w-full text-left px-8 py-5 border-2 border-[#555] bg-white">
-      <div class="text-xs uppercase tracking-[0.18em] font-bold text-black mb-2" data-i18n="arch-l5-title">Data Lake (Raw Zone)</div>
-      <p class="text-sm font-medium text-[#333] leading-relaxed" data-i18n="arch-l5-desc">Multi-type raw data from across the building lifecycle — IoT streams, BIM files, sensor logs, utility records, and operational documents — ingested as-is into a unified data pool, awaiting structuring and transformation.</p>
+    <div class="text-[9px] uppercase tracking-[0.2em] text-[#555] font-semibold mb-2 text-left" data-i18n="arch-l5-label">Raw Zone Layer</div>
+    <div class="w-full text-center px-8 py-5 border-2 border-[#555] bg-white">
+      <div class="text-xs uppercase tracking-[0.18em] font-bold text-black mb-2" data-i18n="arch-l5-title">Data Lake</div>
+      <p class="text-xs font-light text-[#444] leading-relaxed" data-i18n="arch-l5-desc">Multi-type raw data from across the building lifecycle — IoT streams, BIM files, sensor logs, utility records, and operational documents...</p>
     </div>
   </div>
 
@@ -807,14 +861,11 @@
 <!-- [/HIDDEN] -->
 <!-- 7. CTA -->
 <section class="pt-16 pb-16 bg-[#F5F5F5] text-center px-6">
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="max-w-3xl mx-auto flex flex-col items-center gap-10">
 <h2 class="text-4xl md:text-5xl font-light tracking-tight" data-i18n="cta-title">See how our solutions work for your buildings</h2>
-<p class="text-[#444] font-medium leading-relaxed" data-i18n="cta-desc">Request a detailed walkthrough covering energy optimization, carbon asset compliance, and lifecycle data management — maximizing the value of your building data and transforming it into continuously appreciating carbon assets.</p>
-<div class="pt-6">
-<a class="bg-black text-white px-12 py-4 text-sm font-medium hover:bg-[#2A2A2A] transition-colors text-center inline-block" href="contact.html">
+<span class="bg-black text-white px-12 py-4 text-sm font-medium text-center cursor-default inline-block">
 <span data-i18n="cta-contact">Contact Us</span>
-</a>
-</div>
+</span>
 </div>
 </section>
 </main>
@@ -895,14 +946,15 @@
         "out-4-label-full": "Data coverage improvement: 60–90%",
         "sol-energy-title": "Energy Optimization",
         "sol-const-title": "Construction Decarbonization",
-        "sol-retrofit-title": "Circular Retrofit & Asset Recovery",
+        "sol-retrofit-title": "Circular Renovation & Asset Optimization",
         "sol-carbon-title": "LCA Compliance",
         "footer-priv": "Privacy Policy",
         "footer-terms": "Terms",
         "hero-title": "Architecting your building data foundation",
         "hero-desc": "Integrate BIM, BMS, energy, and material data across your portfolio into a unified, structured layer — making your building data computable, auditable, and continuously valuable, in alignment with compliance disclosure and carbon management requirements.",
         "hero-input-placeholder": "Ask SynerArch",
-        "hero-explore": "Explore Solutions",
+        "hero-explore": "Data Bank",
+        "hero-sub": "An AI-native data foundation for the building lifecycle—to make performance computable, auditable, and continuously valuable.",
         "stat-deployments": "Live Deployments",
         "stat-cities": "Cities",
         "stat-sqm": "sq m Managed",
@@ -912,12 +964,12 @@
         "agent-status": "Secure environment for enterprise data integration",
         "sol-title": "Intelligence across your building lifecycle",
         "sol-subtitle": "",
-        "sol-energy-desc": "<strong>Energy savings</strong> — continuous monitoring, issue detection, and proactive optimisation<br><strong>Lower operating costs</strong> — optimise energy-saving retrofit strategies and manage building equipment effectively<br><strong>AI-driven risk prediction</strong> — algorithms improve continuously, enabling smarter decisions",
-        "sol-const-desc": "<strong>Track and manage on-site construction emissions</strong> — aligned with ISO 14064, PAS 2080, EPA Tier 4, Off-Road Act, LEED, and BREEAM<br><strong>MRV-ready data collection</strong> — efficient capture via IoT, OCR, and structured mobile workflows<br><strong>Construction equipment energy monitoring</strong> — clean energy alternatives and construction equipment scheduling optimisation",
-        "sol-carbon-desc": "<strong>Standards compliance</strong> — ISO 14040/44, ISO 14064, ESRS, TCFD, LEED, BREEAM, ZEB, J-Credit, Carbon Credit<br><strong>Improve financing efficiency</strong> — transparent, data-driven decision basis for banks and project partners<br><strong>Maximise asset value</strong> — transform building full lifecycle data into computable, auditable, continuously appreciating assets",
-        "sol-retrofit-desc": "<strong>Sustainability optimisation</strong> — improve transparency across LCA scores, circularity indices, and resource consumption<br><strong>Circular retrofit strategies</strong> — empower circular economy, increase asset reuse rates<br><strong>Building deconstruction inventory</strong> — support material recovery operators and drive regional resource circulation",
-        "sol-mat-title": "Materials & Circular Supply",
-        "sol-mat-desc": "<strong>Low-carbon material promotion</strong> — high-visibility platform for new low-carbon building materials, improving designer selection efficiency<br><strong>Low-carbon material library</strong> — EPD data, supplier information, and product images<br><strong>Re-materialisation of deconstruction waste</strong> — manufacturer database supporting low-carbon product development",
+        "sol-energy-desc": "Energy savings — continuous monitoring, issue detection, proactive optimization... Lower operating costs — energy-saving retrofit strategies, effective building equipment management... Smarter decisions — data-driven insights, optimal decision-making, predictive intelligence",
+        "sol-const-desc": "Track and manage on-site construction emissions — aligned with ISO 14064, PAS 2080, EPA Tier 4, Off-Road Act... MRV-ready data collection — efficient capture via IoT, OCR, mobile tools... Construction equipment energy monitoring — clean energy alternatives, scheduling optimization...",
+        "sol-carbon-desc": "Regulatory & Standards compliance — alignment with global frameworks: ISO 14040/44, ISO 14064, ESRS, TCFD, LEED, BREEAM, ZEB, J-Credit, Carbon Credit. Accelerated Green Financing — transparent, data-driven decision bases for financial institutions and project stakeholders. Maximizing Asset Appreciation — transforming full lifecycle building data into computable, auditable and continuously appreciating assets.",
+        "sol-retrofit-desc": "Sustainability Strategies — improve transparency across LCA scores, circularity indices, resource consumption metrics... Circular retrofit & Lifecycle Management — driving the circular economy, maximizing asset reuse rates... Building Deconstruction Inventory — empowering material recovery operators, accelerating regional resource circularity...",
+        "sol-mat-title": "Low-carbon material",
+        "sol-mat-desc": "Promotion — supply-chain efficiency matching, R&D support... Low-carbon Data House — EPD data, supplier information, on-site photos... Construction Waste Recycling — cradle to cradle strategy, recycle market fit...",
         "flow-1": "Materials",
         "flow-2": "Construction",
         "flow-3": "Operations",
@@ -926,7 +978,7 @@
         "data-title": "Turn building data into asset intelligence",
         "data-subtitle": "",
         "arch-l1-label": "Application Layer",
-        "arch-l2-label": "Intelligence Layer",
+        "arch-l2-label": "AI Orchestration Layer",
         "arch-l2-title": "Intelligence",
         "arch-l2-sub": "AI Orchestration Layer",
         "arch-l3-label": "Specialised Databases",
@@ -938,11 +990,11 @@
         "arch-out-3-title": "Methodology",
         "arch-out-3-desc": "A directly callable function for energy optimisation, carbon accounting, lifecycle analysis, and more.",
         "arch-l4-label": "AI-native Data Infrastructure Layer",
-        "arch-l4-title": "AI-native Data Infrastructure Layer",
-        "arch-l4-desc": "We are building the data infrastructure for the built environment. Enable data Computable, Predictable, Traceable, Auditable.",
-        "arch-l5-label": "Data Lake (Raw Zone)",
-        "arch-l5-title": "Data Lake (Raw Zone)",
-        "arch-l5-desc": "Multi-type raw data from across the building lifecycle — IoT streams, BIM files, sensor logs, utility records, and operational documents — ingested as-is into a unified data pool, awaiting structuring and transformation.",
+        "arch-l4-title": "Data Infrastructure",
+        "arch-l4-desc": "Enable data Computable, Predictable, Traceable, Auditable, Transformable...",
+        "arch-l5-label": "Raw Zone Layer",
+        "arch-l5-title": "Data Lake",
+        "arch-l5-desc": "Multi-type raw data from across the building lifecycle — IoT streams, BIM files, sensor logs, utility records, and operational documents...",
         "out-1-label": "Energy",
         "out-1-val": "↓ 20–30%",
         "out-2-label": "Carbon",
@@ -980,7 +1032,8 @@
         "hero-title": "建物データ基盤を、ともに設計する",
         "hero-desc": "資産ポートフォリオ全体のBIM・BMS・エネルギー・材料データを統合・構造化し、一元管理する基盤を提供します。建物データを演算可能で監査に耐え、継続的に価値を高める資産へと変え、各種コンプライアンス開示およびカーボンマネジメント要件に対応します。",
         "hero-input-placeholder": "SynerArchに質問する",
-        "hero-explore": "ソリューションを見る",
+        "hero-explore": "データバンク",
+        "hero-sub": "建物ライフサイクルのためのAIネイティブデータ基盤——性能をコンピュータブル、監査可能、継続的に価値あるものにするために。",
         "stat-deployments": "実稼働プロジェクト",
         "stat-cities": "対象都市",
         "stat-sqm": "㎡ 管理面積",
@@ -1004,7 +1057,7 @@
         "data-title": "建物データを資産インテリジェンスへ",
         "data-subtitle": "",
         "arch-l1-label": "アプリケーション層",
-        "arch-l2-label": "インテリジェンス層",
+        "arch-l2-label": "AI Orchestration Layer",
         "arch-l2-title": "Intelligence",
         "arch-l2-sub": "AI Orchestration Layer",
         "arch-l3-label": "専門データベース層",
@@ -1016,10 +1069,10 @@
         "arch-out-3-title": "方法論",
         "arch-out-3-desc": "エネルギー最適化・カーボン算定・ライフサイクル分析などに即時参照可能な関数基盤。",
         "arch-l4-label": "AIネイティブ・データインフラ層",
-        "arch-l4-title": "AI-native Data Infrastructure Layer",
+        "arch-l4-title": "Data Infrastructure",
         "arch-l4-desc": "建成環境のためのデータインフラを構築しています。データを演算可能・予測可能・追跡可能・監査可能にします。",
         "arch-l5-label": "データレイク（Raw Zone）",
-        "arch-l5-title": "Data Lake (Raw Zone)",
+        "arch-l5-title": "Data Lake",
         "arch-l5-desc": "建物ライフサイクル全体にわたる多種類の原始データ——IoTストリーム・BIMファイル・センサーログ・エネルギー記録・運用ドキュメント——を原形のまま統合データプールに取り込み、構造化・変換処理を待ちます。",
         "out-1-label": "エネルギー削減",
         "out-1-val": "20–30%",
@@ -1068,7 +1121,7 @@
             var exploreBtn = document.getElementById('hero-explore-btn');
             if (!exploreBtn) return;
             exploreBtn.addEventListener('click', function () {
-                var target = document.getElementById('solutions');
+                var target = document.getElementById('platform');
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth' });
                 }
@@ -1091,6 +1144,25 @@
                     }
                 }, 0);
             };
+        }());
+
+        // ── Hamburger menu toggle ──────────────────────────────────────
+        (function () {
+            var btn = document.getElementById('sa-hamburger-btn');
+            var menu = document.getElementById('sa-nav-dropdown');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var isOpen = menu.style.display === 'block';
+                menu.style.display = isOpen ? 'none' : 'block';
+            });
+            // Close when clicking outside
+            document.addEventListener('click', function () {
+                menu.style.display = 'none';
+            });
+            menu.addEventListener('click', function (e) {
+                e.stopPropagation(); // keep open when clicking inside menu
+            });
         }());
         // Nav initial scroll check
         var nav = document.getElementById('main-nav');

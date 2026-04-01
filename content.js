@@ -27,7 +27,7 @@
         /* Brand logo — nav (square) and footer (rectangular)
          * Update filenames here if logo files are renamed.
          * Files must be in the same directory as index.html. */
-        logoNav:    'logo-rect.png',   /* square version — nav top-left */
+        logoNav:    'logo-nav.png',   /* square version — nav top-left */
         logoFooter: 'logo-rect.png',     /* rectangular version — footer  */
 
         /* Partner / client logos (used on index.html Partners section) */
@@ -106,6 +106,21 @@
      * 3. FOOTER COPYRIGHT
      * ───────────────────────────────────────────────────────────────── */
     window.SA.footerCopyright = '© 2026 SynerArch. All rights reserved.';
+    /* ─────────────────────────────────────────────────────────────────
+     * 5. HAMBURGER NAV ITEMS (index.html only)
+     * Labels for the new hamburger dropdown menu on the homepage.
+     * Interactions and links are disabled for now — add hrefs when ready.
+     * NOTE: Other pages still use their original nav structure.
+     *       Future: align other pages to this pattern when ready.
+     * ───────────────────────────────────────────────────────────────── */
+    window.SA.hamburgerNav = [
+        { id: 'sa-nav-lifecycle',     label: 'Lifecycle'    },
+        { id: 'sa-nav-databank',      label: 'Data Bank'    },
+        { id: 'sa-nav-intelligence',  label: 'Intelligence' },
+        { id: 'sa-nav-about',         label: 'About'        },
+        { id: 'sa-nav-contact',       label: 'Contact'      },
+    ];
+
 
     /* ─────────────────────────────────────────────────────────────────
      * 4. RENDER HELPERS
