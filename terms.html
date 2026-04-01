@@ -22,45 +22,38 @@
     p,li { line-height:1.75; }
     html[lang="en"] .jp-only { display:none; }
     html[lang="jp"] .en-only { display:none; }
+
+        nav { height:64px; transition:all 0.3s ease; }
+        nav.scrolled { background-color:rgba(255,255,255,0.95); backdrop-filter:blur(8px); border-bottom:1px solid #E5E5E5; box-shadow:0 1px 0 #E5E5E5,0 4px 16px rgba(0,0,0,0.04); }
 </style>
 </head>
 <body>
 
 <!-- Global Navigation -->
-<nav class="fixed top-0 left-0 w-full flex items-center px-8 sm:px-12 md:px-20" id="main-nav">
-<div class="flex items-center justify-between w-full max-w-[1440px] mx-auto">
-<div class="text-xl font-bold tracking-tight">
-<a href="index.html"><img src="logo-square.png" alt="SynerArch" id="sa-logo-nav" style="height:68px;width:auto;display:block;"></a>
-</div>
-<div class="hidden md:flex items-center gap-10 text-sm font-light text-gray-500 mx-auto">
-<div class="relative group">
-<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-solutions" href="index.html#solutions">Solutions</a>
-<div class="absolute top-full left-0 w-64 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" data-nav-dropdown=""></div>
-</div>
-<a class="hover:text-black transition-colors" data-i18n="nav-platform" href="ai.html">AI</a>
-<a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a>
-<div class="relative group">
-<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-contact" href="contact.html">Contact</a>
-<div class="absolute top-full left-0 w-44 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" id="contact-nav-dropdown">
-<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors" href="contact.html?type=general" id="cnav-general">General</a>
-<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=careers" id="cnav-careers">Careers</a>
-<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=media" id="cnav-media">Media</a>
-</div>
-</div>
-</div>
-<div class="flex items-center gap-6 ml-auto" id="sa-nav-right">
-<a class="px-5 py-2 bg-black text-white text-sm font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="data-bank.html" data-i18n="nav-databank">Data Bank</a>
-<a class="px-5 py-2 border border-gray-300 text-sm font-light hover:border-black transition-all text-center" href="request-demo.html"><span data-i18n="nav-demo">Request Demo</span></a>
-<div class="lang-switch flex items-center gap-2 text-xs font-medium text-gray-500">
-<span class="active" id="lang-en" onclick="SA.switchLanguage('en')">EN</span>
-<span class="text-gray-500">/</span>
-<span id="lang-jp" onclick="SA.switchLanguage('jp')">JP</span>
-</div>
-</div>
-</div>
+<!-- Global Navigation — hamburger menu -->
+<!-- NOTE: Following index.html nav pattern. Future: full site alignment. -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-6 sm:px-10 md:px-16" id="main-nav" style="height:64px;">
+  <!-- Logo -->
+  <a href="index.html" onclick="return true;"><img src="logo-nav.png" alt="SynerArch" id="sa-logo-nav" style="height:44px;width:auto;display:block;"></a>
+  <!-- Hamburger button + dropdown -->
+  <div style="position:relative;margin-left:auto;">
+    <button id="sa-hamburger-btn" aria-label="Menu" style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+    </button>
+    <div id="sa-nav-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:white;border:1px solid #E5E5E5;box-shadow:0 8px 24px rgba(0,0,0,0.08);z-index:999;padding:8px 0;">
+      <span style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;font-family:'Times New Roman',Times,serif;">Lifecycle</span>
+      <span style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;">Data Bank</span>
+      <span style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;">Intelligence</span>
+      <span style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;">About</span>
+      <span style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:default;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;">Contact</span>
+    </div>
+  </div>
 </nav>
 
-<main class="pt-40 pb-24 px-6 max-w-[760px] mx-auto">
+
+<main class="pt-24 pb-24 px-6 max-w-[760px] mx-auto">
 
   <!-- EN -->
   <div class="en-only">
@@ -147,28 +140,28 @@
 <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
 <div class="space-y-6">
 <div class="text-black font-bold tracking-tight text-lg">
-<a href="index.html"><img src="logo-rect.png" alt="SynerArch" id="sa-logo-footer" style="height:110px;width:auto;display:block;"></a>
+<a href="#" onclick="return false;"><img src="logo-rect.png" alt="SynerArch" id="sa-logo-footer" style="height:110px;width:auto;display:block;"></a>
 </div>
 <div class="flex items-center gap-4">
-<a id="footer-social-x" href="#" class="text-gray-400 hover:text-black transition-colors" aria-label="X (Twitter)"><iconify-icon icon="ph:x-logo-light" width="18"></iconify-icon></a>
-<a id="footer-social-linkedin" href="#" class="text-gray-400 hover:text-black transition-colors" aria-label="LinkedIn"><iconify-icon icon="ph:linkedin-logo-light" width="18"></iconify-icon></a>
+<a id="footer-social-x" href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="X (Twitter)"><iconify-icon icon="ph:x-logo-light" width="18"></iconify-icon></a>
+<a id="footer-social-linkedin" href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="LinkedIn"><iconify-icon icon="ph:linkedin-logo-light" width="18"></iconify-icon></a>
 </div>
 </div>
 <div class="space-y-6">
 <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-use">Use Cases</h5>
 <ul class="space-y-3">
-<li><a class="hover:text-black transition-colors" href="solution-materials.html" data-i18n="sol-mat-title">Materials &amp; Circular Supply</a></li>
-<li><a class="hover:text-black transition-colors" href="solution-construction.html" data-i18n="sol-const-title">Construction Decarbonization</a></li>
-<li><a class="hover:text-black transition-colors" href="solution-energy.html" data-i18n="sol-energy-title">Energy Optimization</a></li>
-<li><a class="hover:text-black transition-colors" href="solution-retrofit.html" data-i18n="sol-retrofit-title">Circular Retrofit &amp; Asset Recovery</a></li>
-<li><a class="hover:text-black transition-colors" href="solution-compliance.html" data-i18n="sol-carbon-title">LCA Compliance</a></li>
+<li><a class="hover:text-black transition-colors" href="#" onclick="return false;" data-i18n="sol-mat-title">Low-carbon material</a></li>
+<li><a class="hover:text-black transition-colors" href="#" onclick="return false;" data-i18n="sol-const-title">Construction Decarbonization</a></li>
+<li><a class="hover:text-black transition-colors" href="#" onclick="return false;" data-i18n="sol-energy-title">Energy Optimization</a></li>
+<li><a class="hover:text-black transition-colors" href="#" onclick="return false;" data-i18n="sol-retrofit-title">Circular Renovation &amp; Asset Optimization</a></li>
+<li><a class="hover:text-black transition-colors" href="#" onclick="return false;" data-i18n="sol-carbon-title">LCA Compliance</a></li>
 </ul>
 </div>
 <div class="space-y-6">
 <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-comp">Company</h5>
 <ul class="space-y-3">
-<li><a class="hover:text-black transition-colors" href="about.html" data-i18n="nav-about">About</a></li>
-<li><a class="hover:text-black transition-colors" href="contact.html" data-i18n="nav-contact">Contact</a></li>
+<li><a class="hover:text-black transition-colors" href="#" onclick="return false;" data-i18n="nav-about">About</a></li>
+<li><a class="hover:text-black transition-colors" href="#" onclick="return false;" data-i18n="nav-contact">Contact</a></li>
 </ul>
 </div>
 <div class="space-y-6">
@@ -188,6 +181,7 @@
 </div>
 </div>
 </footer>
+
 
 <script src="copy.js"></script>
 <script src="copy-loader.js"></script>
@@ -216,6 +210,20 @@ document.addEventListener('DOMContentLoaded', function() {
   if (xEl && SOCIAL_LINKS.x) xEl.href = SOCIAL_LINKS.x;
   if (liEl && SOCIAL_LINKS.linkedin) liEl.href = SOCIAL_LINKS.linkedin;
 });
-</script>
+
+        // ── Hamburger menu toggle ──
+        (function () {
+            var btn = document.getElementById('sa-hamburger-btn');
+            var menu = document.getElementById('sa-nav-dropdown');
+            if (!btn || !menu) return;
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            });
+            document.addEventListener('click', function () {
+                menu.style.display = 'none';
+            });
+        }());
+    </script>
 </body>
 </html>
