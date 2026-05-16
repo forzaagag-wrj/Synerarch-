@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Intelligence — SynerArch</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --nav-bg-scroll: rgba(255,255,255,0.95);
+    --color-black: #111111;
+    --color-mid: #444444;
+    --color-light: #888888;
+    --color-border: #E5E5E5;
+    --color-bg-card: #F7F7F7;
+  }
+
+  body {
+    background-color: #FFFFFF;
+    color: #111111;
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  *:not(iconify-icon):not(iconify-icon *), *::before, *::after {
+    font-family: 'Times New Roman', Times, serif !important;
+  }
+
+  html[lang="jp"] *:not(iconify-icon):not(iconify-icon *),
+  html[lang="jp"] *::before,
+  html[lang="jp"] *::after {
+    font-family: 'Kozuka Gothic Pro','Kozuka Gothic','Noto Sans JP','Hiragino Kaku Gothic ProN', sans-serif !important;
+  }
+
+  /* ── Nav ── */
+  nav {
+    height: 64px;
+    border-bottom: 1px solid transparent;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1000;
+  }
+  nav.scrolled {
+    background-color: var(--nav-bg-scroll);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 0 #E5E5E5, 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  /* ── Typography ── */
+  h1,h2,h3,h4,h5 { letter-spacing: -0.02em; line-height: 1.15; }
+  p,li { line-height: 1.75; }
+
+  /* ── Anchor nav ── */
+  .anchor-nav {
+    position: sticky;
+    top: 64px;
+    z-index: 900;
+    background: #fff;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .anchor-tab {
+    padding: 13px 22px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: none;
+    outline: none;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    white-space: nowrap;
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  .anchor-tab:hover { color: #333; }
+  .anchor-tab.active { color: #111; border-bottom-color: #111; }
+
+  /* ── Card accent line + persona + hint ── */
+  .module-card { position: relative; }
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 3px;
+    z-index: 2;
+    border-radius: 2px 0 0 2px;
+  }
+  #materials::before    { background: #22d3ee; }
+  #construction::before { background: #16a34a; }
+  #energy::before       { background: #2563eb; }
+  #retrofit::before     { background: #fb923c; }
+  #carbon::before       { background: #7e22ce; }
+
+  .card-icon {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .card-persona {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+    font-weight: 300;
+    margin-top: 3px;
+    letter-spacing: 0.01em;
+  }
+  .foundation-hint {
+    font-size: 0.875rem;
+    color: #444;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    line-height: 1.65;
+    padding: 8px 0 0;
+    border-top: 1px solid #F0F0F0;
+    margin-top: 16px;
+  }
+
+  /* ── Module cards ── */
+  .module-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .module-card:hover {
+    border-color: #AAAAAA;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+
+  /* Card inner layout — direction set via JS to avoid all CSS specificity conflicts */
+  .card-body {
+    display: flex;
+    align-items: stretch;
+    min-height: 380px;
+  }
+  /* Mobile: stack card cols vertically */
+  @media (max-width: 767px) {
+    #materials > div > div,
+    #construction > div > div,
+    #energy > div > div,
+    #retrofit > div > div,
+    #carbon > div > div {
+      width: 100% !important;
+      border-left: none !important;
+      border-right: none !important;
+    }
+    #materials > div,
+    #construction > div,
+    #energy > div,
+    #retrofit > div,
+    #carbon > div {
+      flex-direction: column !important;
+      min-height: unset !important;
+    }
+  }
+
+  /* Text column */
+  .card-text {
+    width: 46%;
+    flex-shrink: 0;
+    padding: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-sizing: border-box;
+  }
+  @media (max-width: 767px) {
+    .card-text { width: 100%; padding: 32px 24px; }
+  }
+
+  /* Screenshot column */
+  .card-img {
+    flex: 1;
+    position: relative;
+    background: #E8E8E8;
+    overflow: hidden;
+  }
+  @media (max-width: 767px) {
+    .card-img { min-height: 220px; }
+  }
+  .card-img img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    display: block;
+  }
+  .card-img-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    color: #BBBBBB;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .card-img::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0; width: 56px;
+    background: linear-gradient(to right, #E8E8E8, transparent);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .card-img.img-left::before {
+    left: unset; right: 0;
+    background: linear-gradient(to left, #E8E8E8, transparent);
+  }
+
+  /* ── Capability rows ── */
+  .capability-row {
+    border-top: 1px solid #E8E8E8;
+    padding: 8px 0;
+  }
+  .capability-row:first-child { border-top: none; padding-top: 0; }
+
+  /* ── Data tags ── */
+  .data-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #111;
+    border: 1px solid #888888;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 2px;
+  }
+
+  /* ── Stage tag ── */
+  .stage-tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #111;
+    font-weight: 600;
+  }
+
+  /* ── Step number (How it works) ── */
+  .step-number {
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    color: #888;
+    font-weight: 400;
+    font-family: 'JetBrains Mono', monospace !important;
+    line-height: 1;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .step-connector {
+    width: 1px;
+    background: #E0E0E0;
+    flex-shrink: 0;
+  }
+
+  /* ── Banner ── */
+  .deploy-banner {
+    background: #F4F4F4;
+    border-top: 1px solid #E5E5E5;
+    border-bottom: 1px solid #E5E5E5;
+  }
+  .banner-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #555;
+    border: 1px solid #D5D5D5;
+    background: #fff;
+    padding: 5px 12px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .banner-chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── CTA section ── */
+  .btn-primary {
+    background: #111;
+    color: #fff;
+    padding: 14px 40px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-block;
+    transition: background 0.2s ease, transform 0.15s ease;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #2A2A2A; transform: translateY(-1px); }
+
+  .btn-outline {
+    border: 1px solid #CCC;
+    color: #111;
+    padding: 14px 40px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-block;
+    transition: border-color 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-outline:hover { border-color: #111; }
+
+  .btn-text-link {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #111;
+    text-decoration: none;
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .btn-text-link:hover { border-color: #111; }
+
+  /* ── Fade in ── */
+  .fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Custom scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #F5F5F5; }
+  ::-webkit-scrollbar-thumb { background: #CCC; }
+  ::-webkit-scrollbar-thumb:hover { background: #AAA; }
+
+  /* ── Mobile: stack cards vertically ── */
+  @media (max-width: 767px) {
+    #materials > div,
+    #construction > div,
+    #energy > div,
+    #retrofit > div,
+    #carbon > div {
+      flex-direction: column !important;
+      min-height: unset !important;
+    }
+    #materials > div > div,
+    #construction > div > div,
+    #energy > div > div,
+    #retrofit > div > div,
+    #carbon > div > div {
+      width: 100% !important;
+      min-height: 240px;
+    }
+  }
+
+  /* ── [data-i18n-en/jp] toggle ── */
+  [data-i18n-jp] { display: none; }
+  html[lang="jp"] [data-i18n-en] { display: none; }
+  html[lang="jp"] [data-i18n-jp] { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     NAV  (identical to index.html)
+═══════════════════════════════════════════ -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-6 sm:px-10 md:px-16" id="main-nav">
+  <a href="index.html">
+    <img src="logo-nav.png" alt="SynerArch" id="sa-logo-nav" style="height:44px;width:auto;display:block;">
+  </a>
+  <div style="position:relative;margin-left:auto;">
+    <button id="sa-hamburger-btn" aria-label="Menu"
+      style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+    </button>
+    <div id="sa-nav-dropdown"
+      style="display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:white;border:1px solid #E5E5E5;box-shadow:0 8px 24px rgba(0,0,0,0.08);z-index:999;padding:8px 0;">
+      <span class="sa-nav-item" id="sa-nav-lifecycle"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='lifecycle.html'">Lifecycle</span>
+      <span class="sa-nav-item" id="sa-nav-databank"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='data-bank.html'">Data Bank</span>
+      <span class="sa-nav-item" id="sa-nav-intelligence"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#111;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;font-weight:500;"
+        onclick="window.location.href='intelligence.html'">Intelligence</span>
+      <span class="sa-nav-item" id="sa-nav-about"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='about.html'">About</span>
+      <span class="sa-nav-item" id="sa-nav-contact"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='contact.html'">Contact</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════ -->
+<main>
+
+  <!-- ── 1. HERO ─────────────────────────────── -->
+  <section class="relative overflow-hidden bg-white" style="min-height:380px;">
+
+    <!-- Background: lifecycle grid SVG (pure CSS, no image dependency) -->
+    <svg
+      id="hero-bg-svg"
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:1;"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <defs>
+        <!-- Fine grid -->
+        <pattern id="fine-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" fill="none" stroke="#E8E8E8" stroke-width="0.5"/>
+        </pattern>
+        <!-- Coarse grid overlay -->
+        <pattern id="coarse-grid" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+          <rect width="200" height="200" fill="url(#fine-grid)"/>
+          <path d="M200 0H0V200" fill="none" stroke="#DEDEDE" stroke-width="0.8"/>
+        </pattern>
+        <!-- Fade mask: visible only on right 60%, fades to white on left -->
+        <linearGradient id="fade-mask-x" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="white" stop-opacity="1"/>
+          <stop offset="35%"  stop-color="white" stop-opacity="0"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
+        <!-- Fade mask vertical: fades out toward bottom -->
+        <linearGradient id="fade-mask-y" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+          <stop offset="60%"  stop-color="white" stop-opacity="0"/>
+          <stop offset="100%" stop-color="white" stop-opacity="1"/>
+        </linearGradient>
+        <mask id="grid-mask">
+          <rect width="100%" height="100%" fill="white"/>
+          <rect width="100%" height="100%" fill="url(#fade-mask-x)"/>
+          <rect width="100%" height="100%" fill="url(#fade-mask-y)"/>
+        </mask>
+      </defs>
+
+      <!-- Grid layer -->
+      <rect width="100%" height="100%" fill="url(#coarse-grid)" mask="url(#grid-mask)"/>
+
+      <!-- Lifecycle stage markers: 5 vertical lines, right side -->
+      <!-- These represent the 5 lifecycle phases -->
+      <g opacity="0.28" stroke="#111111" stroke-width="0.6">
+        <line x1="62%" y1="0" x2="62%" y2="100%" stroke-dasharray="4 8"/>
+        <line x1="70%" y1="0" x2="70%" y2="100%" stroke-dasharray="4 8"/>
+        <line x1="78%" y1="0" x2="78%" y2="100%" stroke-dasharray="4 8"/>
+        <line x1="86%" y1="0" x2="86%" y2="100%" stroke-dasharray="4 8"/>
+        <line x1="94%" y1="0" x2="94%" y2="100%" stroke-dasharray="4 8"/>
+      </g>
+
+      <!-- Horizontal data flow line -->
+      <line x1="58%" y1="50%" x2="97%" y2="50%"
+        stroke="#999999" stroke-width="0.8" stroke-dasharray="2 6" opacity="0.8"/>
+
+      <!-- Phase dots on the flow line -->
+      <g fill="#444444" opacity="0.8">
+        <circle cx="62%" cy="50%" r="3"/>
+        <circle cx="70%" cy="50%" r="3"/>
+        <circle cx="78%" cy="50%" r="3"/>
+        <circle cx="86%" cy="50%" r="3"/>
+        <circle cx="94%" cy="50%" r="3"/>
+      </g>
+
+      <!-- Phase labels (very light, uppercase) -->
+      <g font-family="'Times New Roman',Times,serif" font-size="8" fill="#444444"
+         letter-spacing="1.5" text-anchor="middle">
+        <text x="62%" y="44%" id="bg-label-1">MATERIALS</text>
+        <text x="70%" y="44%" id="bg-label-2">CONSTRUCTION</text>
+        <text x="78%" y="44%" id="bg-label-3">OPERATIONS</text>
+        <text x="86%" y="44%" id="bg-label-4">RENOVATION</text>
+        <text x="94%" y="44%" id="bg-label-5">COMPLIANCE</text>
+      </g>
+
+      <!-- Corner accent: top-right bracket -->
+      <g stroke="#CCCCCC" stroke-width="0.8" fill="none" opacity="0.5">
+        <path d="M 97% 8 L 97% 20% L calc(97% - 48px) 20%"
+          vector-effect="non-scaling-stroke"/>
+      </g>
+
+      <!-- Bottom-right small data nodes (decorative) -->
+      <g stroke="#D8D8D8" stroke-width="0.6" fill="none" opacity="0.5">
+        <rect x="89%" y="68%" width="20" height="12" rx="1"/>
+        <rect x="92%" y="68%" width="20" height="12" rx="1"/>
+      </g>
+    </svg>
+
+    <!-- Hero text content -->
+    <div class="relative z-10 max-w-[1200px] mx-auto px-6 sm:px-12 md:px-20 pt-40 pb-24 fade-in">
+      <p class="stage-tag mb-5" id="hero-eyebrow"></p>
+      <h1 class="text-4xl md:text-[52px] font-light tracking-tight leading-tight max-w-[680px] mb-7"
+          id="hero-title"></h1>
+      <p class="text-base font-light text-[#333] leading-relaxed max-w-[560px]"
+          id="hero-sub"></p>
+    </div>
+
+  </section>
+
+  <!-- ── 2. ANCHOR NAV ──────────────────────── -->
+  <div class="anchor-nav" id="anchor-nav-bar">
+    <div style="max-width:1200px;margin:0 auto;padding:0 clamp(24px,5vw,80px);display:flex;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;">
+      <button class="anchor-tab active" data-anchor="materials"    id="tab-materials"></button>
+      <button class="anchor-tab"        data-anchor="construction"  id="tab-construction"></button>
+      <button class="anchor-tab"        data-anchor="energy"        id="tab-energy"></button>
+      <button class="anchor-tab"        data-anchor="retrofit"      id="tab-retrofit"></button>
+      <button class="anchor-tab"        data-anchor="carbon"        id="tab-carbon"></button>
+    </div>
+  </div>
+
+  <!-- ── 3. MODULE CARDS ────────────────────── -->
+  <section class="py-20 px-6 sm:px-12 md:px-20 bg-white">
+    <div class="max-w-[1200px] mx-auto space-y-8">
+
+      <!-- ─ Card: materials ─ -->
+      <div class="module-card anchor-target" id="materials" style="cursor:pointer;" onclick="window.location.href='intelligence-materials.html'">
+        <div style="display:flex;flex-direction:row;align-items:stretch;min-height:380px;">
+          <!-- Text col -->
+          <div style="flex:1;min-width:0;padding:36px 32px 36px 44px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;">
+            <div>
+              <div class="card-icon"><iconify-icon icon="ph:cube-light" width="28" style="color:#22d3ee;display:block;"></iconify-icon></div>
+              <p class="stage-tag" id="c1-stage"></p>
+              <h2 style="font-size:1.375rem;font-weight:300;letter-spacing:-0.02em;margin:6px 0 3px;" id="c1-name"></h2>
+              <p class="card-persona" id="c1-persona"></p>
+              <p style="font-size:0.875rem;color:#333;line-height:1.75;font-weight:300;margin-top:10px;" id="c1-value"></p>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c1-cap1-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c1-cap2-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c1-cap3-title"></p>
+              </div>
+            </div>
+            <div style="margin-top:10px;">
+              <!-- Platform 1 CTA: href below is a placeholder.
+                   Update to the Low-carbon Materials platform URL when the web app is live.
+                   Managed via JS content object key 'c1-cta'. -->
+              <a href="#" onclick="return false;" class="btn-text-link" id="c1-cta"></a>
+            </div>
+          </div>
+          <!-- Info col: screenshot top + meta bottom -->
+          <div style="width:44%;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid #EBEBEB;box-sizing:border-box;">
+
+            <!-- Screenshot -->
+            <div style="height:310px;background:#E0E0E0;overflow:hidden;position:relative;flex-shrink:0;border-bottom:1px solid #EBEBEB;">
+              <img src="screenshots/materials-ui.png" alt="Low-carbon Materials"
+                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;display:block;"
+                onerror="this.style.display='none'">
+              <div class="card-img-placeholder">
+                <iconify-icon icon="ph:monitor-light" width="28" style="color:#CCCCCC;"></iconify-icon>
+                <span id="c1-img-label" style="margin-top:6px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#BBBBBB;"></span>
+              </div>
+            </div>
+
+            <!-- Meta: tags + output + hint + CTA -->
+            <div style="flex:1;padding:12px 20px 12px;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;">
+
+              <!-- Tags -->
+              <div style="display:flex;flex-wrap:wrap;gap:5px;" id="c1-tags-wrap"></div>
+
+              <!-- Hint -->
+              <p class="foundation-hint" style="margin-top:0;padding-top:0;border-top:none;" id="c1-hint"></p>
+
+              <!-- CTA -->
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ Card: construction ─ -->
+      <div class="module-card anchor-target" id="construction" style="cursor:pointer;" onclick="window.location.href='intelligence-construction.html'">
+        <div style="display:flex;flex-direction:row;align-items:stretch;min-height:380px;">
+          <!-- Info col: screenshot top + meta bottom -->
+          <div style="width:44%;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #EBEBEB;box-sizing:border-box;">
+
+            <!-- Screenshot -->
+            <div style="height:310px;background:#E0E0E0;overflow:hidden;position:relative;flex-shrink:0;border-bottom:1px solid #EBEBEB;">
+              <img src="screenshots/construction-ui.png" alt="Construction Decarbonization"
+                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;display:block;"
+                onerror="this.style.display='none'">
+              <div class="card-img-placeholder">
+                <iconify-icon icon="ph:monitor-light" width="28" style="color:#CCCCCC;"></iconify-icon>
+                <span id="c2-img-label" style="margin-top:6px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#BBBBBB;"></span>
+              </div>
+            </div>
+
+            <!-- Meta: tags + output + hint + CTA -->
+            <div style="flex:1;padding:12px 20px 12px;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;">
+
+              <!-- Tags -->
+              <div style="display:flex;flex-wrap:wrap;gap:5px;" id="c2-tags-wrap"></div>
+
+              <!-- Hint -->
+              <p class="foundation-hint" style="margin-top:0;padding-top:0;border-top:none;" id="c2-hint"></p>
+
+            </div>
+          </div>
+          <!-- Text col -->
+          <div style="flex:1;min-width:0;padding:36px 32px 36px 44px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;">
+            <div>
+              <div class="card-icon"><iconify-icon icon="ph:crane-light" width="28" style="color:#16a34a;display:block;"></iconify-icon></div>
+              <p class="stage-tag" id="c2-stage"></p>
+              <h2 style="font-size:1.375rem;font-weight:300;letter-spacing:-0.02em;margin:6px 0 3px;" id="c2-name"></h2>
+              <p class="card-persona" id="c2-persona"></p>
+              <p style="font-size:0.875rem;color:#333;line-height:1.75;font-weight:300;margin-top:10px;" id="c2-value"></p>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c2-cap1-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c2-cap2-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c2-cap3-title"></p>
+              </div>
+            </div>
+            <div style="margin-top:10px;">
+              <a href="request-demo.html" class="btn-text-link" id="c2-cta"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ Card: energy ─ -->
+      <div class="module-card anchor-target" id="energy" style="cursor:pointer;" onclick="window.location.href='intelligence-operations.html'">
+        <div style="display:flex;flex-direction:row;align-items:stretch;min-height:380px;">
+          <!-- Text col -->
+          <div style="flex:1;min-width:0;padding:36px 32px 36px 44px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;">
+            <div>
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="28" height="28" style="display:block;color:#2563eb;flex-shrink:0;">
+                  <rect x="24" y="32" width="208" height="144" rx="12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <line x1="128" y1="176" x2="128" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <line x1="88" y1="216" x2="168" y2="216" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <circle cx="128" cy="104" r="22" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="11"/>
+                  <line x1="128" y1="68" x2="128" y2="56" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                  <line x1="128" y1="140" x2="128" y2="152" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                  <line x1="164" y1="104" x2="176" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                  <line x1="80" y1="104" x2="92" y2="104" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                  <line x1="153" y1="79" x2="161" y2="71" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                  <line x1="95" y1="129" x2="103" y2="121" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                  <line x1="153" y1="129" x2="161" y2="137" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                  <line x1="95" y1="79" x2="103" y2="87" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="11"/>
+                </svg></div>
+              <p class="stage-tag" id="c3-stage"></p>
+              <h2 style="font-size:1.375rem;font-weight:300;letter-spacing:-0.02em;margin:6px 0 3px;" id="c3-name"></h2>
+              <p class="card-persona" id="c3-persona"></p>
+              <p style="font-size:0.875rem;color:#333;line-height:1.75;font-weight:300;margin-top:10px;" id="c3-value"></p>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c3-cap1-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c3-cap2-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c3-cap3-title"></p>
+              </div>
+            </div>
+            <div style="margin-top:10px;">
+              <a href="request-demo.html" class="btn-text-link" id="c3-cta"></a>
+            </div>
+          </div>
+          <!-- Info col: screenshot top + meta bottom -->
+          <div style="width:44%;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid #EBEBEB;box-sizing:border-box;">
+
+            <!-- Screenshot -->
+            <div style="height:310px;background:#E0E0E0;overflow:hidden;position:relative;flex-shrink:0;border-bottom:1px solid #EBEBEB;">
+              <img src="screenshots/energy-ui.png" alt="Energy Optimization"
+                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;display:block;"
+                onerror="this.style.display='none'">
+              <div class="card-img-placeholder">
+                <iconify-icon icon="ph:monitor-light" width="28" style="color:#CCCCCC;"></iconify-icon>
+                <span id="c3-img-label" style="margin-top:6px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#BBBBBB;"></span>
+              </div>
+            </div>
+
+            <!-- Meta: tags + output + hint + CTA -->
+            <div style="flex:1;padding:12px 20px 12px;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;">
+
+              <!-- Tags -->
+              <div style="display:flex;flex-wrap:wrap;gap:5px;" id="c3-tags-wrap"></div>
+
+              <!-- Hint -->
+              <p class="foundation-hint" style="margin-top:0;padding-top:0;border-top:none;" id="c3-hint"></p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ Card: retrofit ─ -->
+      <div class="module-card anchor-target" id="retrofit" style="cursor:pointer;" onclick="window.location.href='intelligence-urban-mining.html'">
+        <div style="display:flex;flex-direction:row;align-items:stretch;min-height:380px;">
+          <!-- Info col: screenshot top + meta bottom -->
+          <div style="width:44%;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid #EBEBEB;box-sizing:border-box;">
+
+            <!-- Screenshot -->
+            <div style="height:310px;background:#E0E0E0;overflow:hidden;position:relative;flex-shrink:0;border-bottom:1px solid #EBEBEB;">
+              <img src="screenshots/retrofit-ui.png" alt="Circular Renovation"
+                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;display:block;"
+                onerror="this.style.display='none'">
+              <div class="card-img-placeholder">
+                <iconify-icon icon="ph:monitor-light" width="28" style="color:#CCCCCC;"></iconify-icon>
+                <span id="c4-img-label" style="margin-top:6px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#BBBBBB;"></span>
+              </div>
+            </div>
+
+            <!-- Meta: tags + output + hint + CTA -->
+            <div style="flex:1;padding:12px 20px 12px;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;">
+
+              <!-- Tags -->
+              <div style="display:flex;flex-wrap:wrap;gap:5px;" id="c4-tags-wrap"></div>
+
+              <!-- Hint -->
+              <p class="foundation-hint" style="margin-top:0;padding-top:0;border-top:none;" id="c4-hint"></p>
+
+            </div>
+          </div>
+          <!-- Text col -->
+          <div style="flex:1;min-width:0;padding:36px 32px 36px 44px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;">
+            <div>
+              <div class="card-icon"><iconify-icon icon="ph:recycle-light" width="28" style="color:#fb923c;display:block;"></iconify-icon></div>
+              <p class="stage-tag" id="c4-stage"></p>
+              <h2 style="font-size:1.375rem;font-weight:300;letter-spacing:-0.02em;margin:6px 0 3px;" id="c4-name"></h2>
+              <p class="card-persona" id="c4-persona"></p>
+              <p style="font-size:0.875rem;color:#333;line-height:1.75;font-weight:300;margin-top:10px;" id="c4-value"></p>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c4-cap1-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c4-cap2-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c4-cap3-title"></p>
+              </div>
+            </div>
+            <div style="margin-top:10px;">
+              <a href="request-demo.html" class="btn-text-link" id="c4-cta"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─ Card: carbon ─ -->
+      <div class="module-card anchor-target" id="carbon" style="cursor:pointer;" onclick="window.location.href='intelligence-compliance.html'">
+        <div style="display:flex;flex-direction:row;align-items:stretch;min-height:380px;">
+          <!-- Text col -->
+          <div style="flex:1;min-width:0;padding:36px 32px 36px 44px;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;">
+            <div>
+              <div class="card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="28" height="28" style="display:block;color:#7e22ce;flex-shrink:0;">
+                  <path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8H152l56,56V216A8,8,0,0,1,200,224Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <polyline points="152 32 152 88 208 88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <polyline points="88 148 108 168 140 128" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <line x1="156" y1="148" x2="176" y2="148" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <polyline points="88 188 108 208 140 168" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                  <line x1="156" y1="188" x2="176" y2="188" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"/>
+                </svg></div>
+              <p class="stage-tag" id="c5-stage"></p>
+              <h2 style="font-size:1.375rem;font-weight:300;letter-spacing:-0.02em;margin:6px 0 3px;" id="c5-name"></h2>
+              <p class="card-persona" id="c5-persona"></p>
+              <p style="font-size:0.875rem;color:#333;line-height:1.75;font-weight:300;margin-top:10px;" id="c5-value"></p>
+            </div>
+            <div style="margin-top:16px;">
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c5-cap1-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c5-cap2-title"></p>
+              </div>
+              <div class="capability-row">
+                <p style="font-size:0.8rem;font-weight:700;color:#111;letter-spacing:-0.01em;margin-bottom:2px;" id="c5-cap3-title"></p>
+              </div>
+            </div>
+            <div style="margin-top:10px;">
+              <a href="request-demo.html" class="btn-text-link" id="c5-cta"></a>
+            </div>
+          </div>
+          <!-- Info col: screenshot top + meta bottom -->
+          <div style="width:44%;flex-shrink:0;display:flex;flex-direction:column;border-left:1px solid #EBEBEB;box-sizing:border-box;">
+
+            <!-- Screenshot -->
+            <div style="height:310px;background:#E0E0E0;overflow:hidden;position:relative;flex-shrink:0;border-bottom:1px solid #EBEBEB;">
+              <img src="screenshots/carbon-ui.png" alt="LCA Compliance"
+                style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top left;display:block;"
+                onerror="this.style.display='none'">
+              <div class="card-img-placeholder">
+                <iconify-icon icon="ph:monitor-light" width="28" style="color:#CCCCCC;"></iconify-icon>
+                <span id="c5-img-label" style="margin-top:6px;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#BBBBBB;"></span>
+              </div>
+            </div>
+
+            <!-- Meta: tags + output + hint + CTA -->
+            <div style="flex:1;padding:12px 20px 12px;display:flex;flex-direction:column;gap:10px;justify-content:flex-start;">
+
+              <!-- Tags -->
+              <div style="display:flex;flex-wrap:wrap;gap:5px;" id="c5-tags-wrap"></div>
+
+              <!-- Hint -->
+              <p class="foundation-hint" style="margin-top:0;padding-top:0;border-top:none;" id="c5-hint"></p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /cards container -->
+  </section>
+
+
+  <!-- ── 4. FLEXIBLE DEPLOYMENT BANNER ──────── -->
+  <div class="deploy-banner py-20 px-6 sm:px-12 md:px-20" style="position:relative;overflow:hidden;">
+
+    <!-- Reference line decorations (left + right, architectural feel) -->
+    <div style="position:absolute;top:0;bottom:0;left:12%;width:0.5px;background:rgba(0,0,0,0.06);pointer-events:none;"></div>
+    <div style="position:absolute;top:0;bottom:0;right:12%;width:0.5px;background:rgba(0,0,0,0.06);pointer-events:none;"></div>
+
+    <div class="max-w-[1200px] mx-auto" style="text-align:center;position:relative;z-index:1;">
+
+      <!-- Chips centered -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;justify-content:center;align-items:center;">
+        <span class="banner-chip">
+          <span class="banner-chip-dot" style="background:#22d3ee;"></span>
+          <span id="banner-chip-1"></span>
+        </span>
+        <span style="font-size:10px;color:#CCCCCC;padding:0 2px;">+</span>
+        <span class="banner-chip">
+          <span class="banner-chip-dot" style="background:#16a34a;"></span>
+          <span id="banner-chip-2"></span>
+        </span>
+        <span style="font-size:10px;color:#CCCCCC;padding:0 2px;">+</span>
+        <span class="banner-chip">
+          <span class="banner-chip-dot" style="background:#2563eb;"></span>
+          <span id="banner-chip-3"></span>
+        </span>
+        <span style="font-size:10px;color:#CCCCCC;padding:0 2px;">+</span>
+        <span class="banner-chip">
+          <span class="banner-chip-dot" style="background:#fb923c;"></span>
+          <span id="banner-chip-4"></span>
+        </span>
+        <span style="font-size:10px;color:#CCCCCC;padding:0 2px;">+</span>
+        <span class="banner-chip">
+          <span class="banner-chip-dot" style="background:#7e22ce;"></span>
+          <span id="banner-chip-5"></span>
+        </span>
+      </div>
+
+      <!-- Title centered -->
+      <h3 style="font-size:1.5rem;font-weight:300;letter-spacing:-0.02em;color:#111;line-height:1.3;margin:0 auto 14px;max-width:560px;" id="banner-title"></h3>
+
+      <!-- Desc centered -->
+      <p style="font-size:0.875rem;font-weight:300;color:#444;line-height:1.75;margin:0 auto;max-width:520px;" id="banner-desc"></p>
+
+    </div>
+  </div>
+
+  <!-- ── 5. HOW SYNERARCH WORKS ──────────────── -->
+  <section class="py-24 px-6 sm:px-12 md:px-20 bg-white">
+    <div class="max-w-[1200px] mx-auto">
+
+      <!-- Section header -->
+      <div class="mb-14">
+        <h2 class="text-3xl md:text-4xl font-light tracking-tight" id="how-title"></h2>
+        <p class="text-sm text-[#555] mt-3 font-light" id="how-sub"></p>
+      </div>
+
+      <!-- 2×2 Grid with hairline cross -->
+      <div style="position:relative;">
+
+        <!-- Horizontal hairline (full width) -->
+        <div style="position:absolute;top:50%;left:0;right:0;height:0.5px;background:rgba(0,0,0,0.1);pointer-events:none;z-index:1;"></div>
+
+        <!-- Vertical hairline (full height) -->
+        <div style="position:absolute;left:50%;top:0;bottom:0;width:0.5px;background:rgba(0,0,0,0.1);pointer-events:none;z-index:1;"></div>
+
+        <!-- Center anchor: hollow square -->
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border:1px solid rgba(0,0,0,0.22);background:#F7F7F7;z-index:2;"></div>
+
+        <!-- Grid cells -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;">
+
+          <!-- Cell 01: top-left -->
+          <div style="padding:40px 44px 48px 0;padding-right:48px;">
+            <span class="step-number" id="step1-num"></span>
+            <h3 style="font-size:1rem;font-weight:600;color:#111;letter-spacing:-0.01em;margin-bottom:10px;" id="step1-title"></h3>
+            <p style="font-size:0.875rem;color:#444;line-height:1.75;font-weight:300;" id="step1-desc"></p>
+          </div>
+
+          <!-- Cell 02: top-right -->
+          <div style="padding:40px 0 48px 48px;">
+            <span class="step-number" id="step2-num"></span>
+            <h3 style="font-size:1rem;font-weight:600;color:#111;letter-spacing:-0.01em;margin-bottom:10px;" id="step2-title"></h3>
+            <p style="font-size:0.875rem;color:#444;line-height:1.75;font-weight:300;" id="step2-desc"></p>
+          </div>
+
+          <!-- Cell 03: bottom-left -->
+          <div style="padding:48px 48px 40px 0;">
+            <span class="step-number" id="step3-num"></span>
+            <h3 style="font-size:1rem;font-weight:600;color:#111;letter-spacing:-0.01em;margin-bottom:10px;" id="step3-title"></h3>
+            <p style="font-size:0.875rem;color:#444;line-height:1.75;font-weight:300;" id="step3-desc"></p>
+          </div>
+
+          <!-- Cell 04: bottom-right -->
+          <div style="padding:48px 0 40px 48px;">
+            <span class="step-number" id="step4-num"></span>
+            <h3 style="font-size:1rem;font-weight:600;color:#111;letter-spacing:-0.01em;margin-bottom:10px;" id="step4-title"></h3>
+            <p style="font-size:0.875rem;color:#444;line-height:1.75;font-weight:300;" id="step4-desc"></p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- How works CTA -->
+      <div class="mt-14" style="display:flex;justify-content:flex-end;">
+        <a id="how-cta" href="data-bank.html" class="btn-text-link"></a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 6. TOTAL CTA ────────────────────────── -->
+  <section class="pt-16 pb-16 text-center px-6" style="background:#F5F5F5;">
+    <div class="max-w-3xl mx-auto flex flex-col items-center gap-10">
+      <h2 class="text-4xl md:text-5xl font-light tracking-tight" id="cta-title"></h2>
+      <a id="cta-btn" href="contact.html"
+        style="background:#111;color:#fff;padding:16px 48px;font-size:0.875rem;font-weight:500;letter-spacing:0.02em;text-decoration:none;display:inline-block;transition:background 0.2s;"
+        onmouseover="this.style.background='#333'"
+        onmouseout="this.style.background='#111'"></a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════════
+     FOOTER  (identical to index.html)
+═══════════════════════════════════════════ -->
+<footer class="bg-white border-t border-[#E5E5E5] py-20 px-6 sm:px-12 md:px-20 text-gray-500 text-sm font-light">
+  <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
+    <!-- Col 1: Logo & Social -->
+    <div class="space-y-6">
+      <a href="index.html">
+        <img src="logo-rect.png" alt="SynerArch" id="sa-logo-footer" style="height:110px;width:auto;display:block;">
+      </a>
+      <div class="flex items-center gap-4">
+        <a id="footer-social-x" href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="X (Twitter)">
+          <iconify-icon icon="ph:x-logo-light" width="18"></iconify-icon>
+        </a>
+        <a id="footer-social-linkedin" href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="LinkedIn">
+          <iconify-icon icon="ph:linkedin-logo-light" width="18"></iconify-icon>
+        </a>
+      </div>
+    </div>
+    <!-- Col 2: Use Cases -->
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-use">Use Cases</h5>
+      <ul class="space-y-3">
+        <li><a class="hover:text-black transition-colors" data-i18n="sol-mat-title"   href="solution-materials.html">Low-carbon material</a></li>
+        <li><a class="hover:text-black transition-colors" data-i18n="sol-const-title" href="solution-construction.html">Construction Decarbonization</a></li>
+        <li><a class="hover:text-black transition-colors" data-i18n="sol-energy-title" href="solution-energy.html">Energy Optimization</a></li>
+        <li><a class="hover:text-black transition-colors" data-i18n="sol-retrofit-title" href="solution-retrofit.html">Circular Renovation &amp; Asset Optimization</a></li>
+        <li><a class="hover:text-black transition-colors" data-i18n="sol-carbon-title" href="solution-compliance.html">LCA Compliance</a></li>
+      </ul>
+    </div>
+    <!-- Col 3: Company -->
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-comp">Company</h5>
+      <ul class="space-y-3">
+        <li><a class="hover:text-black transition-colors" data-i18n="nav-about"   href="about.html">About</a></li>
+        <li><a class="hover:text-black transition-colors" data-i18n="nav-contact" href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <!-- Col 4: Contact placeholder -->
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="nav-contact">Contact</h5>
+      <div class="text-[10px] text-gray-500 leading-relaxed font-mono">
+        <span class="block font-medium text-black text-xs" id="sa-contact-name"></span>
+        <span class="block text-xs mt-1"><a id="sa-contact-email" href="#" class="hover:text-black transition-colors"></a></span>
+      </div>
+    </div>
+  </div>
+  <!-- Bottom bar -->
+  <div class="max-w-[1200px] mx-auto mt-20 pt-8 border-t border-gray-100 flex justify-between items-center text-[10px] uppercase tracking-widest text-gray-500">
+    <div><span data-ph="copyright">© 2026 SynerArch. All rights reserved.</span></div>
+    <div class="flex gap-6 italic">
+      <a class="hover:text-black" data-i18n="footer-priv"  href="privacy.html">Privacy Policy</a>
+      <span class="opacity-20">|</span>
+      <a class="hover:text-black" data-i18n="footer-terms" href="terms.html">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ -->
+<script src="global.js"></script>
+<script src="content.js"></script>
+
+<script>
+/* ══════════════════════════════════════════
+   PAGE CONTENT CONFIG
+   All text is maintained here.
+   Images: replace IMG_PLACEHOLDER values with real paths.
+   Links:  replace LINK_* values with real URLs.
+   ══════════════════════════════════════════ */
+window.INTEL = {
+
+  /* ── Navigation labels (rendered by global.js data-i18n) ── */
+  /* Reusing existing global keys — no override needed */
+
+  en: {
+
+    /* Hero */
+    "hero-eyebrow":   "Intelligence",
+    "hero-title":     "Five capabilities. Intelligent coverage across the building lifecycle.",
+    "hero-sub":       "From construction sites to operational performance, from material sourcing to carbon compliance — SynerArch transforms fragmented building data into structured, computable, and continuously actionable intelligence.",
+
+    /* Anchor tabs */
+    "tab-materials":    "Materials",
+    "tab-construction": "Construction",
+    "tab-energy":       "Operations",
+    "tab-retrofit":     "Urban Mining",
+    "tab-carbon":       "Compliance",
+
+    /* Shared label */
+    "output-label":   "Core Output",
+
+    /* ── Card 01 ── */
+    "c1-stage":       "Materials",
+    "c1-name":        "Low-carbon Materials & Circular Supply",
+    "c1-persona":     "For architects, procurement teams & project developers",
+    "c1-hint":        "Connects to a shared data foundation — material data flows into LCA and compliance workflows.",
+    "c1-value":       "Access EPD-backed material datasets and structured sourcing workflows to identify, evaluate, and select low-carbon materials and reuse inventory — reducing embodied carbon by 10–25% while improving supply chain transparency and procurement efficiency.",
+    "c1-cap1-title":  "Low-carbon Material Promotion",
+    "c1-cap1-desc":   "A high-visibility material catalog that accelerates low-carbon material adoption at the design stage, supporting supply chain matching and manufacturer connections.",
+    "c1-cap2-title":  "Low-carbon Data Library",
+    "c1-cap2-desc":   "Structured access to EPD records, supplier profiles, and product documentation — enabling carbon intensity evaluation across material categories and sourcing decisions.",
+    "c1-cap3-title":  "Construction Waste Reuse",
+    "c1-cap3-desc":   "Connect recovered materials to circular supply channels, supporting cradle-to-cradle strategies that close material loops across projects and portfolios.",
+    "c1-output":      "Structured material comparison reports, curated candidate collections, and procurement-ready datasets with full EPD documentation.",
+    "c1-tags":        ["EPD", "Embodied Carbon", "LCA", "Reuse Inventory", "Supply Chain"],
+    "c1-cta":         "Explore Low-carbon Materials →",
+
+    /* ── Card 02: Construction Decarbonization ── */
+    "c2-stage":       "Construction",
+    "c2-name":        "Construction Decarbonization",
+    "c2-persona":     "For contractors & sustainability managers",
+    "c2-hint":        "Site-captured data feeds directly into carbon accounting and MRV reporting.",
+    "c2-value":       "Capture, structure, and report on-site energy consumption and carbon emission data through mobile workflows, IoT integration, and OCR-powered data entry — improving data accuracy by 30–50% and reducing reporting workload significantly.",
+    "c2-cap1-title":  "On-site Emission Tracking",
+    "c2-cap1-desc":   "Systematically record and manage construction site emissions in alignment with ISO 14064, PAS 2080, and other leading standards — ensuring full traceability and regulatory alignment across reporting cycles.",
+    "c2-cap2-title":  "MRV-ready Data Collection",
+    "c2-cap2-desc":   "Structured data capture via IoT devices, OCR recognition, and mobile-first workflows — producing consistent, audit-ready datasets that feed directly into downstream compliance processes.",
+    "c2-cap3-title":  "Equipment Energy Monitoring",
+    "c2-cap3-desc":   "Track fuel consumption and energy usage across construction equipment, evaluate clean energy alternatives, and optimize scheduling to reduce operational emissions at the site level.",
+    "c2-output":      "Audit-ready emission records and energy consumption reports, structured datasets aligned with MRV frameworks, ready for downstream compliance workflows.",
+    "c2-tags":        ["IoT", "OCR", "MRV", "Scope 1–3", "Emission Factors"],
+    "c2-cta":         "Request a Construction Demo →",
+
+    /* ── Card 03: Energy Optimization ── */
+    "c3-stage":       "Operations",
+    "c3-name":        "Energy Optimization",
+    "c3-persona":     "For building operators & asset managers",
+    "c3-hint":        "Operational energy data integrates with LCA and MRV modules when needed.",
+    "c3-value":       "Drive continuous improvement in building energy performance through persistent monitoring, anomaly detection, and AI-powered proactive optimization — lowering energy consumption and operational costs while enabling smarter asset management decisions.",
+    "c3-cap1-title":  "Energy Efficiency",
+    "c3-cap1-desc":   "Continuously track energy consumption patterns, surface inefficiencies and anomalies in real time, and initiate proactive optimization to achieve systematic reductions across building systems.",
+    "c3-cap2-title":  "Operational Cost Reduction",
+    "c3-cap2-desc":   "Develop targeted retrofit and equipment management strategies grounded in operational data — translating energy insights into concrete, actionable cost reduction measures.",
+    "c3-cap3-title":  "Intelligent Decision Support",
+    "c3-cap3-desc":   "Leverage data-driven insights and continuously evolving AI models to shift building operations from reactive maintenance to predictive, intelligence-led management.",
+    "c3-output":      "Real-time operational monitoring dashboard, anomaly alerts, optimization recommendation reports, and energy performance trend analysis.",
+    "c3-tags":        ["BMS", "IoT", "BIM", "AI Analytics"],
+    "c3-cta":         "Request an Energy Demo →",
+
+    /* ── Card 04: Circular Renovation ── */
+    "c4-stage":       "Urban Mining",
+    "c4-name":        "Circular Renovation & Asset Optimization",
+    "c4-persona":     "For asset owners, developers & retrofit planners",
+    "c4-hint":        "Asset and material data connects to lifecycle carbon and circular supply workflows.",
+    "c4-value":       "Plan and execute circular renovation strategies using LCA scores, circularity indices, and asset recovery data — maximizing reuse rates and advancing regional material circularity across building portfolios.",
+    "c4-cap1-title":  "Sustainability Strategy Development",
+    "c4-cap1-desc":   "Enhance transparency across LCA scores, circularity indices, and resource consumption metrics — providing the structured data foundation needed to make informed renovation decisions.",
+    "c4-cap2-title":  "Circular Retrofit & Lifecycle Management",
+    "c4-cap2-desc":   "Embed circular economy principles into renovation workflows, maximize asset reuse rates, and position retrofit actions within a full building lifecycle value management framework.",
+    "c4-cap3-title":  "Deconstruction Asset Inventory",
+    "c4-cap3-desc":   "Enable material recovery operators to systematically catalog and manage deconstructed building assets — accelerating the flow of recovered materials back into regional circular supply networks.",
+    "c4-output":      "Asset recovery plans, material classification reports, and structured decision datasets for renovation project execution.",
+    "c4-tags":        ["BIM", "Asset Data", "Material Passport", "Circular Economy", "LCA"],
+    "c4-cta":         "Request a Renovation Demo →",
+
+    /* ── Card 05: LCA Compliance ── */
+    "c5-stage":       "Compliance",
+    "c5-name":        "LCA Compliance",
+    "c5-persona":     "For sustainability teams, consultants & compliance officers",
+    "c5-hint":        "Aggregates data across all lifecycle stages into a single, auditable carbon record.",
+    "c5-value":       "Aggregate, calculate, verify, and report full lifecycle carbon emissions using LCA models and MRV workflows aligned with ISO 14040/44, ISO 14064, and ESRS — supporting green financing and the long-term appreciation of building assets.",
+    "c5-cap1-title":  "Regulatory & Standards Alignment",
+    "c5-cap1-desc":   "Maintain compliance across ISO 14040/44, ISO 14064, ESRS, TCFD, LEED, BREEAM, ZEB, J-Credit, and Carbon Credit frameworks — ensuring emission data meets multi-jurisdictional reporting requirements with consistent, audit-ready outputs.",
+    "c5-cap2-title":  "Green Financing Acceleration",
+    "c5-cap2-desc":   "Equip financial institutions and project stakeholders with transparent, data-grounded carbon evidence — streamlining green bond qualification, ESG disclosure, and sustainability-linked financing decisions.",
+    "c5-cap3-title":  "Asset Value Maximization",
+    "c5-cap3-desc":   "Convert full lifecycle building data into computable, auditable carbon assets — creating a traceable and continuously appreciating value base for portfolio-level investment management.",
+    "c5-output":      "Compliance-ready LCA reports, structured emission inventories, and carbon performance dashboards for disclosure and investment decision-making.",
+    "c5-tags":        ["ISO 14040/44", "GHG Protocol", "ESRS", "Scope 1–3", "MRV", "LCA"],
+    "c5-cta":         "Request an LCA Demo →",
+
+    /* ── Deployment Banner ── */
+    "banner-title":   "Start with one capability. Scale as your portfolio grows.",
+    "banner-desc":    "Each capability operates independently and connects to a shared data foundation. Deploy what your current project demands — and expand coverage as your data strategy matures.",
+    "banner-chip-1":  "Materials",
+    "banner-chip-2":  "Construction",
+    "banner-chip-3":  "Operations",
+    "banner-chip-4":  "Urban Mining",
+    "banner-chip-5":  "Compliance",
+
+    /* ── How SynerArch Works ── */
+    "how-title":      "How SynerArch works",
+    "how-sub":        "A shared data foundation across every capability",
+    "step1-num":      "01",
+    "step1-title":    "Unify",
+    "step1-desc":     "Connect BMS, IoT, BIM, on-site, and material data into a standardized building data model.",
+    "step2-num":      "02",
+    "step2-title":    "Structure",
+    "step2-desc":     "Apply validation rules, classification logic, and LCA schemas to make building data computable and audit-ready.",
+    "step3-num":      "03",
+    "step3-title":    "Activate",
+    "step3-desc":     "Draw on the unified data foundation to run the analyses and workflows your buildings require — across energy performance, carbon accounting, material evaluation, and compliance reporting.",
+    "step4-num":      "04",
+    "step4-title":    "Improve",
+    "step4-desc":     "Feed outputs back into the data model continuously — closing data gaps, refining analytical accuracy, and building lifecycle intelligence that compounds over time.",
+    "how-cta":        "Assess your building data →",
+
+    /* ── Total CTA ── */
+    "cta-title":      "See SynerArch in action",
+    "cta-btn":        "Contact Us"
+  },
+
+  jp: {
+
+    /* Hero */
+    "hero-eyebrow":   "インテリジェンス",
+    "hero-title":     "5つの機能領域。建物ライフサイクル全体をカバーするインテリジェンス。",
+    "hero-sub":       "施工現場から運用管理、材料調達から炭素排出コンプライアンスまで——SynerArchは建物各フェーズの分散データを、算定可能・監査可能・継続的に活用できる意思決定基盤へと構造化します。",
+
+    /* Anchor tabs */
+    "tab-materials":    "材料",
+    "tab-construction": "施工",
+    "tab-energy":       "運用",
+    "tab-retrofit":     "アーバンマイニング",
+    "tab-carbon":       "コンプライアンス",
+
+    /* Shared label */
+    "output-label":   "コアアウトプット",
+
+    /* ── Card 01 ── */
+    "c1-stage":       "材料",
+    "c1-name":        "低炭素材料・循環供給",
+    "c1-persona":     "設計者・調達チーム・デベロッパー向け",
+    "c1-hint":        "共有データ基盤に接続 — 材料データはLCAおよびコンプライアンスワークフローに直接連携します。",
+    "c1-value":       "EPDデータと構造化された調達ワークフローを活用し、低炭素建材と再利用在庫を特定・評価・選定。内包炭素を10–25%削減しながら、サプライチェーンの透明性と調達効率を向上させます。",
+    "c1-cap1-title":  "低炭素建材プロモーション",
+    "c1-cap1-desc":   "設計段階における低炭素建材の採用を加速する高視認性カタログ。サプライチェーンマッチングとメーカー連携を支援します。",
+    "c1-cap2-title":  "低炭素データライブラリ",
+    "c1-cap2-desc":   "EPD記録・サプライヤー情報・製品ドキュメントへの構造化アクセス。材料カテゴリ横断での炭素強度評価と調達判断を支援します。",
+    "c1-cap3-title":  "建築廃材の再利用",
+    "c1-cap3-desc":   "回収材料をサーキュラー供給チャネルに接続し、プロジェクト横断でのクレードル・トゥ・クレードル戦略を支援します。",
+    "c1-output":      "構造化された材料比較レポート、候補材料のキュレーションリスト、EPD文書付きの調達対応データセット。",
+    "c1-tags":        ["EPD", "内包炭素", "LCA", "再利用在庫", "サプライチェーン"],
+    "c1-cta":         "低炭素材料を見る →",
+
+    /* ── Card 02 ── */
+    "c2-stage":       "施工",
+    "c2-name":        "施工脱炭素管理",
+    "c2-persona":     "ゼネコン・サステナビリティ担当者向け",
+    "c2-hint":        "現場取得データは炭素算定およびMRV報告に直接連携します。",
+    "c2-value":       "モバイルワークフロー・IoT統合・OCRデータ入力により、現場のエネルギー消費と炭素排出データを取得・構造化・報告。データ精度を30–50%向上し、報告工数を大幅に削減します。",
+    "c2-cap1-title":  "現場排出量トラッキング",
+    "c2-cap1-desc":   "ISO 14064・PAS 2080などの主要基準に準拠し、施工現場の排出量を体系的に記録・管理。報告サイクル全体でのトレーサビリティと規制対応を確保します。",
+    "c2-cap2-title":  "MRV対応データ収集",
+    "c2-cap2-desc":   "IoTデバイス・OCR認識・モバイルワークフローによる構造化データ取得。監査対応データセットを生成し、下流コンプライアンスプロセスへ直接連携します。",
+    "c2-cap3-title":  "設備エネルギー監視",
+    "c2-cap3-desc":   "施工設備の燃料消費とエネルギー使用量を追跡。クリーンエネルギー代替案の評価と稼働スケジュールの最適化により、現場レベルの運用排出を削減します。",
+    "c2-output":      "監査対応の排出記録とエネルギー消費レポート、MRVフレームワーク準拠の構造化データセット。後続コンプライアンスワークフローに対応済み。",
+    "c2-tags":        ["IoT", "OCR", "MRV", "Scope 1–3", "排出係数"],
+    "c2-cta":         "施工脱炭素のデモを申請 →",
+
+    /* ── Card 03 ── */
+    "c3-stage":       "運用",
+    "c3-name":        "エネルギー最適化",
+    "c3-persona":     "ビル管理者・アセットマネージャー向け",
+    "c3-hint":        "運用エネルギーデータはLCAおよびMRVモジュールと必要に応じて連携します。",
+    "c3-value":       "継続的な監視・異常検知・AIによるプロアクティブな最適化を通じて、建物エネルギー性能を継続改善。運用コストを削減しながら、より賢明な資産管理の意思決定を実現します。",
+    "c3-cap1-title":  "エネルギー効率化",
+    "c3-cap1-desc":   "エネルギー消費パターンを継続追跡し、非効率と異常をリアルタイムで検出。建物システム全体での体系的な削減に向けたプロアクティブな最適化を起動します。",
+    "c3-cap2-title":  "運用コスト削減",
+    "c3-cap2-desc":   "運用データに基づく改修・設備管理戦略を策定。エネルギーインサイトを具体的かつ実行可能なコスト削減施策へと転換します。",
+    "c3-cap3-title":  "インテリジェントな意思決定支援",
+    "c3-cap3-desc":   "データ駆動型インサイトと継続進化するAIモデルを活用し、建物運用を事後対応から予測型・インテリジェンス主導の管理へと移行します。",
+    "c3-output":      "リアルタイム運用監視ダッシュボード、異常アラート、最適化提案レポート、エネルギー性能トレンド分析。",
+    "c3-tags":        ["BMS", "IoT", "BIM", "AI分析"],
+    "c3-cta":         "エネルギー最適化のデモを申請 →",
+
+    /* ── Card 04 ── */
+    "c4-stage":       "アーバンマイニング",
+    "c4-name":        "サーキュラー改修・資産最適化",
+    "c4-persona":     "アセットオーナー・デベロッパー・改修計画担当者向け",
+    "c4-hint":        "資産・材料データはライフサイクルカーボンおよび循環供給ワークフローと接続します。",
+    "c4-value":       "LCAスコア・循環性指数・資産回収データを活用してサーキュラー改修戦略を計画・実行。建物ポートフォリオ全体での再利用率最大化と地域的なマテリアル循環を推進します。",
+    "c4-cap1-title":  "サステナビリティ戦略の策定",
+    "c4-cap1-desc":   "LCAスコア・循環性指数・資源消費指標の透明性を向上。根拠ある改修意思決定に必要な構造化データ基盤を提供します。",
+    "c4-cap2-title":  "循環型改修とライフサイクル管理",
+    "c4-cap2-desc":   "サーキュラーエコノミーの原則を改修ワークフローに組み込み、資産再利用率を最大化。改修施策を建物全ライフサイクルの価値管理体系に位置づけます。",
+    "c4-cap3-title":  "解体資産インベントリ",
+    "c4-cap3-desc":   "材料回収事業者が解体建物資産を体系的にカタログ化・管理できるよう支援。回収材料の地域循環供給ネットワークへの還流を加速します。",
+    "c4-output":      "資産回収計画、材料分類レポート、改修プロジェクト実行に向けた構造化意思決定データセット。",
+    "c4-tags":        ["BIM", "資産データ", "マテリアルパスポート", "サーキュラーエコノミー", "LCA"],
+    "c4-cta":         "サーキュラー改修のデモを申請 →",
+
+    /* ── Card 05 ── */
+    "c5-stage":       "コンプライアンス",
+    "c5-name":        "LCAコンプライアンス",
+    "c5-persona":     "サステナビリティチーム・コンサルタント・コンプライアンス担当者向け",
+    "c5-hint":        "全ライフサイクルステージのデータを統合し、単一の監査対応カーボン記録を生成します。",
+    "c5-value":       "ISO 14040/44・ISO 14064・ESRSに準拠したLCAモデルとMRVワークフローにより、全ライフサイクルの炭素排出を統合・算定・検証・報告。グリーンファイナンスと建物資産の長期的な価値向上を支援します。",
+    "c5-cap1-title":  "規制・基準への対応",
+    "c5-cap1-desc":   "ISO 14040/44・ISO 14064・ESRS・TCFD・LEED・BREEAM・ZEB・J-Credit・Carbon Creditへの準拠を維持。排出データが複数地域の報告要件を満たす、一貫した監査対応アウトプットを確保します。",
+    "c5-cap2-title":  "グリーンファイナンスの加速",
+    "c5-cap2-desc":   "金融機関とプロジェクト関係者に透明かつデータに基づく炭素エビデンスを提供。グリーンボンド審査・ESG開示・サステナビリティ連動型融資の意思決定を効率化します。",
+    "c5-cap3-title":  "資産価値の最大化",
+    "c5-cap3-desc":   "建物の全ライフサイクルデータを算定可能・監査可能な炭素資産へと転換。ポートフォリオレベルの投資管理に向けた、追跡可能で継続的に価値を高める資産基盤を構築します。",
+    "c5-output":      "準拠対応LCAレポート、構造化排出インベントリ、開示・投資意思決定向けの炭素性能ダッシュボード。",
+    "c5-tags":        ["ISO 14040/44", "GHGプロトコル", "ESRS", "Scope 1–3", "MRV", "LCA"],
+    "c5-cta":         "LCAコンプライアンスのデモを申請 →",
+
+    /* ── Deployment Banner ── */
+    "banner-title":   "1つの機能領域から始め、ポートフォリオの成長とともに拡張する。",
+    "banner-desc":    "各機能領域は独立して稼働し、共有データ基盤に接続されます。現在のプロジェクトに必要なものから導入し、データ戦略の成熟に合わせてカバレッジを拡大できます。",
+    "banner-chip-1":  "材料",
+    "banner-chip-2":  "施工",
+    "banner-chip-3":  "運用",
+    "banner-chip-4":  "アーバンマイニング",
+    "banner-chip-5":  "コンプライアンス",
+
+    /* ── How SynerArch Works ── */
+    "how-title":      "SynerArchの仕組み",
+    "how-sub":        "すべての機能領域に共通するデータ基盤",
+    "step1-num":      "01",
+    "step1-title":    "統合",
+    "step1-desc":     "BMS・IoT・BIM・現場・材料データを標準化された建物データモデルに接続します。",
+    "step2-num":      "02",
+    "step2-title":    "構造化",
+    "step2-desc":     "検証ルール・分類ロジック・LCAスキーマを適用し、建物データを算定可能・監査対応状態へと変換します。",
+    "step3-num":      "03",
+    "step3-title":    "活用",
+    "step3-desc":     "統合データ基盤を活用し、建物が必要とする分析とワークフローを実行。エネルギー性能・炭素算定・材料評価・コンプライアンス報告にまたがって機能します。",
+    "step4-num":      "04",
+    "step4-title":    "改善",
+    "step4-desc":     "各機能の出力結果をデータモデルへ継続的にフィードバック。データギャップを埋め、分析精度を高め、時間とともに蓄積されるライフサイクルインテリジェンスを構築します。",
+    "how-cta":        "建物データを評価する →",
+
+    /* ── Total CTA ── */
+    "cta-title":      "SynerArchの実際の動作を見る",
+    "cta-btn":        "お問い合わせ"
+  }
+};
+
+/* ══════════════════════════════════════════
+   RENDER ENGINE
+   Reads window.INTEL[lang] and populates DOM.
+   ══════════════════════════════════════════ */
+function renderIntelPage(lang) {
+  var c = window.INTEL[lang] || window.INTEL['en'];
+
+  /* Helper: set text content safely */
+  function setText(id, val) {
+    var el = document.getElementById(id);
+    if (el && val !== undefined) el.textContent = val;
+  }
+
+  /* Hero */
+  setText('hero-eyebrow', c['hero-eyebrow']);
+  setText('hero-title',   c['hero-title']);
+  setText('hero-sub',     c['hero-sub']);
+
+  /* Anchor tabs */
+  setText('tab-materials',    c['tab-materials']);
+  setText('tab-construction', c['tab-construction']);
+  setText('tab-energy',       c['tab-energy']);
+  setText('tab-retrofit',     c['tab-retrofit']);
+  setText('tab-carbon',       c['tab-carbon']);
+
+  /* Cards */
+  var cards = ['c1','c2','c3','c4','c5'];
+  cards.forEach(function(cx) {
+    setText(cx+'-stage',      c[cx+'-stage']);
+    setText(cx+'-name',       c[cx+'-name']);
+    setText(cx+'-value',      c[cx+'-value']);
+    setText(cx+'-cap1-title', c[cx+'-cap1-title']);
+    setText(cx+'-cap2-title', c[cx+'-cap2-title']);
+    setText(cx+'-cap3-title', c[cx+'-cap3-title']);
+    setText(cx+'-cta',        c[cx+'-cta']);
+
+    /* Output label */
+    var labelEl = document.getElementById(cx+'-output-label');
+    if (labelEl) labelEl.textContent = c['output-label'] || 'Core Output';
+
+    /* Tags */
+    var tagsWrap = document.getElementById(cx+'-tags-wrap');
+    if (tagsWrap && Array.isArray(c[cx+'-tags'])) {
+      tagsWrap.innerHTML = '';
+      c[cx+'-tags'].forEach(function(tag) {
+        var span = document.createElement('span');
+        span.className = 'data-tag';
+        span.textContent = tag;
+        tagsWrap.appendChild(span);
+      });
+    }
+  });
+
+  /* Banner */
+  setText('banner-title',  c['banner-title']);
+  setText('banner-desc',   c['banner-desc']);
+  for (var i = 1; i <= 5; i++) {
+    setText('banner-chip-' + i, c['banner-chip-' + i] || '');
+  }
+
+    /* Card persona + hint */
+    ['c1','c2','c3','c4','c5'].forEach(function(cx) {
+      setText(cx+'-persona', c[cx+'-persona'] || '');
+      setText(cx+'-hint',    c[cx+'-hint']    || '');
+    });
+
+    /* Card img placeholder labels */
+    var imgLabels = {
+      'c1-img-label': c['c1-name'],
+      'c2-img-label': c['c2-name'],
+      'c3-img-label': c['c3-name'],
+      'c4-img-label': c['c4-name'],
+      'c5-img-label': c['c5-name']
+    };
+    Object.keys(imgLabels).forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) el.textContent = imgLabels[id] || '';
+    });
+
+  /* How it works */
+  setText('how-title',   c['how-title']);
+  setText('how-sub',     c['how-sub']);
+  setText('step1-num',   c['step1-num']);
+  setText('step1-title', c['step1-title']);
+  setText('step1-desc',  c['step1-desc']);
+  setText('step2-num',   c['step2-num']);
+  setText('step2-title', c['step2-title']);
+  setText('step2-desc',  c['step2-desc']);
+  setText('step3-num',   c['step3-num']);
+  setText('step3-title', c['step3-title']);
+  setText('step3-desc',  c['step3-desc']);
+  setText('step4-num',   c['step4-num']);
+  setText('step4-title', c['step4-title']);
+  setText('step4-desc',  c['step4-desc']);
+  setText('how-cta',     c['how-cta']);
+
+  /* Total CTA */
+  setText('cta-title', c['cta-title']);
+  setText('cta-btn',   c['cta-btn']);
+}
+
+/* ── Background SVG label language switch ── */
+function updateBgLabels(lang) {
+  var labels = {
+    en: ['MATERIALS','CONSTRUCTION','OPERATIONS','RENOVATION','COMPLIANCE'],
+    jp: ['材料','施工','運用','改修','コンプライアンス']
+  };
+  var set = labels[lang] || labels['en'];
+  for (var i = 1; i <= 5; i++) {
+    var el = document.getElementById('bg-label-' + i);
+    if (el) el.textContent = set[i - 1];
+  }
+}
+/* Wrap renderIntelPage to also refresh bg labels */
+var _origRender = renderIntelPage;
+renderIntelPage = function(lang) {
+  _origRender(lang);
+  updateBgLabels(lang);
+};
+
+/* ══════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* Language init via global.js */
+  window.SA.pageContent = { en: {}, jp: {} }; /* shared keys only needed for footer data-i18n */
+  var lang = (window.SA && window.SA.currentLanguage) ? window.SA.currentLanguage : 'en';
+  renderIntelPage(lang);
+
+  /* Hook into global language switcher so switching re-renders this page */
+  var origSwitch = window.SA.switchLanguage;
+  window.SA.switchLanguage = function(newLang) {
+    if (origSwitch) origSwitch.call(window.SA, newLang);
+    renderIntelPage(newLang);
+  };
+
+
+
+
+  window.addEventListener('scroll', function () {
+    var nav = document.getElementById('main-nav');
+    if (!nav) return;
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+  var nav = document.getElementById('main-nav');
+  if (nav && window.scrollY > 50) nav.classList.add('scrolled');
+
+  /* ── Hamburger menu ── */
+  (function () {
+    var btn  = document.getElementById('sa-hamburger-btn');
+    var menu = document.getElementById('sa-nav-dropdown');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    });
+    document.addEventListener('click', function () { menu.style.display = 'none'; });
+    menu.addEventListener('click', function (e) { e.stopPropagation(); });
+  }());
+
+  /* ── Social links config ── */
+  var SOCIAL_LINKS = { x: "", linkedin: "" };
+  (function () {
+    var xEl  = document.getElementById('footer-social-x');
+    var liEl = document.getElementById('footer-social-linkedin');
+    if (xEl  && SOCIAL_LINKS.x)        xEl.href  = SOCIAL_LINKS.x;
+    if (liEl && SOCIAL_LINKS.linkedin) liEl.href = SOCIAL_LINKS.linkedin;
+  }());
+
+  /* ── Anchor nav: sticky tab highlight + smooth scroll ── */
+  (function () {
+    var tabs        = document.querySelectorAll('.anchor-tab');
+    var sections    = ['materials','construction','energy','retrofit','carbon'];
+    var NAV_H       = 64;
+    var ANCHOR_H    = 45;
+    var OFFSET      = NAV_H + ANCHOR_H + 8;
+
+    /* Click → smooth scroll */
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var targetId = tab.getAttribute('data-anchor');
+        var targetEl = document.getElementById(targetId);
+        if (!targetEl) return;
+        var top = targetEl.getBoundingClientRect().top + window.scrollY - OFFSET;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+
+    /* Scroll → active tab highlight only, no scrollIntoView interference */
+    function onScroll() {
+      var scrollY = window.scrollY + OFFSET + 20;
+      var current = sections[0];
+      sections.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top + window.scrollY <= scrollY) {
+          current = id;
+        }
+      });
+      tabs.forEach(function (tab) {
+        tab.classList.toggle('active', tab.getAttribute('data-anchor') === current);
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }());
+
+});
+</script>
+</body>
+</html>

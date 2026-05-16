@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About | SynerArch</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --nav-bg-scroll: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            background-color: #FFFFFF;
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Japanese: Kozuka Gothic (system) with Noto Sans JP web fallback */
+        html[lang="jp"] body, html[lang="jp"] * {
+            font-family: 'Kozuka Gothic Pro', 'Kozuka Gothic', 'A-OTF Kozuka Gothic Pro', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+        }
+
+        /* Navigation Style */
+        nav {
+            height: 72px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        nav.scrolled {
+            background-color: var(--nav-bg-scroll);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .lang-switch span {
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .lang-switch .active {
+            color: #000000 !important;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F5F5F5; }
+        ::-webkit-scrollbar-thumb { background: #CCCCCC; }
+        ::-webkit-scrollbar-thumb:hover { background: #AAAAAA; }
+
+        .founder-card {
+            background: #F7F7F7;
+            border: 1px solid #E5E5E5;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        /* ── Round 6 Polish ────────────────────────────────────────── */
+
+        /* Typography refinements */
+        h1, h2, h3, h4, h5 {
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+        }
+        p, li {
+            line-height: 1.75;
+        }
+
+        /* Nav polish */
+        nav {
+            border-bottom: 1px solid transparent;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        nav.scrolled {
+            box-shadow: 0 1px 0 #E5E5E5, 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        /* Card depth system */
+        .agent-card {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .agent-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.06);
+        }
+        .solution-card {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+        }
+        .solution-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+        .card {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            transition: box-shadow 0.25s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        }
+
+        /* Button polish */
+        a[href], button {
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Primary black button */
+        .btn-primary {
+            background: #000;
+            color: #fff;
+            padding: 12px 32px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Outline button */
+        .btn-outline {
+            border: 1px solid #D1D1D1;
+            color: #000;
+            padding: 12px 32px;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            display: inline-block;
+        }
+        .btn-outline:hover {
+            border-color: #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Link micro-interactions */
+        a {
+            transition: opacity 0.15s ease;
+        }
+
+        /* Flow tooltip polish */
+        .flow-tooltip {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 6px;
+        }
+        .flow-node:hover .flow-tooltip {
+            bottom: 115%;
+        }
+
+        /* Inputs polish */
+        input, textarea, select {
+            -webkit-font-smoothing: antialiased;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #000 !important;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.06);
+        }
+
+
+        /* Founders card */
+        .founder-card {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        /* Lang switch polish */
+        .lang-switch span {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+        .lang-switch span:hover {
+            color: #000 !important;
+        }
+        .lang-switch .active {
+            color: #000 !important;
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* Fade-in timing refinement */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Arch / platform diagram boxes */
+        .arch-box {
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .arch-box:hover {
+            border-color: #BBBBBB;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Agent input wrap focus state */
+        #agent-input-wrap {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        #agent-input-wrap:focus-within {
+            border-color: #555;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+        }
+
+        /* Scrollbar refinement */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D8D8D8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #AAAAAA; }
+
+        /* ── End Round 6 ─────────────────────────────────────────── */
+
+        /* ── Round 7 Diagram Visibility ────────────────────────────── */
+
+        /* Lifecycle flow: connecting line */
+        .absolute.h-\[1px\] {
+            background-color: #BBBBBB !important;
+            height: 2px !important;
+        }
+
+        /* Lifecycle flow nodes: stronger border + clearer label */
+        .flow-node {
+            border: 1.5px solid #AAAAAA !important;
+            font-size: 0.6875rem;
+        }
+        .flow-node:hover {
+            border-color: #000 !important;
+            background: #F0F0F0 !important;
+        }
+        .flow-node span {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+        }
+
+        /* Arch diagram: top row boxes */
+        .w-\[160px\].py-3.border {
+            border: 1.5px solid #AAAAAA !important;
+            color: #333 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+        }
+        .w-\[160px\].py-3.border:hover {
+            border-color: #000 !important;
+            background: #F0F0F0 !important;
+        }
+
+        /* Arch diagram: vertical connector lines (index) */
+        .h-10.w-\[1px\] {
+            background-color: #999 !important;
+            width: 2px !important;
+        }
+
+        /* Arch diagram: output boxes (index) */
+        .p-6.border.border-gray-200.text-left {
+            border: 1.5px solid #CCCCCC !important;
+        }
+        .p-6.border.border-gray-200.text-left:hover {
+            border-color: #666 !important;
+        }
+        .p-6.border.border-gray-200.text-left span {
+            color: #222 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+        }
+
+        /* AI Core box label */
+        .absolute.-top-3 {
+            letter-spacing: 0.15em;
+            font-size: 0.625rem;
+        }
+
+        /* Step number circles (solution pages: energy, construction etc.) */
+        .w-12.h-12.rounded-full {
+            border: 2px solid #555 !important;
+            background: #fff !important;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* Flow line between step circles */
+        .flow-line {
+            height: 2px !important;
+            background: #AAAAAA !important;
+        }
+
+        /* Step labels under circles */
+        .flow-line + .text-center .font-medium,
+        .text-center .font-medium {
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        /* Platform arch-box */
+        .arch-box {
+            border: 1.5px solid #BBBBBB !important;
+            font-size: 0.75rem !important;
+            font-weight: 600;
+            color: #222 !important;
+            letter-spacing: 0.06em;
+        }
+        .arch-box:hover {
+            border-color: #333 !important;
+        }
+
+        /* Platform connector-line */
+        .connector-line {
+            background: #999 !important;
+            width: 2px !important;
+        }
+
+        /* Compliance / construction flow-dot */
+        .flow-dot {
+            width: 10px !important;
+            height: 10px !important;
+            background: #555 !important;
+            border: none !important;
+        }
+
+        /* Compliance flow step labels */
+        .text-\[10px\].mb-2.text-gray-500 {
+            color: #333 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* Retrofit how-it-works step labels (text-sm font-bold tracking-widest) */
+        .flex.justify-between.items-center span {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+        .flex.justify-between.items-center iconify-icon {
+            color: #888;
+        }
+
+        /* Construction step numbers (text-blue-500) */
+        .text-blue-500 {
+            font-size: 1.125rem !important;
+            font-weight: 700 !important;
+        }
+
+        /* Outcomes row labels */
+        .uppercase.tracking-widest.font-medium {
+            color: #111 !important;
+        }
+
+        /* ── End Round 7 ─────────────────────────────────────────── */
+    </style>
+</head>
+<body>
+<!-- Global Navigation -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-8 sm:px-12 md:px-20" id="main-nav">
+<div class="flex items-center justify-between w-full max-w-[1440px] mx-auto">
+<!-- Logo -->
+<div class="text-xl font-bold tracking-tight">
+<a href="index.html"><span data-ph="logo">[LOGO_PLACEHOLDER]</span></a>
+</div>
+<!-- Menu Middle -->
+<div class="hidden md:flex items-center gap-10 text-sm font-light text-gray-500 mx-auto">
+<div class="relative group">
+<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-solutions" href="index.html#solutions">Solutions</a>
+<!-- Dropdown Menu -->
+<div class="absolute top-full left-0 w-64 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" data-nav-dropdown="">
+<!-- populated by content.js -->
+</div>
+</div>
+<a class="hover:text-black transition-colors" data-i18n="nav-platform" href="ai.html">AI</a>
+<a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a>
+<div class="relative group">
+<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-contact" href="contact.html">Contact</a>
+<div class="absolute top-full left-0 w-44 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" id="contact-nav-dropdown">
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors" href="contact.html?type=general" id="cnav-general">General</a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=careers" id="cnav-careers">Careers</a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=media" id="cnav-media">Media</a>
+</div>
+</div>
+</div>
+<!-- Right Side -->
+<div class="flex items-center gap-6 ml-auto" id="sa-nav-right">
+<a class="px-5 py-2 bg-black text-white text-sm font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="data-bank.html" data-i18n="nav-databank">Data Bank</a>
+<a class="px-5 py-2 border border-gray-300 rounded-none text-sm font-light hover:border-black transition-all text-center" href="request-demo.html">
+<span data-i18n="nav-demo">Request Demo</span>
+</a>
+<div class="lang-switch flex items-center gap-2 text-xs font-medium text-gray-500">
+<span class="active" id="lang-en" onclick="SA.switchLanguage('en')">EN</span>
+<span class="text-gray-500">/</span>
+<span id="lang-jp" onclick="SA.switchLanguage('jp')">JP</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-16 pb-16">
+<!-- 1️⃣ Hero -->
+<section class="max-w-[700px] mx-auto text-center py-16 px-6 fade-in">
+<h1 class="text-4xl md:text-5xl font-light leading-snug mb-8" data-i18n="about-hero-title">
+            We are building AI-native data infrastructure for the full building lifecycle — transforming fragmented building data into computable, auditable, and continuously appreciating assets.
+        </h1>
+<p class="text-lg text-[#333333] font-medium leading-relaxed" data-i18n="about-hero-desc">
+            Built on 20+ years of architecture and BIM expertise combined with an AI-native data architecture, we deliver solutions for energy optimization, carbon asset management, and lifecycle data management. Starting from Asia-Pacific, we are building the data foundation for the global built environment.
+        </p>
+</section>
+<!-- 2️⃣ What We Do -->
+<section class="bg-[#F5F5F5] py-16 border-y border-[#EBEBEB]">
+<div class="max-w-[800px] mx-auto px-6 text-center">
+<h2 class="text-sm uppercase tracking-[0.2em] text-[#555555] font-semibold mb-12" data-i18n="about-wwd-label">What We Do</h2>
+<div class="space-y-8 text-lg text-[#333333] font-medium leading-relaxed">
+<p data-i18n="about-wwd-p1">
+                    The building industry is shifting from delivery-oriented to performance-oriented — yet building data remains fragmented across contractors, consultants, and operators, non-computable and non-auditable. Our work is to change this. Through AI, we integrate and structure BIM and all building data, establishing standardized data models that continuously generate specialized databases for energy optimization, carbon accounting, and lifecycle analysis — providing a directly callable data foundation for building asset operations and decision-making.
+                </p>
+<p data-i18n="about-wwd-p2">
+                    Our five solutions span the full building lifecycle — low-carbon materials, construction decarbonization, building operations, circular retrofit and deconstruction, and carbon asset compliance — delivering scalable, data-driven tools to developers, asset managers, contractors, and operators, transforming building data into continuously appreciating carbon assets and maximizing data value.
+                </p>
+<p class="text-sm uppercase tracking-[0.2em] text-black font-medium pt-4" data-i18n="about-tagline">Energy is the entry point. Data infrastructure is the business.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Global Footer -->
+<footer class="bg-white border-t border-[#E5E5E5] py-20 px-6 sm:px-12 md:px-20 text-gray-500 text-sm font-light">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
+<!-- Col 1: Logo & Social -->
+<div class="space-y-6">
+<div class="text-black font-bold tracking-tight text-lg underline underline-offset-8 decoration-1 decoration-gray-200">
+<a href="index.html"><span data-ph="logo">[LOGO_PLACEHOLDER]</span></a>
+</div>
+<div class="flex items-center gap-4">
+<a id="footer-social-x" href="#" class="text-gray-400 hover:text-black transition-colors" aria-label="X (Twitter)">
+  <iconify-icon icon="ph:x-logo-light" width="18"></iconify-icon>
+</a>
+<a id="footer-social-linkedin" href="#" class="text-gray-400 hover:text-black transition-colors" aria-label="LinkedIn">
+  <iconify-icon icon="ph:linkedin-logo-light" width="18"></iconify-icon>
+</a>
+</div>
+</div>
+<!-- Col 2: Use Cases -->
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-use">Use Cases</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-black transition-colors" data-i18n="sol-energy-title" href="solution-energy.html">Energy Optimization</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-mat-title" href="solution-materials.html">Materials &amp; Circular Supply</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-retrofit-title" href="solution-retrofit.html">Circular Retrofit &amp; Asset Recovery</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-const-title" href="solution-construction.html">Construction Decarbonization</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-carbon-title" href="solution-compliance.html">Carbon Compliance &amp; LCA</a></li>
+</ul>
+</div>
+<!-- Col 3: Company -->
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-comp">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="nav-contact" href="contact.html">Contact</a></li>
+</ul>
+</div>
+<!-- Col 4: Info Placeholder -->
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="nav-contact">Contact</h5>
+<div class="text-[10px] text-gray-500 leading-relaxed font-mono">
+<span data-ph="company-info">[COMPANY_INFO_PLACEHOLDER]</span><br/>
+Based on your region and industry sector.
+</div>
+</div>
+</div>
+<!-- Bottom -->
+<div class="max-w-[1200px] mx-auto mt-20 pt-8 border-t border-gray-100 flex justify-between items-center text-[10px] uppercase tracking-widest text-gray-500">
+<div><span data-ph="copyright">© 2026 SynerArch. All rights reserved.</span></div>
+<div class="flex gap-6 italic">
+<a class="hover:text-black" data-i18n="footer-priv" href="#">Privacy Policy</a>
+<span class="opacity-20">|</span>
+<a class="hover:text-black" data-i18n="footer-terms" href="#">Terms</a>
+</div>
+</div>
+</footer>
+<script src="copy.js"></script>
+<script src="copy-loader.js"></script>
+<script src="content.js"></script>
+<script src="global.js"></script>
+<script>
+    // Page content — consumed by global.js renderContent()
+    window.SA.pageContent = {
+        "en": {
+        "nav-solutions": "Solutions",
+        "nav-platform": "AI",
+        "nav-about": "About",
+        "nav-contact": "Contact",
+        "nav-demo": "Request Demo",
+        "footer-desc": "AI-powered solutions for BIM-enabled buildings, carbon, and lifecycle management.",
+        "footer-head-use": "Use Cases",
+        "footer-head-comp": "Company",
+        "footer-outcomes-head": "Typical performance outcomes across deployments:",
+        "out-1-label-full": "Energy reduction: 20–30%",
+        "out-2-label-full": "Carbon reduction: 15–25%",
+        "out-3-label-full": "Operational cost reduction: 10–20%",
+        "out-4-label-full": "Data coverage improvement: 60–90%",
+        "sol-energy-title": "Energy Optimization",
+        "sol-mat-title": "Materials & Circular Supply",
+        "sol-retrofit-title": "Circular Retrofit & Asset Recovery",
+        "sol-const-title": "Construction Decarbonization",
+        "sol-carbon-title": "Carbon Compliance & LCA",
+        "footer-priv": "Privacy Policy",
+        "footer-terms": "Terms",
+        "about-hero-title": "We are building AI-native data infrastructure for the full building lifecycle — transforming fragmented building data into computable, auditable, and continuously appreciating assets.",
+        "about-hero-desc": "Built on 20+ years of architecture and BIM expertise combined with an AI-native data architecture, we deliver solutions for energy optimization, carbon asset management, and lifecycle data management. Starting from Asia-Pacific, we are building the data foundation for the global built environment.",
+        "about-wwd-label": "What We Do",
+        "about-wwd-p1": "The building industry is shifting from delivery-oriented to performance-oriented — yet building data remains fragmented across contractors, consultants, and operators, non-computable and non-auditable. Our work is to change this. Through AI, we integrate and structure BIM and all building data, establishing standardized data models that continuously generate specialized databases for energy optimization, carbon accounting, and lifecycle analysis — providing a directly callable data foundation for building asset operations and decision-making.",
+        "about-wwd-p2": "Our five solutions span the full building lifecycle — low-carbon materials, construction decarbonization, building operations, circular retrofit and deconstruction, and carbon asset compliance — delivering scalable, data-driven tools to developers, asset managers, contractors, and operators, transforming building data into continuously appreciating carbon assets and maximizing data value.",
+        "about-tagline": "Energy is the entry point. Data infrastructure is the business.",
+        "about-team-label": "Team",
+        "about-team-desc": "Founder information will be available soon. Our team brings together experience across construction, energy systems, data platforms, and AI, with a focus on delivering scalable and measurable impact in the built environment",
+        "about-cta-title": "Get in touch to learn more about our solutions and approach"
+        },
+        "jp": {
+        "nav-solutions": "ソリューション",
+        "nav-platform": "AI",
+        "nav-about": "会社情報",
+        "nav-contact": "お問い合わせ",
+        "nav-databank": "データバンク",
+        "nav-demo": "デモを依頼",
+        "footer-desc": "BIMを活用した建物・カーボン・ライフサイクル管理のためのAIソリューション。",
+        "footer-head-use": "ユースケース",
+        "footer-head-comp": "会社情報",
+        "footer-outcomes-head": "一般的な導入効果：",
+        "out-1-label-full": "エネルギー削減：20–30%",
+        "out-2-label-full": "カーボン削減：15–25%",
+        "out-3-label-full": "運用コスト削減：10–20%",
+        "out-4-label-full": "データ可視化率向上：60–90%",
+        "sol-energy-title": "エネルギー最適化",
+        "sol-mat-title": "材料・循環供給",
+        "sol-retrofit-title": "サーキュラー改修・資産回収",
+        "sol-const-title": "施工カーボン管理",
+        "sol-carbon-title": "カーボン管理・LCA",
+        "footer-priv": "プライバシーポリシー",
+        "footer-terms": "利用規約",
+        "about-hero-title": "私たちは建物ライフサイクル全体のためのAIネイティブなデータインフラを構築しています。断片化された建物データを、演算可能で監査に耐え、継続的に価値を高める資産へと転換します。",
+        "about-hero-desc": "20年以上の建築・BIM分野の深い知見とAIネイティブなデータアーキテクチャを融合し、エネルギー最適化・カーボン資産管理・ライフサイクルデータ管理のソリューションを提供します。アジア太平洋を起点に、グローバルな建成環境のデータ基盤を構築しています。",
+        "about-wwd-label": "事業内容",
+        "about-wwd-p1": "建築業界は「納品志向」から「性能志向」へと移行しています。しかし建物データは依然として、承包業者・コンサルタント・運営者の間で断片化されており、演算も監査もできない状態にあります。私たちはこの現状を変えることを使命としています。AIによってBIMおよびあらゆる建物データを統合・構造化し、標準化されたデータモデルを構築。エネルギー最適化・カーボン算定・ライフサイクル分析等のための専門データベースを継続的に生成し、建物資産の運用と意思決定のための即時参照可能なデータ基盤を提供します。",
+        "about-wwd-p2": "私たちの5つのソリューションは建物ライフサイクル全体をカバーします。低炭素材料・施工脱炭素化・建物運用・循環型改修・解体・カーボン資産コンプライアンスにわたり、デベロッパー・資産管理者・施工業者・運用者に対してスケーラブルなデータ駆動型ツールを提供。建物データを継続的に価値を高めるカーボン資産へと転換し、データ価値を最大化します。",
+        "about-tagline": "エネルギーは入口。データ基盤が、事業の本質。",
+        "about-team-label": "チーム",
+        "about-team-desc": "創業者情報は準備中です。建築・エネルギー・データ・AI分野の経験を持つチームにより、実用的かつスケーラブルな価値提供を目指しています",
+        "about-cta-title": "ソリューションや取り組みについてお問い合わせください"
+        }
+    };
+
+
+
+    // Scroll Effect
+    window.addEventListener('scroll', function () {
+        var nav = document.getElementById('main-nav');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        window.SA.initLanguage();
+
+        // ── Social Links Config ───────────────────────────────────────
+        var SOCIAL_LINKS = { x: "", linkedin: "" };
+        (function() {
+            var xEl = document.getElementById('footer-social-x');
+            var liEl = document.getElementById('footer-social-linkedin');
+            if (xEl && SOCIAL_LINKS.x) xEl.href = SOCIAL_LINKS.x;
+            if (liEl && SOCIAL_LINKS.linkedin) liEl.href = SOCIAL_LINKS.linkedin;
+        }());
+    });
+</script>
+</body>
+</html>

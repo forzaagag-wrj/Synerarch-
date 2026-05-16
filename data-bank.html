@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Data Bank | SynerArch</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+:root { --nav-bg-scroll: rgba(255,255,255,0.95); }
+body { background:#fff; color:#000; font-family:'Times New Roman',Times,serif; margin:0; overflow-x:hidden; }
+html[lang="jp"] body, html[lang="jp"] * { font-family:'Kozuka Gothic Pro','Kozuka Gothic','A-OTF Kozuka Gothic Pro','Noto Sans JP','Hiragino Kaku Gothic ProN',sans-serif; }
+nav { height:72px; transition:all 0.3s ease; z-index:1000; border-bottom:1px solid transparent; }
+nav.scrolled { background-color:var(--nav-bg-scroll); backdrop-filter:blur(8px); border-bottom:1px solid #E5E5E5; box-shadow:0 1px 0 #E5E5E5,0 4px 16px rgba(0,0,0,0.04); }
+.lang-switch span { cursor:pointer; font-size:11px; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; padding:2px 4px; border-radius:3px; transition:color 0.15s ease,background 0.15s ease; }
+.lang-switch span:hover { color:#000 !important; }
+.lang-switch .active { color:#000 !important; background:rgba(0,0,0,0.05); }
+[data-i18n-jp] { display:none; }
+html[lang="jp"] [data-i18n-en] { display:none; }
+html[lang="jp"] [data-i18n-jp] { display:block; }
+h1,h2,h3,h4,h5 { letter-spacing:-0.02em; line-height:1.15; }
+p,li { line-height:1.75; }
+.fade-in { animation:fadeIn 0.8s cubic-bezier(0.4,0,0.2,1) forwards; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:#D8D8D8; border-radius:10px; }
+::-webkit-scrollbar-thumb:hover { background:#AAAAAA; }
+
+/* Upload zone */
+.upload-zone { border:2px dashed #D0D0D0; transition:border-color 0.2s, background 0.2s; }
+.upload-zone:hover, .upload-zone.drag-over { border-color:#000; background:#F7F7F7; }
+.upload-zone input[type="file"] { display:none; }
+
+/* Step indicator */
+.step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; letter-spacing:0.05em; transition:all 0.2s; }
+.step-dot.active { background:#000; color:#fff; }
+.step-dot.done { background:#000; color:#fff; }
+.step-dot.inactive { background:#E5E5E5; color:#999; }
+.step-line { flex:1; height:1px; background:#E5E5E5; }
+
+/* Category tab */
+.cat-tab { border-bottom:2px solid transparent; transition:all 0.15s; cursor:pointer; }
+.cat-tab.active { border-bottom-color:#000; color:#000; }
+.cat-tab:not(.active) { color:#888; }
+.cat-tab:not(.active):hover { color:#333; }
+
+/* File pill */
+.file-pill { display:flex; align-items:center; gap:8px; background:#F5F5F5; border:1px solid #E5E5E5; padding:6px 12px; font-size:12px; }
+.file-pill .remove-btn { cursor:pointer; color:#999; transition:color 0.15s; line-height:1; }
+.file-pill .remove-btn:hover { color:#000; }
+
+/* Hidden/shown panels */
+.db-panel { display:none; }
+.db-panel.active { display:block; }
+
+/* Input styles consistent with site */
+.db-input { width:100%; padding:12px 16px; border:1px solid #E5E5E5; background:#fff; font-size:14px; color:#000; outline:none; transition:border-color 0.15s; }
+.db-input:focus { border-color:#000; }
+.db-input::placeholder { color:#AAAAAA; }
+
+/* Progress bar */
+.upload-progress { height:2px; background:#E5E5E5; overflow:hidden; }
+.upload-progress-bar { height:100%; background:#000; width:0%; transition:width 0.3s ease; }
+</style>
+</head>
+<body>
+
+<!-- Global Navigation -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-8 sm:px-12 md:px-20" id="main-nav">
+<div class="flex items-center justify-between w-full max-w-[1440px] mx-auto">
+<div class="text-xl font-bold tracking-tight">
+<a href="index.html"><span data-ph="logo">[LOGO_PLACEHOLDER]</span></a>
+</div>
+<div class="hidden md:flex items-center gap-10 text-sm font-light text-gray-500 mx-auto">
+<div class="relative group">
+<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-solutions" href="index.html#solutions">Solutions</a>
+<div class="absolute top-full left-0 w-64 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" data-nav-dropdown=""></div>
+</div>
+<a class="hover:text-black transition-colors" data-i18n="nav-platform" href="ai.html">AI</a>
+<a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a>
+<div class="relative group">
+<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-contact" href="contact.html">Contact</a>
+<div class="absolute top-full left-0 w-44 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" id="contact-nav-dropdown">
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors" href="contact.html?type=general" id="cnav-general">General</a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=careers" id="cnav-careers">Careers</a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=media" id="cnav-media">Media</a>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-auto" id="sa-nav-right">
+<a class="px-5 py-2 bg-black text-white text-sm font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="data-bank.html">
+<span data-i18n-en="">Data Bank</span>
+<span data-i18n-jp="">データバンク</span>
+</a>
+<a class="px-5 py-2 border border-gray-300 rounded-none text-sm font-light hover:border-black transition-all text-center" href="request-demo.html">
+<span data-i18n="nav-demo">Request Demo</span>
+</a>
+<div class="lang-switch flex items-center gap-2 text-xs font-medium text-gray-500">
+<span class="active" id="lang-en" onclick="SA.switchLanguage('en')">EN</span>
+<span class="text-gray-500">/</span>
+<span id="lang-jp" onclick="SA.switchLanguage('jp')">JP</span>
+</div>
+</div>
+</div>
+</nav>
+
+<main class="pt-28 pb-20 px-6">
+<div class="max-w-[680px] mx-auto">
+
+  <!-- ── Step Indicator ── -->
+  <div class="flex items-center gap-0 mb-12" id="step-indicator">
+    <div class="step-dot active" id="dot-1">1</div>
+    <div class="step-line mx-3"></div>
+    <div class="step-dot inactive" id="dot-2">2</div>
+    <div class="step-line mx-3"></div>
+    <div class="step-dot inactive" id="dot-3">3</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       STEP 1 — Identity
+  ══════════════════════════════════════════ -->
+  <div class="db-panel active" id="panel-step1">
+
+    <!-- Header -->
+    <div class="mb-10 space-y-3">
+      <p class="text-[10px] uppercase tracking-[0.3em] text-[#555555] font-semibold">
+        <span data-i18n-en="">Step 1 of 3</span>
+        <span data-i18n-jp="">ステップ 1 / 3</span>
+      </p>
+      <h1 class="text-3xl md:text-4xl font-light tracking-tight">
+        <span data-i18n-en="">Tell us who you are</span>
+        <span data-i18n-jp="">あなたについて教えてください</span>
+      </h1>
+      <p class="text-[#333333] font-medium leading-relaxed">
+        <span data-i18n-en="">We will review your submitted data and contact you with an assessment. No account required.</span>
+        <span data-i18n-jp="">ご提出いただいたデータを確認し、評価結果をご連絡いたします。アカウント登録は不要です。</span>
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="space-y-5">
+      <div>
+        <label class="block text-xs uppercase tracking-wider text-[#555555] font-semibold mb-2">
+          <span data-i18n-en="">Name</span>
+          <span data-i18n-jp="">お名前</span>
+        </label>
+        <input class="db-input" id="db-name" type="text"
+          placeholder="Your name"
+          data-placeholder-jp="お名前"/>
+      </div>
+      <div>
+        <label class="block text-xs uppercase tracking-wider text-[#555555] font-semibold mb-2">
+          <span data-i18n-en="">Email</span>
+          <span data-i18n-jp="">メールアドレス</span>
+        </label>
+        <input class="db-input" id="db-email" type="email"
+          placeholder="you@company.com"
+          data-placeholder-jp="メールアドレス"/>
+        <p class="text-xs text-[#888888] mt-1.5 font-medium">
+          <span data-i18n-en="">We will use this email to send you our assessment.</span>
+          <span data-i18n-jp="">評価結果はこちらのメールアドレスへお送りします。</span>
+        </p>
+      </div>
+      <div>
+        <label class="block text-xs uppercase tracking-wider text-[#555555] font-semibold mb-2">
+          <span data-i18n-en="">Company</span>
+          <span data-i18n-jp="">会社名</span>
+        </label>
+        <input class="db-input" id="db-company" type="text"
+          placeholder="Company or organization"
+          data-placeholder-jp="会社名・組織名"/>
+      </div>
+
+      <!-- Error message -->
+      <p class="text-xs text-red-500 hidden" id="step1-error">
+        <span data-i18n-en="">Please fill in all fields.</span>
+        <span data-i18n-jp="">すべての項目を入力してください。</span>
+      </p>
+
+      <button
+        class="w-full py-4 bg-black text-white text-sm font-semibold hover:bg-[#2A2A2A] transition-colors uppercase tracking-widest mt-2"
+        id="btn-step1-next"
+        onclick="goToStep2()">
+        <span data-i18n-en="">Continue</span>
+        <span data-i18n-jp="">次へ</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       STEP 2 — Upload
+  ══════════════════════════════════════════ -->
+  <div class="db-panel" id="panel-step2">
+
+    <!-- Header -->
+    <div class="mb-10 space-y-3">
+      <p class="text-[10px] uppercase tracking-[0.3em] text-[#555555] font-semibold">
+        <span data-i18n-en="">Step 2 of 3</span>
+        <span data-i18n-jp="">ステップ 2 / 3</span>
+      </p>
+      <h1 class="text-3xl md:text-4xl font-light tracking-tight">
+        <span data-i18n-en="">Upload your building data</span>
+        <span data-i18n-jp="">建物データをアップロード</span>
+      </h1>
+      <p class="text-[#333333] font-medium leading-relaxed">
+        <span data-i18n-en="">Upload data across one or more categories. We assess what you have — no complete dataset required.</span>
+        <span data-i18n-jp="">1つ以上のカテゴリにデータをアップロードしてください。完全なデータセットは不要です。</span>
+      </p>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex border-b border-[#E5E5E5] mb-8 gap-6">
+      <button class="cat-tab active pb-3 text-sm font-medium" data-cat="bim" onclick="switchCat('bim')">
+        <span data-i18n-en="">BIM Data</span>
+        <span data-i18n-jp="">BIMデータ</span>
+      </button>
+      <button class="cat-tab pb-3 text-sm font-medium" data-cat="cad" onclick="switchCat('cad')">
+        <span data-i18n-en="">CAD & Architectural</span>
+        <span data-i18n-jp="">CAD・建築データ</span>
+      </button>
+      <button class="cat-tab pb-3 text-sm font-medium" data-cat="project" onclick="switchCat('project')">
+        <span data-i18n-en="">Project & Operations</span>
+        <span data-i18n-jp="">プロジェクト・運用</span>
+      </button>
+    </div>
+
+    <!-- Upload panels per category -->
+    <div id="upload-panels">
+
+      <!-- BIM -->
+      <div class="cat-panel" id="cat-bim">
+        <p class="text-xs text-[#666666] font-medium mb-4">
+          <span data-i18n-en="">Revit (.rvt), IFC (.ifc), Navisworks (.nwd), or other BIM formats</span>
+          <span data-i18n-jp="">Revit (.rvt)、IFC (.ifc)、Navisworks (.nwd)、その他BIM形式</span>
+        </p>
+        <div class="upload-zone p-8 text-center cursor-pointer" id="zone-bim" onclick="document.getElementById('file-bim').click()">
+          <input accept=".rvt,.ifc,.nwd,.nwf,.nwc,.rfa,.rte" id="file-bim" multiple type="file" onchange="handleFiles('bim', this.files)"/>
+          <iconify-icon icon="ph:cloud-arrow-up-light" width="36" class="text-[#AAAAAA] mb-3 block mx-auto"></iconify-icon>
+          <p class="text-sm font-medium text-[#333333]">
+            <span data-i18n-en="">Drop files here or click to browse</span>
+            <span data-i18n-jp="">ファイルをドロップするかクリックして選択</span>
+          </p>
+          <p class="text-xs text-[#888888] mt-1 font-medium">
+            <span data-i18n-en="">Max 500 MB per file</span>
+            <span data-i18n-jp="">1ファイル最大500MB</span>
+          </p>
+        </div>
+        <div class="mt-4 space-y-2" id="filelist-bim"></div>
+      </div>
+
+      <!-- CAD -->
+      <div class="cat-panel hidden" id="cat-cad">
+        <p class="text-xs text-[#666666] font-medium mb-4">
+          <span data-i18n-en="">AutoCAD (.dwg/.dxf), SketchUp (.skp), Rhino (.3dm), or PDF drawings</span>
+          <span data-i18n-jp="">AutoCAD (.dwg/.dxf)、SketchUp (.skp)、Rhino (.3dm)、またはPDF図面</span>
+        </p>
+        <div class="upload-zone p-8 text-center cursor-pointer" id="zone-cad" onclick="document.getElementById('file-cad').click()">
+          <input accept=".dwg,.dxf,.skp,.3dm,.pdf" id="file-cad" multiple type="file" onchange="handleFiles('cad', this.files)"/>
+          <iconify-icon icon="ph:cloud-arrow-up-light" width="36" class="text-[#AAAAAA] mb-3 block mx-auto"></iconify-icon>
+          <p class="text-sm font-medium text-[#333333]">
+            <span data-i18n-en="">Drop files here or click to browse</span>
+            <span data-i18n-jp="">ファイルをドロップするかクリックして選択</span>
+          </p>
+          <p class="text-xs text-[#888888] mt-1 font-medium">
+            <span data-i18n-en="">Max 500 MB per file</span>
+            <span data-i18n-jp="">1ファイル最大500MB</span>
+          </p>
+        </div>
+        <div class="mt-4 space-y-2" id="filelist-cad"></div>
+      </div>
+
+      <!-- Project -->
+      <div class="cat-panel hidden" id="cat-project">
+        <p class="text-xs text-[#666666] font-medium mb-4">
+          <span data-i18n-en="">Schedules, energy reports, asset registers, cost data (.xlsx, .csv, .pdf, .docx)</span>
+          <span data-i18n-jp="">スケジュール、エネルギーレポート、資産台帳、コストデータ (.xlsx, .csv, .pdf, .docx)</span>
+        </p>
+        <div class="upload-zone p-8 text-center cursor-pointer" id="zone-project" onclick="document.getElementById('file-project').click()">
+          <input accept=".xlsx,.xls,.csv,.pdf,.docx,.doc,.pptx,.ppt,.zip" id="file-project" multiple type="file" onchange="handleFiles('project', this.files)"/>
+          <iconify-icon icon="ph:cloud-arrow-up-light" width="36" class="text-[#AAAAAA] mb-3 block mx-auto"></iconify-icon>
+          <p class="text-sm font-medium text-[#333333]">
+            <span data-i18n-en="">Drop files here or click to browse</span>
+            <span data-i18n-jp="">ファイルをドロップするかクリックして選択</span>
+          </p>
+          <p class="text-xs text-[#888888] mt-1 font-medium">
+            <span data-i18n-en="">Max 500 MB per file</span>
+            <span data-i18n-jp="">1ファイル最大500MB</span>
+          </p>
+        </div>
+        <div class="mt-4 space-y-2" id="filelist-project"></div>
+      </div>
+
+    </div><!-- /upload-panels -->
+
+    <!-- Progress bar (hidden until uploading) -->
+    <div class="upload-progress mt-6 hidden" id="upload-progress-wrap">
+      <div class="upload-progress-bar" id="upload-progress-bar"></div>
+    </div>
+
+    <!-- Error -->
+    <p class="text-xs text-red-500 hidden mt-4" id="step2-error">
+      <span data-i18n-en="">Please upload at least one file before continuing.</span>
+      <span data-i18n-jp="">少なくとも1つのファイルをアップロードしてから次へ進んでください。</span>
+    </p>
+
+    <!-- Nav buttons -->
+    <div class="flex gap-4 mt-8">
+      <button class="flex-1 py-4 border border-[#E5E5E5] text-sm font-medium hover:border-black transition-colors" onclick="goToStep1()">
+        <span data-i18n-en="">Back</span>
+        <span data-i18n-jp="">戻る</span>
+      </button>
+      <button class="flex-1 py-4 bg-black text-white text-sm font-semibold hover:bg-[#2A2A2A] transition-colors uppercase tracking-widest" id="btn-step2-next" onclick="goToStep3()">
+        <span data-i18n-en="">Submit</span>
+        <span data-i18n-jp="">送信</span>
+      </button>
+    </div>
+
+    <!-- Note -->
+    <p class="text-xs text-[#888888] font-medium mt-6 text-center">
+      <span data-i18n-en="">Your data is handled confidentially and used solely for our internal assessment.</span>
+      <span data-i18n-jp="">ご提供いただいたデータは機密として扱われ、社内評価のみに使用されます。</span>
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       STEP 3 — Confirmation
+  ══════════════════════════════════════════ -->
+  <div class="db-panel" id="panel-step3">
+    <div class="text-center py-12 space-y-6 fade-in">
+      <div class="w-14 h-14 border-2 border-black flex items-center justify-center mx-auto">
+        <iconify-icon icon="ph:check-bold" width="28"></iconify-icon>
+      </div>
+      <h1 class="text-3xl font-light tracking-tight">
+        <span data-i18n-en="">Data received</span>
+        <span data-i18n-jp="">データを受信しました</span>
+      </h1>
+      <p class="text-[#333333] font-medium leading-relaxed max-w-md mx-auto">
+        <span data-i18n-en="">Our team will review your submission and reach out within 2–3 business days with an initial assessment.</span>
+        <span data-i18n-jp="">チームがご提出内容を確認し、2〜3営業日以内に初期評価結果をご連絡いたします。</span>
+      </p>
+      <p class="text-xs text-[#888888] font-medium" id="confirm-email-display"></p>
+
+      <!-- Summary of submitted files -->
+      <div class="text-left border border-[#E5E5E5] p-6 mt-4 space-y-3 max-w-md mx-auto" id="submit-summary"></div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+        <a class="px-8 py-3 bg-black text-white text-sm font-medium hover:bg-[#2A2A2A] transition-colors" href="index.html">
+          <span data-i18n-en="">Back to Home</span>
+          <span data-i18n-jp="">ホームへ戻る</span>
+        </a>
+        <a class="px-8 py-3 border border-[#E5E5E5] text-sm font-medium hover:border-black transition-colors" href="request-demo.html">
+          <span data-i18n-en="">Also Request a Demo</span>
+          <span data-i18n-jp="">デモも依頼する</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /max-w -->
+</main>
+
+<!-- Global Footer -->
+<footer class="bg-white border-t border-[#E5E5E5] py-20 px-6 sm:px-12 md:px-20 text-gray-500 text-sm font-light">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
+<div class="space-y-6">
+<div class="text-black font-bold tracking-tight text-lg underline underline-offset-8 decoration-1 decoration-gray-200">
+<a href="index.html"><span data-ph="logo">[LOGO_PLACEHOLDER]</span></a>
+</div>
+</div>
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-use">Use Cases</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-black transition-colors" data-i18n="sol-energy-title" href="solution-energy.html">Energy Optimization</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-mat-title" href="solution-materials.html">Materials &amp; Circular Supply</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-retrofit-title" href="solution-retrofit.html">Circular Retrofit &amp; Asset Recovery</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-const-title" href="solution-construction.html">Construction Decarbonization</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-carbon-title" href="solution-compliance.html">Carbon Compliance &amp; LCA</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-comp">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="nav-contact" href="contact.html">Contact</a></li>
+</ul>
+</div>
+<div class="space-y-3 text-xs font-light text-gray-400">
+<a class="hover:text-black" data-i18n="footer-priv" href="#">Privacy Policy</a>
+<span class="mx-2">·</span>
+<a class="hover:text-black" data-i18n="footer-terms" href="#">Terms</a>
+</div>
+</div>
+</footer>
+
+<!-- ── Scripts ── -->
+<script src="databank-config.js"></script>
+<script src="copy.js"></script>
+<script src="copy-loader.js"></script>
+<script src="content.js"></script>
+<script src="global.js"></script>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────
+const state = {
+  name: '', email: '', company: '',
+  files: { bim: [], cad: [], project: [] },
+  currentCat: 'bim',
+};
+
+// ── Step navigation ────────────────────────────────────────────────────
+function showPanel(id) {
+  document.querySelectorAll('.db-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+function updateDots(step) {
+  [1,2,3].forEach(n => {
+    const dot = document.getElementById('dot-' + n);
+    dot.className = 'step-dot ' + (n < step ? 'done' : n === step ? 'active' : 'inactive');
+  });
+}
+
+function goToStep1() {
+  showPanel('step1');
+  updateDots(1);
+}
+
+function goToStep2() {
+  const name = document.getElementById('db-name').value.trim();
+  const email = document.getElementById('db-email').value.trim();
+  const company = document.getElementById('db-company').value.trim();
+  const err = document.getElementById('step1-error');
+
+  if (!name || !email || !company) {
+    err.classList.remove('hidden'); return;
+  }
+  // Basic email validation
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    err.classList.remove('hidden'); return;
+  }
+  err.classList.add('hidden');
+  state.name = name; state.email = email; state.company = company;
+  showPanel('step2');
+  updateDots(2);
+}
+
+async function goToStep3() {
+  const totalFiles = Object.values(state.files).flat().length;
+  const err = document.getElementById('step2-error');
+  if (totalFiles === 0) {
+    err.classList.remove('hidden'); return;
+  }
+  err.classList.add('hidden');
+
+  const btn = document.getElementById('btn-step2-next');
+  btn.disabled = true;
+  btn.innerHTML = '<span data-i18n-en="">Submitting...</span><span data-i18n-jp="">送信中...</span>';
+
+  if (DATABANK_CONFIG.mode === 'live' && DATABANK_CONFIG.upload_endpoint) {
+    await doLiveUpload();
+  } else {
+    // Mock mode: simulate brief delay
+    await new Promise(r => setTimeout(r, 900));
+  }
+
+  showConfirmation();
+  showPanel('step3');
+  updateDots(3);
+  btn.disabled = false;
+}
+
+// ── Live upload (called only when mode = "live") ───────────────────────
+async function doLiveUpload() {
+  const allFiles = [];
+  for (const [cat, files] of Object.entries(state.files)) {
+    for (const file of files) allFiles.push({ cat, file });
+  }
+  const progress = document.getElementById('upload-progress-wrap');
+  const bar = document.getElementById('upload-progress-bar');
+  progress.classList.remove('hidden');
+
+  const uploadedIds = [];
+  for (let i = 0; i < allFiles.length; i++) {
+    const { cat, file } = allFiles[i];
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('category', cat);
+    fd.append('submitter_name', state.name);
+    fd.append('submitter_email', state.email);
+    fd.append('submitter_company', state.company);
+    try {
+      const res = await fetch(DATABANK_CONFIG.upload_endpoint, { method: 'POST', body: fd });
+      const json = await res.json();
+      if (json.file_id) uploadedIds.push({ category: cat, file_id: json.file_id });
+    } catch(e) { console.error('Upload error', e); }
+    bar.style.width = ((i + 1) / allFiles.length * 80) + '%';
+  }
+
+  // Notify
+  if (DATABANK_CONFIG.notify_endpoint) {
+    try {
+      await fetch(DATABANK_CONFIG.notify_endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: state.name, email: state.email, company: state.company,
+          files: uploadedIds
+        })
+      });
+    } catch(e) { console.error('Notify error', e); }
+  }
+  bar.style.width = '100%';
+  await new Promise(r => setTimeout(r, 300));
+  progress.classList.add('hidden');
+}
+
+// ── Show confirmation summary ──────────────────────────────────────────
+function showConfirmation() {
+  const lang = document.documentElement.lang || 'en';
+  document.getElementById('confirm-email-display').textContent =
+    (lang === 'jp' ? '確認メールを送信先: ' : 'Confirmation sent to: ') + state.email;
+
+  const summary = document.getElementById('submit-summary');
+  const cats = { bim: 'BIM Data', cad: 'CAD & Architectural', project: 'Project & Operations' };
+  const catsJP = { bim: 'BIMデータ', cad: 'CAD・建築データ', project: 'プロジェクト・運用データ' };
+  let html = '';
+  for (const [cat, files] of Object.entries(state.files)) {
+    if (!files.length) continue;
+    const label = lang === 'jp' ? catsJP[cat] : cats[cat];
+    html += `<div class="text-xs font-semibold text-[#333333] uppercase tracking-wider mb-1">${label}</div>`;
+    files.forEach(f => {
+      html += `<div class="text-xs text-[#666666] font-medium flex items-center gap-2 mb-0.5">
+        <iconify-icon icon="ph:file-light" width="12"></iconify-icon> ${f.name}
+      </div>`;
+    });
+  }
+  summary.innerHTML = html || '';
+  if (!html) summary.style.display = 'none';
+}
+
+// ── Category switching ─────────────────────────────────────────────────
+function switchCat(cat) {
+  state.currentCat = cat;
+  document.querySelectorAll('.cat-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.cat === cat);
+  });
+  document.querySelectorAll('.cat-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('cat-' + cat).classList.remove('hidden');
+}
+
+// ── File handling ──────────────────────────────────────────────────────
+function handleFiles(cat, fileList) {
+  const MAX_MB = DATABANK_CONFIG.max_file_mb || 500;
+  const MAX_FILES = DATABANK_CONFIG.max_files_per_category || 10;
+  const lang = document.documentElement.lang || 'en';
+
+  Array.from(fileList).forEach(file => {
+    if (file.size > MAX_MB * 1024 * 1024) {
+      alert((lang === 'jp')
+        ? `${file.name} は${MAX_MB}MBを超えています。`
+        : `${file.name} exceeds the ${MAX_MB} MB limit.`);
+      return;
+    }
+    if (state.files[cat].length >= MAX_FILES) {
+      alert((lang === 'jp')
+        ? `1カテゴリあたり最大${MAX_FILES}ファイルです。`
+        : `Maximum ${MAX_FILES} files per category.`);
+      return;
+    }
+    // Prevent duplicates
+    if (!state.files[cat].find(f => f.name === file.name && f.size === file.size)) {
+      state.files[cat].push(file);
+    }
+  });
+  renderFileList(cat);
+}
+
+function renderFileList(cat) {
+  const container = document.getElementById('filelist-' + cat);
+  container.innerHTML = '';
+  state.files[cat].forEach((file, idx) => {
+    const pill = document.createElement('div');
+    pill.className = 'file-pill';
+    pill.innerHTML = `
+      <iconify-icon icon="ph:file-light" width="14" class="text-[#666666] flex-shrink-0"></iconify-icon>
+      <span class="flex-1 truncate text-[#333333]">${file.name}</span>
+      <span class="text-[#888888] flex-shrink-0">${(file.size/1024/1024).toFixed(1)} MB</span>
+      <span class="remove-btn flex-shrink-0" onclick="removeFile('${cat}', ${idx})">
+        <iconify-icon icon="ph:x-light" width="14"></iconify-icon>
+      </span>`;
+    container.appendChild(pill);
+  });
+}
+
+function removeFile(cat, idx) {
+  state.files[cat].splice(idx, 1);
+  renderFileList(cat);
+}
+
+// ── Drag and drop ──────────────────────────────────────────────────────
+['bim','cad','project'].forEach(cat => {
+  const zone = document.getElementById('zone-' + cat);
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    handleFiles(cat, e.dataTransfer.files);
+    switchCat(cat);
+  });
+});
+
+// ── Lang switch placeholder update ────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  const inputs = document.querySelectorAll('[data-placeholder-jp]');
+  if (typeof SA !== 'undefined' && SA.currentLanguage === 'jp') {
+    inputs.forEach(el => { el.placeholder = el.dataset.placeholderJp; });
+  }
+});
+</script>
+</body>
+</html>

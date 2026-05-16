@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lifecycle — SynerArch</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --nav-bg-scroll: rgba(255,255,255,0.95);
+    --color-black: #111111;
+    --color-mid: #444444;
+    --color-light: #888888;
+    --color-border: #E5E5E5;
+    --color-bg-card: #F7F7F7;
+
+    /* Lifecycle stage colours — consistent with index.html + intelligence.html */
+    --clr-design:       #22d3ee;
+    --clr-construction: #16a34a;
+    --clr-operations:   #2563eb;
+    --clr-urban:        #fb923c;
+    --clr-compliance:   #7e22ce;
+  }
+
+  body {
+    background-color: #FFFFFF;
+    color: #111111;
+    font-family: 'Times New Roman', Times, serif;
+    margin: 0;
+    overflow-x: hidden;
+  }
+
+  *:not(iconify-icon):not(iconify-icon *), *::before, *::after {
+    font-family: 'Times New Roman', Times, serif !important;
+  }
+
+  html[lang="jp"] *:not(iconify-icon):not(iconify-icon *),
+  html[lang="jp"] *::before,
+  html[lang="jp"] *::after {
+    font-family: 'Kozuka Gothic Pro','Kozuka Gothic','Noto Sans JP','Hiragino Kaku Gothic ProN', sans-serif !important;
+  }
+
+  /* ── Nav ── */
+  nav {
+    height: 64px;
+    border-bottom: 1px solid transparent;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    z-index: 1000;
+  }
+  nav.scrolled {
+    background-color: var(--nav-bg-scroll);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 0 #E5E5E5, 0 4px 16px rgba(0,0,0,0.04);
+  }
+
+  /* ── Typography ── */
+  h1,h2,h3,h4,h5 { letter-spacing: -0.02em; line-height: 1.15; }
+  p,li { line-height: 1.75; }
+
+  /* ── Stage tag ── */
+  .stage-tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #111;
+    font-weight: 600;
+  }
+
+  /* ── Step number ── */
+  .step-number {
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    color: #888;
+    font-weight: 400;
+    font-family: 'JetBrains Mono', monospace !important;
+    line-height: 1;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    background: #111;
+    color: #fff;
+    padding: 14px 40px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-block;
+    transition: background 0.2s ease, transform 0.15s ease;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: #2A2A2A; transform: translateY(-1px); }
+
+  .btn-outline {
+    border: 1px solid #CCC;
+    color: #111;
+    padding: 14px 40px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-block;
+    transition: border-color 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-outline:hover { border-color: #111; }
+
+  .btn-text-link {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #111;
+    text-decoration: none;
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .btn-text-link:hover { border-color: #111; }
+
+  /* ── Fade in ── */
+  .fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Custom scrollbar ── */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #F5F5F5; }
+  ::-webkit-scrollbar-thumb { background: #CCC; }
+  ::-webkit-scrollbar-thumb:hover { background: #AAA; }
+
+  /* ── i18n toggle ── */
+  [data-i18n-jp] { display: none; }
+  html[lang="jp"] [data-i18n-en] { display: none; }
+  html[lang="jp"] [data-i18n-jp] { display: block; }
+
+  /* ══════════════════════════════
+     INTRO SECTION
+  ══════════════════════════════ */
+  .intro-grid {
+    display: block;
+  }
+  @media (max-width: 767px) {
+    .intro-grid { max-width: 100%; }
+  }
+
+  /* ── Stage colour accent dots in intro ── */
+  .stage-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  /* ══════════════════════════════
+     LIFECYCLE OVERVIEW (placeholder for Step 2+)
+  ══════════════════════════════ */
+  .lifecycle-placeholder {
+    background: #F7F7F7;
+    border: 1px dashed #D0D0D0;
+    border-radius: 2px;
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: #AAA;
+  }
+
+  /* ══════════════════════════════
+     CIRCULAR LIFECYCLE DIAGRAM
+  ══════════════════════════════ */
+  #lc-diagram-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  #lc-diagram-svg { width: 100%; height: auto; display: block; }
+
+  .lc-arc {
+    transition: opacity 0.3s ease, stroke-width 0.3s ease;
+    fill: none;
+  }
+  .lc-arc.dimmed    { opacity: 0.15; }
+  .lc-arc.active    { stroke-width: 7; opacity: 1; }
+
+  .lc-node-group { cursor: pointer; outline: none; }
+  .lc-node-group:focus { outline: none; }
+  .lc-node-group:focus-visible { outline: none; }
+  .lc-node-circle { transition: opacity 0.3s ease, transform 0.2s ease; transform-box: fill-box; transform-origin: center; }
+  .lc-node-group.dimmed .lc-node-circle { opacity: 0.2; }
+  .lc-node-group.dimmed .lc-node-label { opacity: 0.2; }
+  .lc-node-group:hover .lc-node-circle { transform: scale(1.25); }
+  .lc-node-label { transition: opacity 0.3s ease; pointer-events: none; }
+
+  /* Feedback arc (Compliance → Design, circular closure) */
+  .lc-feedback-arc { opacity: 0.18; fill: none; }
+
+  /* Mobile: hide diagram, show vertical list */
+  @media (max-width: 767px) {
+    #lc-diagram-outer { display: none !important; }
+    #lc-mobile-list   { display: flex !important; }
+  }
+  @media (min-width: 768px) {
+    #lc-diagram-outer { display: flex; }
+    #lc-mobile-list   { display: none !important; }
+  }
+  #lc-mobile-list { display: none; flex-direction: column; gap: 0; }
+
+  .lc-mobile-stage {
+    border-left: 3px solid #E5E5E5;
+    padding: 16px 0 16px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .lc-mobile-stage:hover { background: #FAFAFA; }
+  .lc-mobile-stage.active {
+    background: #F7F7F7;
+  }
+
+  /* ── Intro two-col → single col on mobile ── */
+  @media (max-width: 767px) {
+    .intro-two-col {
+      grid-template-columns: 1fr !important;
+      gap: 40px !important;
+    }
+  }
+
+  /* ── Stage block inner grid → single col on mobile ── */
+  @media (max-width: 767px) {
+    .stage-inner-grid {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+    .stage-block { padding: 48px 0; }
+  }
+
+  /* Role cards + Stage 1 cards: single col on mobile */
+  @media (max-width: 640px) {
+    .s1-cards-top, .s1-cards-bottom, .role-cards-flex {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  /* ── Hero title shrink on mobile ── */
+  @media (max-width: 767px) {
+    #hero-title { font-size: 2rem !important; line-height: 1.2 !important; }
+    #hero-sub   { font-size: 0.9375rem !important; }
+  }
+
+  /* ── Section header mobile ── */
+  @media (max-width: 767px) {
+    #lc-section-title { font-size: 1.75rem !important; }
+  }
+
+  /* ── CTA section mobile ── */
+  @media (max-width: 767px) {
+    #cta-title { font-size: 2rem !important; }
+  }
+
+  /* ══════════════════════════════
+     STAGE CONTENT BLOCKS
+  ══════════════════════════════ */
+  .stage-block {
+    padding: 72px 0;
+    border-top: 1px solid #E5E5E5;
+    scroll-margin-top: 80px;
+    display: none; /* hidden by default — shown on node click */
+  }
+  .stage-block.active {
+    display: block;
+    animation: stageReveal 0.4s ease-out forwards;
+  }
+  @keyframes stageReveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .stage-block-grid {
+    display: block;
+  }
+
+  .stage-num {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    color: #555;
+    font-weight: 400;
+    margin-bottom: 0;
+    display: block;
+  }
+  .stage-accent-bar {
+    width: 28px;
+    height: 2px;
+    margin-bottom: 14px;
+    border-radius: 1px;
+  }
+  .focus-tag {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #333;
+    border: 1px solid #CCCCCC;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 2px;
+    margin: 3px 3px 3px 0;
+  }
+  .intel-link {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #CCC;
+    padding-bottom: 1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .intel-link:hover { color: #111; border-color: #111; }
+
+  /* ── Role Cards ── */
+  .role-cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 640px) {
+    .role-cards-grid { grid-template-columns: 1fr; }
+  }
+
+  .role-card {
+    border: 1px solid #E5E5E5;
+    background: #FAFAFA;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .role-card:hover {
+    border-color: #AAAAAA;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .role-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .role-card:hover::before { opacity: 1; }
+
+  /* ── Role card org label ── */
+  .role-org-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .role-org-divider {
+    width: 100%;
+    height: 1px;
+    background: #E8E8E8;
+    margin-bottom: 10px;
+  }
+
+  .role-name { font-size: 0.9375rem; font-weight: 500; color: #111; letter-spacing: -0.01em; }
+  .role-desc { font-size: 0.875rem; color: #333; font-weight: 300; line-height: 1.75; }
+
+  .role-hook {
+    font-size: 0.875rem;
+    color: #333;
+    font-weight: 400;
+    line-height: 1.65;
+    padding-left: 11px;
+    border-left: 2px solid #E0E0E0;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.35s ease;
+  }
+  .role-card:hover .role-hook { opacity: 1; max-height: 140px; }
+
+  .role-cta {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #555;
+    text-decoration: none;
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 1px;
+    display: inline-block;
+    margin-top: 2px;
+    opacity: 0;
+    transition: opacity 0.25s ease, color 0.2s, border-color 0.2s;
+  }
+  .role-card:hover .role-cta { opacity: 1; }
+  .role-cta:hover { color: #111; border-color: #999; }
+
+  /* ══════════════════════════════
+     FINAL CTA  (same as intelligence.html)
+  ══════════════════════════════ */
+
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     NAV  (identical to intelligence.html)
+     NOTE: When lifecycle.html is live, update index.html nav so
+     #sa-nav-lifecycle points to lifecycle.html instead of index.html.
+     Also update Lifecycle link in all other pages' nav dropdowns.
+═══════════════════════════════════════════ -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-6 sm:px-10 md:px-16" id="main-nav">
+  <a href="index.html">
+    <img src="logo-nav.png" alt="SynerArch" id="sa-logo-nav" style="height:44px;width:auto;display:block;">
+  </a>
+  <div style="position:relative;margin-left:auto;">
+    <button id="sa-hamburger-btn" aria-label="Menu"
+      style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+    </button>
+    <div id="sa-nav-dropdown"
+      style="display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:white;border:1px solid #E5E5E5;box-shadow:0 8px 24px rgba(0,0,0,0.08);z-index:999;padding:8px 0;">
+      <!-- Lifecycle: active/current page — bold weight -->
+      <span class="sa-nav-item" id="sa-nav-lifecycle"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:500;color:#111;cursor:default;font-family:'Times New Roman',Times,serif;">Lifecycle</span>
+      <span class="sa-nav-item" id="sa-nav-databank"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='data-bank.html'">Data Bank</span>
+      <span class="sa-nav-item" id="sa-nav-intelligence"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='intelligence.html'">Intelligence</span>
+      <span class="sa-nav-item" id="sa-nav-about"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='about.html'">About</span>
+      <span class="sa-nav-item" id="sa-nav-contact"
+        style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;font-family:'Times New Roman',Times,serif;"
+        onclick="window.location.href='contact.html'">Contact</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════ -->
+<main>
+
+  <!-- ── 1. HERO ─────────────────────────────── -->
+  <!--
+    CONTENT NOTES:
+    · Eyebrow: "Building Lifecycle"
+    · Main title direction: express that the built environment is a continuous
+      multi-stage process involving different participants at every phase.
+      e.g. "Every Stage. Every Role. One Lifecycle."
+      or   "Built Environment Lifecycle — Find Your Place."
+    · Supporting text: explain that the building lifecycle spans from design
+      through construction, operations, urban mining to compliance. Different
+      participants carry different responsibilities at each stage. Understanding
+      your position in the lifecycle is the first step to acting on it.
+    · CTA: "Explore Lifecycle Roles" → anchors to the diagram/overview section below.
+    · Background SVG: same grid as intelligence.html but the 5 dashed phase lines
+      now label the 5 lifecycle stages (Design / Construction / Operations /
+      Urban Mining / Compliance) with their respective accent colours.
+  -->
+  <section class="relative overflow-hidden bg-white px-6 sm:px-12 md:px-20" style="min-height:420px;">
+
+    <!-- Background grid SVG -->
+    <svg id="hero-bg-svg" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+      style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:1;"
+      preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <pattern id="fine-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M40 0H0V40" fill="none" stroke="#E8E8E8" stroke-width="0.5"/>
+        </pattern>
+        <pattern id="coarse-grid" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+          <rect width="200" height="200" fill="url(#fine-grid)"/>
+          <path d="M200 0H0V200" fill="none" stroke="#DEDEDE" stroke-width="0.8"/>
+        </pattern>
+        <linearGradient id="fade-mask-x" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="white" stop-opacity="1"/>
+          <stop offset="30%"  stop-color="white" stop-opacity="0"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="fade-mask-y" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+          <stop offset="65%"  stop-color="white" stop-opacity="0"/>
+          <stop offset="100%" stop-color="white" stop-opacity="1"/>
+        </linearGradient>
+        <mask id="grid-mask">
+          <rect width="100%" height="100%" fill="white"/>
+          <rect width="100%" height="100%" fill="url(#fade-mask-x)"/>
+          <rect width="100%" height="100%" fill="url(#fade-mask-y)"/>
+        </mask>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#coarse-grid)" mask="url(#grid-mask)"/>
+      <g stroke="#CCCCCC" stroke-width="0.8" fill="none" opacity="0.45">
+        <path d="M 97% 8 L 97% 18% L calc(97% - 40px) 18%" vector-effect="non-scaling-stroke"/>
+      </g>
+    </svg>
+
+    <!-- Hero text content — same max-w + mx-auto as all other sections -->
+    <div class="relative z-10 max-w-[1200px] mx-auto pt-40 pb-24 fade-in">
+      <p class="stage-tag mb-5" id="hero-eyebrow"></p>
+      <h1 class="text-4xl md:text-[52px] font-light tracking-tight leading-tight mb-7"
+          id="hero-title"></h1>
+      <p class="text-base font-light text-[#333] leading-relaxed" style="max-width:640px;"
+          id="hero-sub"></p>
+    </div>
+
+  </section>
+
+  <hr style="border:none;border-top:1px solid #E5E5E5;margin:0;">
+
+  <!-- ── 2. INTRODUCTION SECTION ───────────────
+       PURPOSE: Briefly establish WHY a lifecycle perspective matters.
+       REFERENCE: Mirrors the compact intro style of Madaster Industries Overview.
+       LAYOUT: Two-column on desktop, single column on mobile.
+  ──────────────────────────────────────────── -->
+  <section class="py-20 px-6 sm:px-12 md:px-20 bg-white">
+    <div class="max-w-[1200px] mx-auto">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;" class="intro-two-col">
+
+        <!-- Left: primary statement -->
+        <div>
+          <p class="stage-tag mb-5" id="intro-eyebrow"></p>
+          <h2 class="text-3xl md:text-[36px] font-light tracking-tight mb-6" id="intro-title"></h2>
+          <p style="font-size:0.9375rem;color:#333;font-weight:300;line-height:1.8;" id="intro-body"></p>
+        </div>
+
+        <!-- Right: 5 stage list -->
+        <div style="padding-top:8px;">
+          <p class="stage-tag" style="margin-bottom:20px;" id="intro-stages-label"></p>
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;align-items:center;padding:14px 0;border-bottom:1px solid #F0F0F0;">
+              <span class="stage-dot" style="background:#22d3ee;"></span>
+              <span style="font-size:0.9375rem;font-weight:300;color:#111;flex:1;" id="intro-s1-name"></span>
+              <span style="font-size:0.8125rem;color:#333;font-weight:300;text-align:right;max-width:220px;" id="intro-s1-focus"></span>
+            </div>
+            <div style="display:flex;align-items:center;padding:14px 0;border-bottom:1px solid #F0F0F0;">
+              <span class="stage-dot" style="background:#16a34a;"></span>
+              <span style="font-size:0.9375rem;font-weight:300;color:#111;flex:1;" id="intro-s2-name"></span>
+              <span style="font-size:0.8125rem;color:#333;font-weight:300;text-align:right;max-width:220px;" id="intro-s2-focus"></span>
+            </div>
+            <div style="display:flex;align-items:center;padding:14px 0;border-bottom:1px solid #F0F0F0;">
+              <span class="stage-dot" style="background:#2563eb;"></span>
+              <span style="font-size:0.9375rem;font-weight:300;color:#111;flex:1;" id="intro-s3-name"></span>
+              <span style="font-size:0.8125rem;color:#333;font-weight:300;text-align:right;max-width:220px;" id="intro-s3-focus"></span>
+            </div>
+            <div style="display:flex;align-items:center;padding:14px 0;border-bottom:1px solid #F0F0F0;">
+              <span class="stage-dot" style="background:#fb923c;"></span>
+              <span style="font-size:0.9375rem;font-weight:300;color:#111;flex:1;" id="intro-s4-name"></span>
+              <span style="font-size:0.8125rem;color:#333;font-weight:300;text-align:right;max-width:220px;" id="intro-s4-focus"></span>
+            </div>
+            <div style="display:flex;align-items:center;padding:14px 0;">
+              <span class="stage-dot" style="background:#7e22ce;"></span>
+              <span style="font-size:0.9375rem;font-weight:300;color:#111;flex:1;" id="intro-s5-name"></span>
+              <span style="font-size:0.8125rem;color:#333;font-weight:300;text-align:right;max-width:220px;" id="intro-s5-focus"></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr style="border:none;border-top:1px solid #E5E5E5;margin:0;">
+
+  <!-- ── 3. LIFECYCLE OVERVIEW SECTION ─────────
+       This section is the page core.
+       PLACEHOLDER — will be built in Step 2 (Circular Diagram SVG)
+       and Step 3 (Stage content blocks + Role cards).
+  ──────────────────────────────────────────── -->
+  <section id="lifecycle-overview" class="py-20 px-6 sm:px-12 md:px-20 bg-white">
+    <div class="max-w-[1200px] mx-auto">
+
+      <!-- Section header -->
+      <div style="margin-bottom:48px;">
+        <p class="stage-tag mb-4" id="lc-section-eyebrow"></p>
+        <h2 class="text-3xl md:text-[36px] font-light tracking-tight" id="lc-section-title"></h2>
+      </div>
+
+      <!-- ═══════════════════════════════════════════
+           CIRCULAR LIFECYCLE DIAGRAM
+           Desktop: SVG circle + side info panel
+           Mobile:  vertical stage list (see #lc-mobile-list below)
+      ════════════════════════════════════════════ -->
+
+      <!-- DESKTOP diagram -->
+      <div id="lc-diagram-outer" style="display:flex;align-items:flex-start;justify-content:center;gap:56px;min-height:520px;">
+
+        <!-- SVG diagram -->
+        <div id="lc-diagram-wrap">
+          <svg id="lc-diagram-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" aria-label="Building Lifecycle Diagram">
+            <!--
+              GEOMETRY (r=188, cx=cy=250):
+              5 nodes evenly spaced at 72° intervals, starting from top (-90°):
+                Node 1 Design:       -90°  → (250.0,  62.0)  — top
+                Node 2 Construction: -18°  → (428.8, 191.9)  — upper right
+                Node 3 Operations:    54°  → (360.5, 402.1)  — lower right
+                Node 4 Urban Mining: 126°  → (139.5, 402.1)  — lower left
+                Node 5 Compliance:   198°  → ( 71.2, 191.9)  — upper left
+
+              Arcs: each spans 64°, gap of 8° centred on each node (4° each side):
+                Arc 1 Design→Const:     -86° → -22°
+                Arc 2 Const→Ops:        -14° →  50°
+                Arc 3 Ops→Urban:         58° → 122°
+                Arc 4 Urban→Compliance: 130° → 194°
+                Arc 5 Compliance→Design: 202° → 266°
+            -->
+
+            <!-- ── Arc 1: Design — #22d3ee — -86° to -22° ── -->
+            <path id="arc-design" class="lc-arc"
+              d="M 263.1 62.5 A 188 188 0 0 1 424.3 179.6"
+              stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
+
+            <!-- ── Arc 2: Construction — #16a34a — -14° to 50° ── -->
+            <path id="arc-construction" class="lc-arc"
+              d="M 432.4 204.5 A 188 188 0 0 1 370.8 394.0"
+              stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+
+            <!-- ── Arc 3: Operations — #2563eb — 58° to 122° ── -->
+            <path id="arc-operations" class="lc-arc"
+              d="M 349.6 409.4 A 188 188 0 0 1 150.4 409.4"
+              stroke="#2563eb" stroke-width="5" stroke-linecap="round"/>
+
+            <!-- ── Arc 4: Urban Mining — #fb923c — 130° to 194° ── -->
+            <path id="arc-urban" class="lc-arc"
+              d="M 129.2 394.0 A 188 188 0 0 1 67.6 204.5"
+              stroke="#fb923c" stroke-width="5" stroke-linecap="round"/>
+
+            <!-- ── Arc 5: Compliance — #7e22ce — 202° to 266° ── -->
+            <path id="arc-compliance" class="lc-arc"
+              d="M 75.7 179.6 A 188 188 0 0 1 236.9 62.5"
+              stroke="#7e22ce" stroke-width="5" stroke-linecap="round"/>
+
+            <!-- ── Inner circle (logo area) ── -->
+            <circle cx="250" cy="250" r="72" fill="none" stroke="#D8D8D8" stroke-width="1"/>
+            <circle cx="250" cy="250" r="66" fill="#FAFAFA" stroke="#EBEBEB" stroke-width="0.5"/>
+
+            <!-- Centre mark: two clockwise half-arcs forming a cycle (cx=250,cy=250,r=32,gap=10°) -->
+            <defs>
+              <marker id="arr-top" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                <polygon points="0,1 9,5 0,9" fill="#1a1a1a"/>
+              </marker>
+              <marker id="arr-bot" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                <polygon points="0,1 9,5 0,9" fill="#1a1a1a"/>
+              </marker>
+            </defs>
+            <!-- Top half-arc: 190°→350°, small arc (flag=0), clockwise (sweep=1) -->
+            <path d="M 218.5 244.4 A 32 32 0 0 1 281.5 244.4"
+              fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"
+              marker-end="url(#arr-top)"/>
+            <!-- Bottom half-arc: 10°→170°, small arc (flag=0), clockwise (sweep=1) -->
+            <path d="M 281.5 255.6 A 32 32 0 0 1 218.5 255.6"
+              fill="none" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"
+              marker-end="url(#arr-bot)"/>
+
+            <!-- ── Node 1: Design — top (-90°) → (250, 62) ── -->
+            <g class="lc-node-group" id="node-design" data-stage="design" tabindex="0" role="button" aria-label="Design stage">
+              <circle class="lc-node-circle" cx="250" cy="62" r="11" fill="#22d3ee" stroke="#fff" stroke-width="2.5"/>
+              <text class="lc-node-label" x="250" y="37"
+                font-family="'Times New Roman',Times,serif" font-size="11" font-weight="600"
+                fill="#111" text-anchor="middle" letter-spacing="0.08em">DESIGN</text>
+            </g>
+
+            <!-- ── Node 2: Construction — upper right (-18°) → (428.8, 191.9) ── -->
+            <g class="lc-node-group" id="node-construction" data-stage="construction" tabindex="0" role="button" aria-label="Construction stage">
+              <circle class="lc-node-circle" cx="428.8" cy="191.9" r="11" fill="#16a34a" stroke="#fff" stroke-width="2.5"/>
+              <text class="lc-node-label" x="447" y="188"
+                font-family="'Times New Roman',Times,serif" font-size="11" font-weight="600"
+                fill="#111" text-anchor="start" letter-spacing="0.08em">CONSTRUCTION</text>
+            </g>
+
+            <!-- ── Node 3: Operations — lower right (54°) → (360.5, 402.1) ── -->
+            <g class="lc-node-group" id="node-operations" data-stage="operations" tabindex="0" role="button" aria-label="Operations stage">
+              <circle class="lc-node-circle" cx="360.5" cy="402.1" r="11" fill="#2563eb" stroke="#fff" stroke-width="2.5"/>
+              <text class="lc-node-label" x="378" y="399"
+                font-family="'Times New Roman',Times,serif" font-size="11" font-weight="600"
+                fill="#111" text-anchor="start" letter-spacing="0.08em">OPERATIONS</text>
+            </g>
+
+            <!-- ── Node 4: Urban Mining — lower left (126°) → (139.5, 402.1) ── -->
+            <g class="lc-node-group" id="node-urban" data-stage="urban" tabindex="0" role="button" aria-label="Urban Mining stage">
+              <circle class="lc-node-circle" cx="139.5" cy="402.1" r="11" fill="#fb923c" stroke="#fff" stroke-width="2.5"/>
+              <text class="lc-node-label" x="122" y="395"
+                font-family="'Times New Roman',Times,serif" font-size="11" font-weight="600"
+                fill="#111" text-anchor="end" letter-spacing="0.08em">URBAN</text>
+              <text class="lc-node-label" x="122" y="410"
+                font-family="'Times New Roman',Times,serif" font-size="11" font-weight="600"
+                fill="#111" text-anchor="end" letter-spacing="0.08em">MINING</text>
+            </g>
+
+            <!-- ── Node 5: Compliance — upper left (198°) → (71.2, 191.9) ── -->
+            <g class="lc-node-group" id="node-compliance" data-stage="compliance" tabindex="0" role="button" aria-label="Compliance stage">
+              <circle class="lc-node-circle" cx="71.2" cy="191.9" r="11" fill="#7e22ce" stroke="#fff" stroke-width="2.5"/>
+              <text class="lc-node-label" x="53" y="188"
+                font-family="'Times New Roman',Times,serif" font-size="11" font-weight="600"
+                fill="#111" text-anchor="end" letter-spacing="0.08em">COMPLIANCE</text>
+            </g>
+
+          </svg>
+        </div><!-- /lc-diagram-wrap -->
+
+        <!-- Stage info panel (right of diagram — shows stage name + objective on click) -->
+        <div id="lc-stage-panel" style="width:260px;flex-shrink:0;padding-top:48px;min-height:400px;">
+          <!-- Default: hint text -->
+          <div id="lc-panel-hint" style="padding-top:80px;">
+            <p style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#AAAAAA;
+                      font-weight:500;line-height:2;" id="lc-panel-hint-text">Select a stage<br>to explore roles</p>
+            <div style="width:20px;height:1px;background:#E8E8E8;margin-top:16px;"></div>
+          </div>
+          <!-- Active: stage name + objective, no CTA -->
+          <div id="lc-panel-content" style="display:none;">
+            <div id="lc-panel-bar" style="width:2px;height:32px;margin-bottom:14px;border-radius:1px;"></div>
+            <p id="lc-panel-stage-tag"
+               style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;
+                      font-weight:600;margin-bottom:12px;"></p>
+            <p id="lc-panel-desc"
+               style="font-size:0.875rem;color:#333;font-weight:300;line-height:1.8;"></p>
+          </div>
+        </div>
+
+      </div><!-- /lc-diagram-outer -->
+
+      <!-- MOBILE: vertical list fallback -->
+      <div id="lc-mobile-list">
+        <div class="lc-mobile-stage" id="mob-design" data-stage="design" style="border-color:#22d3ee;"
+          onclick="window.LC_DIAGRAM && window.LC_DIAGRAM.setActive('design')">
+          <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#22d3ee;margin-bottom:4px;">01</p>
+          <p style="font-size:0.9375rem;font-weight:300;color:#111;margin-bottom:2px;" id="mob-design-name"></p>
+          <p style="font-size:0.8125rem;color:#555;font-weight:300;" id="mob-design-focus"></p>
+        </div>
+        <div class="lc-mobile-stage" id="mob-construction" data-stage="construction" style="border-color:#16a34a;"
+          onclick="window.LC_DIAGRAM && window.LC_DIAGRAM.setActive('construction')">
+          <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#16a34a;margin-bottom:4px;">02</p>
+          <p style="font-size:0.9375rem;font-weight:300;color:#111;margin-bottom:2px;" id="mob-construction-name"></p>
+          <p style="font-size:0.8125rem;color:#555;font-weight:300;" id="mob-construction-focus"></p>
+        </div>
+        <div class="lc-mobile-stage" id="mob-operations" data-stage="operations" style="border-color:#2563eb;"
+          onclick="window.LC_DIAGRAM && window.LC_DIAGRAM.setActive('operations')">
+          <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#2563eb;margin-bottom:4px;">03</p>
+          <p style="font-size:0.9375rem;font-weight:300;color:#111;margin-bottom:2px;" id="mob-operations-name"></p>
+          <p style="font-size:0.8125rem;color:#555;font-weight:300;" id="mob-operations-focus"></p>
+        </div>
+        <div class="lc-mobile-stage" id="mob-urban" data-stage="urban" style="border-color:#fb923c;"
+          onclick="window.LC_DIAGRAM && window.LC_DIAGRAM.setActive('urban')">
+          <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#fb923c;margin-bottom:4px;">04</p>
+          <p style="font-size:0.9375rem;font-weight:300;color:#111;margin-bottom:2px;" id="mob-urban-name"></p>
+          <p style="font-size:0.8125rem;color:#555;font-weight:300;" id="mob-urban-focus"></p>
+        </div>
+        <div class="lc-mobile-stage" id="mob-compliance" data-stage="compliance" style="border-color:#7e22ce;"
+          onclick="window.LC_DIAGRAM && window.LC_DIAGRAM.setActive('compliance')">
+          <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#7e22ce;margin-bottom:4px;">05</p>
+          <p style="font-size:0.9375rem;font-weight:300;color:#111;margin-bottom:2px;" id="mob-compliance-name"></p>
+          <p style="font-size:0.8125rem;color:#555;font-weight:300;" id="mob-compliance-focus"></p>
+        </div>
+      </div><!-- /lc-mobile-list -->
+
+      <!-- ═══════════════════════════════════════════
+           STAGE CONTENT BLOCKS
+           5 stages, each with:
+           · Left col: stage meta (number, name, objective, industry focus, intel link)
+           · Right col: role cards (2 per stage, hover reveals hook + CTA)
+           IDs match the scroll targets used by the diagram (stage-design etc.)
+      ════════════════════════════════════════════ -->
+      <div style="margin-top:80px;">
+
+        <!-- ── STAGE 1: DESIGN ── -->
+        <div class="stage-block stage-design" id="stage-design">
+          <div class="stage-block-grid">
+            <!-- Stage meta row -->
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+              <span class="stage-num" id="s1-num" style="margin-bottom:0;"></span>
+              <div class="stage-accent-bar" style="background:#22d3ee;margin-bottom:0;width:24px;"></div>
+              <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#22d3ee;margin:0;" id="s1-tag"></p>
+            </div>
+            <!-- Industry focus + tags + intel -->
+            <div style="display:grid;grid-template-columns:2fr 3fr;gap:48px;align-items:start;margin-bottom:36px;" class="stage-inner-grid">
+              <div>
+                <p style="font-size:0.875rem;color:#333;font-weight:300;line-height:1.75;margin-bottom:20px;" id="s1-focus-body"></p>
+                <div style="margin-bottom:24px;">
+                  <span class="focus-tag">Embodied Carbon</span>
+                  <span class="focus-tag">Material Selection</span>
+                  <span class="focus-tag">EPD</span>
+                  <span class="focus-tag">Procurement</span>
+                  <span class="focus-tag">LCA</span>
+                </div>
+                <div>
+                  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:8px;" id="s1-intel-label"></p>
+                  <a href="intelligence-materials.html" class="intel-link" id="s1-intel-link"></a>
+                </div>
+              </div>
+              <!-- Role cards: 2-col grid, 3rd card below left -->
+              <div>
+                <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:16px;" id="s1-roles-label"></p>
+                <!-- Row 1: two cards side by side -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;" class="s1-cards-top">
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#22d3ee;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s1-p1-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s1-p1-role"></p>
+                    <p class="role-desc"  id="s1-p1-desc"></p>
+                    <p class="role-hook"  id="s1-p1-hook"></p>
+                    <a href="role-architect.html" class="role-cta" id="s1-p1-cta"></a>
+                  </div>
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#22d3ee;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s1-p2-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s1-p2-role"></p>
+                    <p class="role-desc"  id="s1-p2-desc"></p>
+                    <p class="role-hook"  id="s1-p2-hook"></p>
+                    <a href="role-procurement.html" class="role-cta" id="s1-p2-cta"></a>
+                  </div>
+                </div>
+                <!-- Row 2: third card, half width aligned left -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="s1-cards-bottom">
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#22d3ee;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s1-p3-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s1-p3-role"></p>
+                    <p class="role-desc"  id="s1-p3-desc"></p>
+                    <p class="role-hook"  id="s1-p3-hook"></p>
+                    <a href="role-epd-manager.html" class="role-cta" id="s1-p3-cta"></a>
+                  </div>
+                  <!-- empty cell to keep grid alignment -->
+                  <div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STAGE 2: CONSTRUCTION ── -->
+        <div class="stage-block stage-construction" id="stage-construction">
+          <div class="stage-block-grid">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+              <span class="stage-num" id="s2-num" style="margin-bottom:0;"></span>
+              <div class="stage-accent-bar" style="background:#16a34a;margin-bottom:0;width:24px;"></div>
+              <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#16a34a;margin:0;" id="s2-tag"></p>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 3fr;gap:48px;align-items:start;margin-bottom:36px;" class="stage-inner-grid">
+              <div>
+                <p style="font-size:0.875rem;color:#333;font-weight:300;line-height:1.75;margin-bottom:20px;" id="s2-focus-body"></p>
+                <div style="margin-bottom:24px;">
+                  <span class="focus-tag">Site Emissions</span>
+                  <span class="focus-tag">MRV</span>
+                  <span class="focus-tag">ISO 14064</span>
+                  <span class="focus-tag">Data Capture</span>
+                  <span class="focus-tag">Equipment Energy</span>
+                </div>
+                <div>
+                  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:8px;" id="s2-intel-label"></p>
+                  <a href="intelligence-construction.html" class="intel-link" id="s2-intel-link"></a>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:16px;" id="s2-roles-label"></p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="role-cards-flex">
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#16a34a;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s2-p1-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s2-p1-role"></p>
+                    <p class="role-desc"  id="s2-p1-desc"></p>
+                    <p class="role-hook"  id="s2-p1-hook"></p>
+                    <a href="role-site-supervisor.html" class="role-cta" id="s2-p1-cta"></a>
+                  </div>
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#16a34a;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s2-p2-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s2-p2-role"></p>
+                    <p class="role-desc"  id="s2-p2-desc"></p>
+                    <p class="role-hook"  id="s2-p2-hook"></p>
+                    <a href="role-sustainability-manager.html" class="role-cta" id="s2-p2-cta"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STAGE 3: OPERATIONS ── -->
+        <div class="stage-block stage-operations" id="stage-operations">
+          <div class="stage-block-grid">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+              <span class="stage-num" id="s3-num" style="margin-bottom:0;"></span>
+              <div class="stage-accent-bar" style="background:#2563eb;margin-bottom:0;width:24px;"></div>
+              <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#2563eb;margin:0;" id="s3-tag"></p>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 3fr;gap:48px;align-items:start;margin-bottom:36px;" class="stage-inner-grid">
+              <div>
+                <p style="font-size:0.875rem;color:#333;font-weight:300;line-height:1.75;margin-bottom:20px;" id="s3-focus-body"></p>
+                <div style="margin-bottom:24px;">
+                  <span class="focus-tag">Energy Monitoring</span>
+                  <span class="focus-tag">BMS</span>
+                  <span class="focus-tag">IoT</span>
+                  <span class="focus-tag">Anomaly Detection</span>
+                  <span class="focus-tag">Maintenance</span>
+                </div>
+                <div>
+                  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:8px;" id="s3-intel-label"></p>
+                  <a href="intelligence-operations.html" class="intel-link" id="s3-intel-link"></a>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:16px;" id="s3-roles-label"></p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="role-cards-flex">
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#2563eb;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s3-p1-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s3-p1-role"></p>
+                    <p class="role-desc"  id="s3-p1-desc"></p>
+                    <p class="role-hook"  id="s3-p1-hook"></p>
+                    <a href="role-operations-manager.html" class="role-cta" id="s3-p1-cta"></a>
+                  </div>
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#2563eb;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s3-p2-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s3-p2-role"></p>
+                    <p class="role-desc"  id="s3-p2-desc"></p>
+                    <p class="role-hook"  id="s3-p2-hook"></p>
+                    <a href="role-energy-consultant.html" class="role-cta" id="s3-p2-cta"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STAGE 4: URBAN MINING ── -->
+        <div class="stage-block stage-urban" id="stage-urban">
+          <div class="stage-block-grid">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+              <span class="stage-num" id="s4-num" style="margin-bottom:0;"></span>
+              <div class="stage-accent-bar" style="background:#fb923c;margin-bottom:0;width:24px;"></div>
+              <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#fb923c;margin:0;" id="s4-tag"></p>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 3fr;gap:48px;align-items:start;margin-bottom:36px;" class="stage-inner-grid">
+              <div>
+                <p style="font-size:0.875rem;color:#333;font-weight:300;line-height:1.75;margin-bottom:20px;" id="s4-focus-body"></p>
+                <div style="margin-bottom:24px;">
+                  <span class="focus-tag">Renovation</span>
+                  <span class="focus-tag">Circularity Index</span>
+                  <span class="focus-tag">Material Reuse</span>
+                  <span class="focus-tag">Deconstruction</span>
+                  <span class="focus-tag">GWP</span>
+                </div>
+                <div>
+                  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:8px;" id="s4-intel-label"></p>
+                  <a href="intelligence-urban-mining.html" class="intel-link" id="s4-intel-link"></a>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:16px;" id="s4-roles-label"></p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="role-cards-flex">
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#fb923c;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s4-p1-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s4-p1-role"></p>
+                    <p class="role-desc"  id="s4-p1-desc"></p>
+                    <p class="role-hook"  id="s4-p1-hook"></p>
+                    <a href="role-asset-owner.html" class="role-cta" id="s4-p1-cta"></a>
+                  </div>
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#fb923c;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s4-p2-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s4-p2-role"></p>
+                    <p class="role-desc"  id="s4-p2-desc"></p>
+                    <p class="role-hook"  id="s4-p2-hook"></p>
+                    <a href="role-reuse-coordinator.html" class="role-cta" id="s4-p2-cta"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── STAGE 5: COMPLIANCE ── -->
+        <div class="stage-block stage-compliance" id="stage-compliance">
+          <div class="stage-block-grid">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+              <span class="stage-num" id="s5-num" style="margin-bottom:0;"></span>
+              <div class="stage-accent-bar" style="background:#7e22ce;margin-bottom:0;width:24px;"></div>
+              <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;color:#7e22ce;margin:0;" id="s5-tag"></p>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 3fr;gap:48px;align-items:start;margin-bottom:36px;" class="stage-inner-grid">
+              <div>
+                <p style="font-size:0.875rem;color:#333;font-weight:300;line-height:1.75;margin-bottom:20px;" id="s5-focus-body"></p>
+                <div style="margin-bottom:24px;">
+                  <span class="focus-tag">LCA</span>
+                  <span class="focus-tag">ISO 14040/44</span>
+                  <span class="focus-tag">ESG Disclosure</span>
+                  <span class="focus-tag">Carbon Credits</span>
+                  <span class="focus-tag">Green Finance</span>
+                </div>
+                <div>
+                  <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:8px;" id="s5-intel-label"></p>
+                  <a href="intelligence-compliance.html" class="intel-link" id="s5-intel-link"></a>
+                </div>
+              </div>
+              <div>
+                <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#111;font-weight:600;margin-bottom:16px;" id="s5-roles-label"></p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;" class="role-cards-flex">
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#7e22ce;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s5-p1-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s5-p1-role"></p>
+                    <p class="role-desc"  id="s5-p1-desc"></p>
+                    <p class="role-hook"  id="s5-p1-hook"></p>
+                    <a href="role-esg-manager.html" class="role-cta" id="s5-p1-cta"></a>
+                  </div>
+                  <div class="role-card">
+                    <div class="card-top-bar" style="position:absolute;top:0;left:0;right:0;height:2px;background:#7e22ce;opacity:0;transition:opacity 0.25s;"></div>
+                    <span class="role-org-label" id="s5-p2-org"></span>
+                    <div class="role-org-divider"></div>
+                    <p class="role-name" id="s5-p2-role"></p>
+                    <p class="role-desc"  id="s5-p2-desc"></p>
+                    <p class="role-hook"  id="s5-p2-hook"></p>
+                    <a href="role-carbon-asset-manager.html" class="role-cta" id="s5-p2-cta"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /stage blocks -->
+
+    </div>
+  </section>
+
+  <hr style="border:none;border-top:1px solid #E5E5E5;margin:0;">
+
+  <!-- ── 4. FINAL CTA SECTION ───────────────────
+       Identical structure to intelligence.html CTA section.
+       PURPOSE: Guide users to contact / request demo.
+  ──────────────────────────────────────────── -->
+  <!--
+    CTA TITLE direction:
+    Should not repeat "explore lifecycle" — pivot to action.
+    e.g. "Ready to see how SynerArch fits your role?"
+    or   "Talk to us about your lifecycle stage."
+    Tone: welcoming, low-pressure, institutional
+  -->
+  <section class="pt-16 pb-16 text-center px-6" style="background:#F5F5F5;">
+    <div class="max-w-3xl mx-auto flex flex-col items-center gap-10">
+      <h2 class="text-4xl md:text-5xl font-light tracking-tight" id="cta-title"></h2>
+      <a id="cta-btn" href="contact.html"
+        style="background:#111;color:#fff;padding:16px 48px;font-size:0.875rem;font-weight:500;
+               letter-spacing:0.02em;text-decoration:none;display:inline-block;transition:background 0.2s;"
+        onmouseover="this.style.background='#333'"
+        onmouseout="this.style.background='#111'"></a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════════════════════════════════
+     FOOTER  (identical to intelligence.html)
+═══════════════════════════════════════════ -->
+<footer class="bg-white border-t border-[#E5E5E5] py-20 px-6 sm:px-12 md:px-20 text-gray-500 text-sm font-light">
+  <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
+    <!-- Col 1: Logo & Social -->
+    <div class="space-y-6">
+      <a href="index.html">
+        <img src="logo-rect.png" alt="SynerArch" id="sa-logo-footer" style="height:110px;width:auto;display:block;">
+      </a>
+      <div class="flex items-center gap-4">
+        <a id="footer-social-x" href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="X">
+          <iconify-icon icon="ph:x-logo-light" width="18"></iconify-icon>
+        </a>
+        <a id="footer-social-linkedin" href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="LinkedIn">
+          <iconify-icon icon="ph:linkedin-logo-light" width="18"></iconify-icon>
+        </a>
+      </div>
+    </div>
+    <!-- Col 2: Use Cases -->
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" id="footer-col2-title"></h5>
+      <ul class="space-y-3">
+        <li><a class="hover:text-black transition-colors" href="intelligence-materials.html" id="footer-link-materials"></a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-construction.html" id="footer-link-construction"></a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-operations.html" id="footer-link-operations"></a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-urban-mining.html" id="footer-link-urban"></a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-compliance.html" id="footer-link-compliance"></a></li>
+      </ul>
+    </div>
+    <!-- Col 3: Company -->
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" id="footer-col3-title"></h5>
+      <ul class="space-y-3">
+        <li><a class="hover:text-black transition-colors" href="about.html" id="footer-link-about"></a></li>
+        <li><a class="hover:text-black transition-colors" href="contact.html" id="footer-link-contact"></a></li>
+      </ul>
+    </div>
+    <!-- Col 4: Contact -->
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" id="footer-col4-title"></h5>
+      <div class="text-[10px] text-gray-500 leading-relaxed font-mono">
+        <span class="block font-medium text-black text-xs" id="sa-contact-name"></span>
+        <span class="block text-xs mt-1"><a id="sa-contact-email" href="#" class="hover:text-black transition-colors"></a></span>
+      </div>
+    </div>
+  </div>
+  <!-- Bottom bar -->
+  <div class="max-w-[1200px] mx-auto mt-20 pt-8 border-t border-gray-100 flex justify-between items-center text-[10px] uppercase tracking-widest text-gray-500">
+    <div><span id="footer-copyright"></span></div>
+    <div class="flex gap-6 italic">
+      <a class="hover:text-black" href="privacy.html" id="footer-link-privacy"></a>
+      <span class="opacity-20">|</span>
+      <a class="hover:text-black" href="terms.html" id="footer-link-terms"></a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS
+     JS priority: product_pages_v4 > intelligence_v6 > v37
+═══════════════════════════════════════════ -->
+<script src="global.js"></script><!-- v4 version -->
+<script src="content.js"></script><!-- v37 — populates contact name/email + social links -->
+<script src="lifecycle-content.js"></script><!-- lifecycle page copy — edit this file to update all text -->
+
+<script>
+/* ══════════════════════════════════════════
+   LIFECYCLE PAGE — RENDER ENGINE + INTERACTION
+   Copy is managed in lifecycle-content.js
+   Do NOT add text content here.
+   ══════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════
+   RENDER ENGINE
+   Reads window.LIFECYCLE[lang] and populates DOM.
+   Mirrors the pattern used in intelligence.html.
+   ══════════════════════════════════════════ */
+function renderLifecyclePage(lang) {
+  var c = window.LIFECYCLE[lang] || window.LIFECYCLE['en'];
+  function t(id, val) { var el = document.getElementById(id); if (el && val !== undefined) el.textContent = val; }
+  function h(id, val) { var el = document.getElementById(id); if (el && val !== undefined) el.innerHTML = val; }
+
+  /* Hero */
+  t('hero-eyebrow', c['hero-eyebrow']);
+  t('hero-title',   c['hero-title']);
+  t('hero-sub',     c['hero-sub']);
+
+  /* Intro */
+  t('intro-eyebrow',      c['intro-eyebrow']);
+  t('intro-title',        c['intro-title']);
+  t('intro-body',         c['intro-body']);
+  t('intro-stages-label', c['intro-stages-label']);
+  t('intro-s1-name',  c['intro-s1-name']);  t('intro-s1-focus', c['intro-s1-focus']);
+  t('intro-s2-name',  c['intro-s2-name']);  t('intro-s2-focus', c['intro-s2-focus']);
+  t('intro-s3-name',  c['intro-s3-name']);  t('intro-s3-focus', c['intro-s3-focus']);
+  t('intro-s4-name',  c['intro-s4-name']);  t('intro-s4-focus', c['intro-s4-focus']);
+  t('intro-s5-name',  c['intro-s5-name']);  t('intro-s5-focus', c['intro-s5-focus']);
+  t('intro-footnote', c['intro-footnote']);
+
+  /* Lifecycle section header */
+  t('lc-section-eyebrow', c['lc-section-eyebrow']);
+  t('lc-section-title',   c['lc-section-title']);
+  t('lc-panel-hint-text', c['lc-panel-hint']);
+
+  /* Stage content blocks */
+  [1,2,3,4,5].forEach(function(i) {
+    var s = 's' + i + '-';
+    t(s+'num',         c[s+'num']);
+    t(s+'tag',         c[s+'tag']);
+    t(s+'objective',   c[s+'objective']);
+    t(s+'focus-body',  c[s+'focus-body']);
+    t(s+'intel-label', c[s+'intel-label']);
+    t(s+'intel-link',  c[s+'intel-link']);
+    t(s+'roles-label', c[s+'roles-label']);
+    t(s+'p1-org',      c[s+'p1-org']);
+    t(s+'p1-role',     c[s+'p1-role']);
+    t(s+'p1-desc',     c[s+'p1-desc']);
+    t(s+'p1-hook',     c[s+'p1-hook']);
+    t(s+'p1-cta',      c[s+'p1-cta']);
+    t(s+'p2-org',      c[s+'p2-org']);
+    t(s+'p2-role',     c[s+'p2-role']);
+    t(s+'p2-desc',     c[s+'p2-desc']);
+    t(s+'p2-hook',     c[s+'p2-hook']);
+    t(s+'p2-cta',      c[s+'p2-cta']);
+  });
+  /* Stage 1 only: third role card */
+  t('s1-p3-org',  c['s1-p3-org']);
+  t('s1-p3-role', c['s1-p3-role']);
+  t('s1-p3-desc', c['s1-p3-desc']);
+  t('s1-p3-hook', c['s1-p3-hook']);
+  t('s1-p3-cta',  c['s1-p3-cta']);
+
+  /* CTA */
+  t('cta-title', c['cta-title']);
+  t('cta-btn',   c['cta-btn']);
+
+  /* Footer */
+  t('footer-col2-title',       c['footer-col2-title']);
+  t('footer-link-materials',   c['footer-link-materials']);
+  t('footer-link-construction',c['footer-link-construction']);
+  t('footer-link-operations',  c['footer-link-operations']);
+  t('footer-link-urban',       c['footer-link-urban']);
+  t('footer-link-compliance',  c['footer-link-compliance']);
+  t('footer-col3-title',       c['footer-col3-title']);
+  t('footer-link-about',       c['footer-link-about']);
+  t('footer-link-contact',     c['footer-link-contact']);
+  t('footer-col4-title',       c['footer-col4-title']);
+  t('footer-copyright',        c['footer-copyright']);
+  t('footer-link-privacy',     c['footer-link-privacy']);
+  t('footer-link-terms',       c['footer-link-terms']);
+
+  /* Hero background has no lifecycle annotations — nothing to update here. */
+
+  /* Mobile list — stage names + focus text */
+  var mobMap = [
+    { id:'design',       num:1 },
+    { id:'construction', num:2 },
+    { id:'operations',   num:3 },
+    { id:'urban',        num:4 },
+    { id:'compliance',   num:5 }
+  ];
+  mobMap.forEach(function(m) {
+    var nameEl  = document.getElementById('mob-' + m.id + '-name');
+    var focusEl = document.getElementById('mob-' + m.id + '-focus');
+    if (nameEl)  nameEl.textContent  = c['intro-s' + m.num + '-name']  || '';
+    if (focusEl) focusEl.textContent = c['intro-s' + m.num + '-focus'] || '';
+  });
+}
+
+/* ══════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* Language init — hook into global.js SA system */
+  window.SA = window.SA || {};
+  window.SA.pageContent = { en: {}, jp: {} };
+  var lang = (window.SA && window.SA.currentLanguage) ? window.SA.currentLanguage : 'en';
+  renderLifecyclePage(lang);
+
+  /* Hook language switcher */
+  var origSwitch = window.SA.switchLanguage;
+  window.SA.switchLanguage = function(newLang) {
+    if (origSwitch) origSwitch.call(window.SA, newLang);
+    renderLifecyclePage(newLang);
+  };
+
+  /* ── Social links (update href when available) ── */
+  var SOCIAL_LINKS = { x: '', linkedin: '' };
+  (function() {
+    var xEl  = document.getElementById('footer-social-x');
+    var liEl = document.getElementById('footer-social-linkedin');
+    if (xEl  && SOCIAL_LINKS.x)        { xEl.href  = SOCIAL_LINKS.x;  xEl.removeAttribute('onclick'); }
+    if (liEl && SOCIAL_LINKS.linkedin) { liEl.href = SOCIAL_LINKS.linkedin; liEl.removeAttribute('onclick'); }
+  }());
+
+  /* Nav scroll effect */
+  var nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', function () {
+    if (!nav) return;
+    nav.classList.toggle('scrolled', window.scrollY > 50);
+  });
+  if (nav && window.scrollY > 50) nav.classList.add('scrolled');
+
+  /* Hamburger menu */
+  (function () {
+    var btn  = document.getElementById('sa-hamburger-btn');
+    var menu = document.getElementById('sa-nav-dropdown');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+    });
+    document.addEventListener('click', function () { menu.style.display = 'none'; });
+    menu.addEventListener('click', function (e) { e.stopPropagation(); });
+  }());
+
+  /* ══════════════════════════════════════════
+     CIRCULAR LIFECYCLE DIAGRAM INTERACTION
+     - Node click: highlight arc + show side panel + scroll to stage block
+     - Scroll: auto-highlight active stage node (Step 3 integration ready)
+     ══════════════════════════════════════════ */
+  (function() {
+
+    var STAGES = [
+      { id:'design',       arc:'arc-design',       node:'node-design',       color:'#22d3ee', label:'Design',        scrollTo:'stage-design' },
+      { id:'construction', arc:'arc-construction', node:'node-construction', color:'#16a34a', label:'Construction',  scrollTo:'stage-construction' },
+      { id:'operations',   arc:'arc-operations',   node:'node-operations',   color:'#2563eb', label:'Operations',    scrollTo:'stage-operations' },
+      { id:'urban',        arc:'arc-urban',        node:'node-urban',        color:'#fb923c', label:'Urban Mining',  scrollTo:'stage-urban' },
+      { id:'compliance',   arc:'arc-compliance',   node:'node-compliance',   color:'#7e22ce', label:'Compliance',    scrollTo:'stage-compliance' }
+    ];
+
+    var activeStage = null;
+
+    /* Map stage id to its content block id */
+    var STAGE_BLOCK = {
+      'design':       'stage-design',
+      'construction': 'stage-construction',
+      'operations':   'stage-operations',
+      'urban':        'stage-urban',
+      'compliance':   'stage-compliance'
+    };
+
+    function showStageBlock(stageId) {
+      /* Hide all stage blocks */
+      Object.values(STAGE_BLOCK).forEach(function(blockId) {
+        var el = document.getElementById(blockId);
+        if (el) el.classList.remove('active');
+      });
+      /* Show selected */
+      if (stageId) {
+        var target = document.getElementById(STAGE_BLOCK[stageId]);
+        if (target) {
+          target.classList.add('active');
+          /* Scroll to the block smoothly after a short delay (allow render) */
+          setTimeout(function() {
+            var top = target.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({ top: top, behavior: 'smooth' });
+          }, 50);
+        }
+      }
+    }
+
+    function setActive(stageId) {
+      activeStage = stageId;
+
+      /* Diagram: arc + node highlight */
+      STAGES.forEach(function(s) {
+        var arc  = document.getElementById(s.arc);
+        var node = document.getElementById(s.node);
+        var isActive = (s.id === stageId);
+        if (arc)  { arc.classList.toggle('dimmed', !isActive); arc.classList.toggle('active', isActive); }
+        if (node) { node.classList.toggle('dimmed', !isActive); }
+      });
+
+      /* Side panel — show stage name + objective text */
+      var hint    = document.getElementById('lc-panel-hint');
+      var content = document.getElementById('lc-panel-content');
+      var bar     = document.getElementById('lc-panel-bar');
+      var tag     = document.getElementById('lc-panel-stage-tag');
+      var desc    = document.getElementById('lc-panel-desc');
+
+      var stage = STAGES.filter(function(s){ return s.id === stageId; })[0];
+      if (!stage) return;
+
+      if (hint)    hint.style.display    = 'none';
+      if (content) content.style.display = 'block';
+      if (bar)     bar.style.background  = stage.color;
+      if (tag)   { tag.textContent = stage.label; tag.style.color = stage.color; }
+
+      /* Read objective from current language content */
+      var lang = (window.SA && window.SA.currentLanguage) ? window.SA.currentLanguage : 'en';
+      var c    = window.LIFECYCLE[lang] || window.LIFECYCLE['en'];
+      var idx  = { design:1, construction:2, operations:3, urban:4, compliance:5 }[stageId];
+      if (desc && idx) desc.textContent = c['s' + idx + '-objective'] || '';
+
+      /* Mobile list: highlight active item */
+      document.querySelectorAll('.lc-mobile-stage').forEach(function(el) {
+        var isActive = (el.dataset.stage === stageId ||
+          (stageId === 'urban' && el.dataset.stage === 'urban'));
+        el.classList.toggle('active', el.dataset.stage === stageId);
+      });
+
+      /* Show content block */
+      showStageBlock(stageId);
+    }
+
+    function clearActive() {
+      activeStage = null;
+      STAGES.forEach(function(s) {
+        var arc  = document.getElementById(s.arc);
+        var node = document.getElementById(s.node);
+        if (arc)  { arc.classList.remove('dimmed','active'); }
+        if (node) { node.classList.remove('dimmed'); }
+      });
+      /* Reset side panel */
+      var hint    = document.getElementById('lc-panel-hint');
+      var content = document.getElementById('lc-panel-content');
+      if (hint)    hint.style.display    = 'block';
+      if (content) content.style.display = 'none';
+      /* Mobile list: clear active */
+      document.querySelectorAll('.lc-mobile-stage').forEach(function(el) {
+        el.classList.remove('active');
+      });
+      /* Hide all stage blocks */
+      showStageBlock(null);
+    }
+
+    /* Attach click handlers to nodes */
+    STAGES.forEach(function(s) {
+      var node = document.getElementById(s.node);
+      if (!node) return;
+      node.addEventListener('click', function() {
+        if (activeStage === s.id) {
+          clearActive();
+        } else {
+          setActive(s.id);
+        }
+      });
+      /* Keyboard accessibility */
+      node.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (activeStage === s.id) { clearActive(); } else { setActive(s.id); }
+        }
+      });
+    });
+
+    /* Expose setActive so mobile list can also call it */
+    window.LC_DIAGRAM = { setActive: setActive, clearActive: clearActive };
+
+    /* ══════════════════════════════════════════
+       STEP 4: SCROLL → DIAGRAM HIGHLIGHT
+       When user scrolls into a stage block, sync the diagram:
+       - highlight the corresponding arc + node
+       - update side panel with stage name + objective
+       - does NOT re-trigger showStageBlock (block already visible)
+       ══════════════════════════════════════════ */
+    var _scrollLocked = false; /* prevent scroll fighting during programmatic scroll */
+
+    function onScroll() {
+      if (_scrollLocked) return;
+
+      var NAV_H  = 80;
+      var middle = window.scrollY + window.innerHeight * 0.4;
+      var found  = null;
+
+      STAGES.forEach(function(s) {
+        var el = document.getElementById(s.scrollTo);
+        if (!el) return;
+        /* Only consider blocks that are currently visible (active) */
+        if (!el.classList.contains('active')) return;
+        var top    = el.getBoundingClientRect().top + window.scrollY;
+        var bottom = top + el.offsetHeight;
+        if (middle >= top - NAV_H && middle <= bottom) found = s.id;
+      });
+
+      if (found && found !== activeStage) {
+        /* Silently update diagram highlight without re-triggering scroll */
+        activeStage = found;
+        STAGES.forEach(function(s) {
+          var arc  = document.getElementById(s.arc);
+          var node = document.getElementById(s.node);
+          var isActive = (s.id === found);
+          if (arc)  { arc.classList.toggle('dimmed', !isActive); arc.classList.toggle('active', isActive); }
+          if (node) { node.classList.toggle('dimmed', !isActive); }
+        });
+
+        /* Update side panel text */
+        var bar  = document.getElementById('lc-panel-bar');
+        var tag  = document.getElementById('lc-panel-stage-tag');
+        var desc = document.getElementById('lc-panel-desc');
+        var hint = document.getElementById('lc-panel-hint');
+        var cont = document.getElementById('lc-panel-content');
+        var stg  = STAGES.filter(function(s){ return s.id === found; })[0];
+        if (stg) {
+          if (hint) hint.style.display = 'none';
+          if (cont) cont.style.display = 'block';
+          if (bar)  bar.style.background = stg.color;
+          if (tag)  { tag.textContent = stg.label; tag.style.color = stg.color; }
+          var lang2 = (window.SA && window.SA.currentLanguage) ? window.SA.currentLanguage : 'en';
+          var c2    = window.LIFECYCLE[lang2] || window.LIFECYCLE['en'];
+          var idx2  = { design:1, construction:2, operations:3, urban:4, compliance:5 }[found];
+          if (desc && idx2) desc.textContent = c2['s' + idx2 + '-objective'] || '';
+        }
+
+        /* Mobile list: sync active item on scroll */
+        document.querySelectorAll('.lc-mobile-stage').forEach(function(el) {
+          el.classList.toggle('active', el.dataset.stage === found);
+        });
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* Lock scroll-sync briefly when programmatic scroll fires */
+    var _origShow = showStageBlock;
+    showStageBlock = function(stageId) {
+      _scrollLocked = true;
+      _origShow(stageId);
+      setTimeout(function() { _scrollLocked = false; }, 700);
+    };
+
+  }());
+
+  /* ── Role card colour bar on hover ── */
+  document.querySelectorAll('.role-card').forEach(function(card) {
+    var bar = card.querySelector('.card-top-bar');
+    if (!bar) return;
+    card.addEventListener('mouseenter', function() { bar.style.opacity = '1'; });
+    card.addEventListener('mouseleave', function() { bar.style.opacity = '0'; });
+  });
+
+});
+</script>
+</body>
+</html>

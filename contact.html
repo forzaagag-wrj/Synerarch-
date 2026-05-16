@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact Us | SynerArch</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+        
+        :root {
+            --nav-bg-scroll: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            background-color: #FFFFFF;
+            color: #000000;
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Japanese: Kozuka Gothic (system) with Noto Sans JP web fallback */
+        html[lang="jp"] body, html[lang="jp"] * {
+            font-family: 'Kozuka Gothic Pro', 'Kozuka Gothic', 'A-OTF Kozuka Gothic Pro', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+        }
+
+        /* Navigation Style */
+        nav {
+            height: 72px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        nav.scrolled {
+            background-color: var(--nav-bg-scroll);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #E5E5E5;
+        }
+
+        .lang-switch span {
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .lang-switch .active {
+            color: #000000 !important;
+        }
+
+        /* Form Styling */
+        input, textarea {
+            background: #F5F5F5;
+            border: 1px solid #2A2A2A;
+            color: white;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #999999;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #F5F5F5; }
+        ::-webkit-scrollbar-thumb { background: #CCCCCC; }
+        ::-webkit-scrollbar-thumb:hover { background: #AAAAAA; }
+        /* ── Round 6 Polish ────────────────────────────────────────── */
+
+        /* Typography refinements */
+        h1, h2, h3, h4, h5 {
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+        }
+        p, li {
+            line-height: 1.75;
+        }
+
+        /* Nav polish */
+        nav {
+            border-bottom: 1px solid transparent;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        nav.scrolled {
+            box-shadow: 0 1px 0 #E5E5E5, 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        /* Card depth system */
+        .agent-card {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+        .agent-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.06);
+        }
+        .solution-card {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+        }
+        .solution-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+        .card {
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            transition: box-shadow 0.25s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        }
+
+        /* Button polish */
+        a[href], button {
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Primary black button */
+        .btn-primary {
+            background: #000;
+            color: #fff;
+            padding: 12px 32px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background: #1a1a1a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Outline button */
+        .btn-outline {
+            border: 1px solid #D1D1D1;
+            color: #000;
+            padding: 12px 32px;
+            font-size: 0.8125rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            display: inline-block;
+        }
+        .btn-outline:hover {
+            border-color: #000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Link micro-interactions */
+        a {
+            transition: opacity 0.15s ease;
+        }
+
+        /* Flow tooltip polish */
+        .flow-tooltip {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 6px;
+        }
+        .flow-node:hover .flow-tooltip {
+            bottom: 115%;
+        }
+
+        /* Inputs polish */
+        input, textarea, select {
+            -webkit-font-smoothing: antialiased;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #000 !important;
+            box-shadow: 0 0 0 2px rgba(0,0,0,0.06);
+        }
+
+
+        /* Founders card */
+        .founder-card {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        /* Lang switch polish */
+        .lang-switch span {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+        .lang-switch span:hover {
+            color: #000 !important;
+        }
+        .lang-switch .active {
+            color: #000 !important;
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* Fade-in timing refinement */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Arch / platform diagram boxes */
+        .arch-box {
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .arch-box:hover {
+            border-color: #BBBBBB;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* Agent input wrap focus state */
+        #agent-input-wrap {
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        #agent-input-wrap:focus-within {
+            border-color: #555;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+        }
+
+        /* Scrollbar refinement */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #D8D8D8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #AAAAAA; }
+
+        /* ── End Round 6 ─────────────────────────────────────────── */
+
+        /* ── Round 7 Diagram Visibility ────────────────────────────── */
+
+        /* Lifecycle flow: connecting line */
+        .absolute.h-\[1px\] {
+            background-color: #BBBBBB !important;
+            height: 2px !important;
+        }
+
+        /* Lifecycle flow nodes: stronger border + clearer label */
+        .flow-node {
+            border: 1.5px solid #AAAAAA !important;
+            font-size: 0.6875rem;
+        }
+        .flow-node:hover {
+            border-color: #000 !important;
+            background: #F0F0F0 !important;
+        }
+        .flow-node span {
+            font-size: 0.6875rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+        }
+
+        /* Arch diagram: top row boxes */
+        .w-\[160px\].py-3.border {
+            border: 1.5px solid #AAAAAA !important;
+            color: #333 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+        }
+        .w-\[160px\].py-3.border:hover {
+            border-color: #000 !important;
+            background: #F0F0F0 !important;
+        }
+
+        /* Arch diagram: vertical connector lines (index) */
+        .h-10.w-\[1px\] {
+            background-color: #999 !important;
+            width: 2px !important;
+        }
+
+        /* Arch diagram: output boxes (index) */
+        .p-6.border.border-gray-200.text-left {
+            border: 1.5px solid #CCCCCC !important;
+        }
+        .p-6.border.border-gray-200.text-left:hover {
+            border-color: #666 !important;
+        }
+        .p-6.border.border-gray-200.text-left span {
+            color: #222 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+        }
+
+        /* AI Core box label */
+        .absolute.-top-3 {
+            letter-spacing: 0.15em;
+            font-size: 0.625rem;
+        }
+
+        /* Step number circles (solution pages: energy, construction etc.) */
+        .w-12.h-12.rounded-full {
+            border: 2px solid #555 !important;
+            background: #fff !important;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000;
+        }
+
+        /* Flow line between step circles */
+        .flow-line {
+            height: 2px !important;
+            background: #AAAAAA !important;
+        }
+
+        /* Step labels under circles */
+        .flow-line + .text-center .font-medium,
+        .text-center .font-medium {
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        /* Platform arch-box */
+        .arch-box {
+            border: 1.5px solid #BBBBBB !important;
+            font-size: 0.75rem !important;
+            font-weight: 600;
+            color: #222 !important;
+            letter-spacing: 0.06em;
+        }
+        .arch-box:hover {
+            border-color: #333 !important;
+        }
+
+        /* Platform connector-line */
+        .connector-line {
+            background: #999 !important;
+            width: 2px !important;
+        }
+
+        /* Compliance / construction flow-dot */
+        .flow-dot {
+            width: 10px !important;
+            height: 10px !important;
+            background: #555 !important;
+            border: none !important;
+        }
+
+        /* Compliance flow step labels */
+        .text-\[10px\].mb-2.text-gray-500 {
+            color: #333 !important;
+            font-size: 0.6875rem !important;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* Retrofit how-it-works step labels (text-sm font-bold tracking-widest) */
+        .flex.justify-between.items-center span {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+        .flex.justify-between.items-center iconify-icon {
+            color: #888;
+        }
+
+        /* Construction step numbers (text-blue-500) */
+        .text-blue-500 {
+            font-size: 1.125rem !important;
+            font-weight: 700 !important;
+        }
+
+        /* Outcomes row labels */
+        .uppercase.tracking-widest.font-medium {
+            color: #111 !important;
+        }
+
+        /* ── End Round 7 ─────────────────────────────────────────── */
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#000;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#000;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.invisible{visibility:hidden}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.left-0{left:0px}.top-0{top:0px}.top-full{top:100%}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-0\.5{margin-bottom:0.125rem}.mb-16{margin-bottom:4rem}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mt-12{margin-top:3rem}.mt-16{margin-top:4rem}.mt-2{margin-top:0.5rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-32{height:8rem}.w-64{width:16rem}.w-full{width:100%}.max-w-\[1440px\]{max-width:1440px}.max-w-\[600px\]{max-width:600px}.max-w-xs{max-width:20rem}.resize-none{resize:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-10{gap:2.5rem}.gap-12{gap:3rem}.gap-16{gap:4rem}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.rounded{border-radius:0.25rem}.rounded-lg{border-radius:0.5rem}.rounded-none{border-radius:0px}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-t{border-top-width:1px}.border-\[\#1A1A1A\]{--tw-border-opacity:1;border-color:rgb(26 26 26 / var(--tw-border-opacity, 1))}.border-\[\#222\]{--tw-border-opacity:1;border-color:rgb(34 34 34 / var(--tw-border-opacity, 1))}.border-\[\#2A2A2A\]{--tw-border-opacity:1;border-color:rgb(42 42 42 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(75 85 99 / var(--tw-border-opacity, 1))}.bg-\[\#111\]{--tw-bg-opacity:1;background-color:rgb(17 17 17 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(0 0 0 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.p-10{padding:2.5rem}.p-2{padding:0.5rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-8{padding-left:2rem;padding-right:2rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pb-24{padding-bottom:6rem}.pt-16{padding-top:4rem}.pt-32{padding-top:8rem}.pt-8{padding-top:2rem}.text-center{text-align:center}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[10px\]{font-size:10px}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-light{font-weight:300}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-0.025em}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-black{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.opacity-0{opacity:0}.opacity-60{opacity:0.6}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.hover\:border-black:hover{--tw-border-opacity:1;border-color:rgb(255 255 255 / var(--tw-border-opacity, 1))}.hover\:bg-\[\#1A1A1A\]:hover{--tw-bg-opacity:1;background-color:rgb(26 26 26 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-200:hover{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.hover\:text-black:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.group:hover .group-hover\:visible{visibility:visible}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width: 640px){.sm\:px-12{padding-left:3rem;padding-right:3rem}}@media (min-width: 768px){.md\:flex{display:flex}.md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:px-20{padding-left:5rem;padding-right:5rem}.md\:text-5xl{font-size:3rem;line-height:1}}</style>
+</head>
+<body class="is-mb-ai-setting">
+<!-- Global Navigation -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-8 sm:px-12 md:px-20" id="main-nav">
+<div class="flex items-center justify-between w-full max-w-[1440px] mx-auto">
+<!-- Logo -->
+<div class="text-xl font-bold tracking-tight">
+<a href="index.html"><span data-ph="logo">[LOGO_PLACEHOLDER]</span></a>
+</div>
+<!-- Menu Middle -->
+<div class="hidden md:flex items-center gap-10 text-sm font-light text-gray-500 mx-auto">
+<div class="relative group">
+<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-solutions" href="index.html#solutions">Solutions</a>
+<!-- Dropdown Menu -->
+<div class="absolute top-full left-0 w-64 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" id="contact-sol-dropdown">
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors" href="solution-energy.html"><span class="block font-medium mb-0.5" data-i18n="sol-energy-title">Energy Optimization</span></a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="solution-materials.html"><span class="block font-medium mb-0.5" data-i18n="sol-mat-title">Materials &amp; Circular Supply</span></a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="solution-retrofit.html"><span class="block font-medium mb-0.5" data-i18n="sol-retrofit-title">Circular Retrofit &amp; Asset Recovery</span></a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="solution-construction.html"><span class="block font-medium mb-0.5" data-i18n="sol-const-title">Construction Decarbonization</span></a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="solution-compliance.html"><span class="block font-medium mb-0.5" data-i18n="sol-carbon-title">Carbon Compliance &amp; LCA</span></a>
+<!-- populated by content.js -->
+</div>
+</div>
+<a class="hover:text-black transition-colors" data-i18n="nav-platform" href="ai.html">AI</a>
+<a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a>
+<div class="relative group">
+<a class="hover:text-black transition-colors flex items-center gap-1 py-4" data-i18n="nav-contact" href="contact.html">Contact</a>
+<div class="absolute top-full left-0 w-44 bg-[#F7F7F7] border border-[#E5E5E5] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-2 shadow-2xl" id="contact-nav-dropdown">
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors" href="contact.html?type=general" id="cnav-general">General</a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=careers" id="cnav-careers">Careers</a>
+<a class="block px-4 py-3 hover:bg-[#F0F0F0] rounded text-xs text-gray-500 hover:text-black transition-colors border-t border-[#E5E5E5]" href="contact.html?type=media" id="cnav-media">Media</a>
+</div>
+</div>
+</div>
+<!-- Right Side -->
+<div class="flex items-center gap-6 ml-auto" id="sa-nav-right">
+<a class="px-5 py-2 bg-black text-white text-sm font-medium hover:bg-[#2A2A2A] transition-colors text-center" href="data-bank.html" data-i18n="nav-databank">Data Bank</a>
+<a class="px-5 py-2 border border-gray-300 rounded-none text-sm font-light hover:border-black transition-all text-center" href="request-demo.html">
+<span data-i18n="nav-demo">Request Demo</span>
+</a>
+<div class="lang-switch flex items-center gap-2 text-xs font-medium text-gray-500">
+<span class="active" id="lang-en" onclick="SA.switchLanguage('en'); setTimeout(function(){ var t=(new URLSearchParams(window.location.search).get('type')||'general'); if(window._contactApplyType) window._contactApplyType(t); },10)">EN</span>
+<span class="text-gray-500">/</span>
+<span id="lang-jp" onclick="SA.switchLanguage('jp'); setTimeout(function(){ var t=(new URLSearchParams(window.location.search).get('type')||'general'); if(window._contactApplyType) window._contactApplyType(t); },10)">JP</span>
+</div>
+</div>
+</div>
+</nav>
+<main class="pt-28 pb-16">
+<!-- Hero Section -->
+<section class="max-w-[600px] mx-auto text-center mb-16 px-6">
+
+<h1 class="text-4xl md:text-5xl font-medium mb-6" id="contact-title" style="font-size:2.5rem;line-height:1.15;font-weight:500;">Get in Touch</h1>
+<p class="text-[#444] leading-relaxed font-medium" id="contact-desc">Whether you are exploring a collaboration, looking to learn more about our technology and solutions, or simply want to connect — we welcome the conversation. We also look forward to building relationships with exceptional talent and media partners in the built environment.</p>
+</section>
+<!-- Contact Form Card -->
+<section class="max-w-[600px] mx-auto px-6">
+<div class="bg-[#F7F7F7] border border-[#E5E5E5] rounded-xl p-10">
+<form action="#" class="space-y-6" method="POST">
+<div>
+<label class="block text-sm font-medium text-gray-500 mb-2" data-i18n="form-name">Name</label>
+<input class="w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-black" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-500 mb-2" data-i18n="form-email">Email</label>
+<input class="w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-black" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-500 mb-2" data-i18n="form-company">Company</label>
+<input class="w-full px-4 py-3 rounded-lg bg-white border border-[#E5E5E5] text-black" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-500 mb-2" data-i18n="form-message">Message</label>
+<textarea class="w-full px-4 py-3 rounded-lg h-32 resize-none bg-white border border-[#E5E5E5] text-black" required=""></textarea>
+<p class="mt-2 text-xs text-gray-500 leading-relaxed" id="contact-hint">We recommend briefly describing your project background, including building type, scale, and key objectives (e.g., energy optimization, carbon compliance, retrofit planning), so we can prepare in advance. Our team typically responds within 1–2 business days.</p>
+</div>
+<button class="w-full bg-black text-white font-semibold py-4 rounded-lg hover:bg-gray-800 transition-colors" data-i18n="form-submit" type="submit">Send Message</button>
+</form>
+</div>
+<!-- Contact Info Placeholder -->
+<div class="mt-16 pt-16 border-t border-[#E5E5E5] text-center">
+<div class="text-gray-500">
+<p class="text-xl font-medium mb-4"><span data-ph="contact-info">[CONTACT_INFO_PLACEHOLDER]</span></p>
+<p class="text-sm opacity-60">[CONTACT_INFO: Email · Phone · Address]</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Global Footer -->
+<footer class="bg-white border-t border-[#E5E5E5] py-20 px-6 sm:px-12 md:px-20 text-gray-500 text-sm font-light">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
+<!-- Col 1: Logo & Social -->
+<div class="space-y-6">
+<div class="text-black font-bold tracking-tight text-lg underline underline-offset-8 decoration-1 decoration-gray-200">
+<a href="index.html"><span data-ph="logo">[LOGO_PLACEHOLDER]</span></a>
+</div>
+<div class="flex items-center gap-4">
+<a id="footer-social-x" href="#" class="text-gray-400 hover:text-black transition-colors" aria-label="X (Twitter)">
+  <iconify-icon icon="ph:x-logo-light" width="18"></iconify-icon>
+</a>
+<a id="footer-social-linkedin" href="#" class="text-gray-400 hover:text-black transition-colors" aria-label="LinkedIn">
+  <iconify-icon icon="ph:linkedin-logo-light" width="18"></iconify-icon>
+</a>
+</div>
+</div>
+<!-- Col 2: Use Cases -->
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-use">Use Cases</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-black transition-colors" data-i18n="sol-energy-title" href="solution-energy.html">Energy Optimization</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-mat-title" href="solution-materials.html">Materials &amp; Circular Supply</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-retrofit-title" href="solution-retrofit.html">Circular Retrofit &amp; Asset Recovery</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-const-title" href="solution-construction.html">Construction Decarbonization</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="sol-carbon-title" href="solution-compliance.html">Carbon Compliance &amp; LCA</a></li>
+</ul>
+</div>
+<!-- Col 3: Company -->
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="footer-head-comp">Company</h5>
+<ul class="space-y-3">
+<li><a class="hover:text-black transition-colors" data-i18n="nav-about" href="about.html">About</a></li>
+<li><a class="hover:text-black transition-colors" data-i18n="nav-contact" href="contact.html">Contact</a></li>
+</ul>
+</div>
+<!-- Col 4: Info Placeholder -->
+<div class="space-y-6">
+<h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]" data-i18n="nav-contact">Contact</h5>
+<div class="text-[10px] text-gray-500 leading-relaxed font-mono">
+<span data-ph="company-info">[COMPANY_INFO_PLACEHOLDER]</span><br/>
+Based on your region and industry sector.
+</div>
+</div>
+</div>
+<!-- Bottom -->
+<div class="max-w-[1200px] mx-auto mt-20 pt-8 border-t border-gray-100 flex justify-between items-center text-[10px] uppercase tracking-widest text-gray-500">
+<div><span data-ph="copyright">© 2026 SynerArch. All rights reserved.</span></div>
+<div class="flex gap-6 italic">
+<a class="hover:text-black" data-i18n="footer-priv" href="#">Privacy Policy</a>
+<span class="opacity-20">|</span>
+<a class="hover:text-black" data-i18n="footer-terms" href="#">Terms</a>
+</div>
+</div>
+</footer>
+<script src="copy.js"></script>
+<script src="copy-loader.js"></script>
+<script src="content.js"></script>
+<script src="global.js"></script>
+<script>
+    // Page content — consumed by global.js renderContent()
+    window.SA.pageContent = {
+        "en": {
+        "nav-solutions": "Solutions",
+        "nav-platform": "AI",
+        "nav-about": "About",
+        "nav-contact": "Contact",
+        "nav-demo": "Request Demo",
+        "footer-desc": "AI-powered solutions for BIM-enabled buildings, carbon, and lifecycle management.",
+        "footer-head-use": "Use Cases",
+        "footer-head-comp": "Company",
+        "footer-outcomes-head": "Typical performance outcomes across deployments:",
+        "out-1-label-full": "Energy reduction: 20–30%",
+        "out-2-label-full": "Carbon reduction: 15–25%",
+        "out-3-label-full": "Operational cost reduction: 10–20%",
+        "out-4-label-full": "Data coverage improvement: 60–90%",
+        "sol-energy-title": "Energy Optimization",
+        "sol-mat-title": "Materials & Circular Supply",
+        "sol-retrofit-title": "Circular Retrofit & Asset Recovery",
+        "sol-const-title": "Construction Decarbonization",
+        "sol-carbon-title": "Carbon Compliance & LCA",
+        "footer-priv": "Privacy Policy",
+        "footer-terms": "Terms",
+        "hero-title": "Get in Touch",
+        "hero-desc": "Whether you are exploring a collaboration, looking to learn more about our technology and solutions, or simply want to connect — we welcome the conversation. We also look forward to building relationships with exceptional talent and media partners in the built environment.",
+        "form-name": "Name",
+        "form-email": "Email",
+        "form-company": "Company",
+        "form-message": "Message",
+        "form-hint": "We recommend briefly describing your project background, including building type, scale, and key objectives (e.g., energy optimization, carbon compliance, retrofit planning), so we can prepare in advance. Our team typically responds within 1–2 business days.",
+        "form-submit": "Send Message"
+        },
+        "jp": {
+        "nav-solutions": "ソリューション",
+        "nav-platform": "AI",
+        "nav-about": "会社情報",
+        "nav-contact": "お問い合わせ",
+        "nav-databank": "データバンク",
+        "nav-demo": "デモを依頼",
+        "footer-desc": "BIMを活用した建物・カーボン・ライフサイクル管理のためのAIソリューション。",
+        "footer-head-use": "ユースケース",
+        "footer-head-comp": "会社情報",
+        "footer-outcomes-head": "一般的な導入効果：",
+        "out-1-label-full": "エネルギー削減：20–30%",
+        "out-2-label-full": "カーボン削減：15–25%",
+        "out-3-label-full": "運用コスト削減：10–20%",
+        "out-4-label-full": "データ可視化率向上：60–90%",
+        "sol-energy-title": "エネルギー最適化",
+        "sol-mat-title": "材料・循環供給",
+        "sol-retrofit-title": "サーキュラー改修・資産回収",
+        "sol-const-title": "施工カーボン管理",
+        "sol-carbon-title": "カーボン管理・LCA",
+        "footer-priv": "プライバシーポリシー",
+        "footer-terms": "利用規約",
+        "hero-title": "お問い合わせ",
+        "hero-desc": "ソリューションに関するご相談、技術・製品の詳細についてのお問い合わせ、あるいは単純なご連絡まで、いつでもお気軽にご連絡ください。建成環境分野の優秀な人材やメディアパートナーとのつながりも歓迎しています。",
+        "form-name": "お名前",
+        "form-email": "メール",
+        "form-company": "会社",
+        "form-message": "メッセージ",
+        "form-hint": "プロジェクト概要（建物種類・規模・目的など）をご記入ください。通常1〜2営業日以内にご連絡いたします",
+        "form-submit": "送信"
+        }
+    };
+
+
+
+    // Scroll Effect
+    window.addEventListener('scroll', function () {
+        var nav = document.getElementById('main-nav');
+        if (window.scrollY > 50) {
+            nav.classList.add('scrolled');
+        } else {
+            nav.classList.remove('scrolled');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // ── Social Links Config ───────────────────────────────────────
+        var SOCIAL_LINKS = { x: "", linkedin: "" };
+        (function() {
+            var xEl = document.getElementById('footer-social-x');
+            var liEl = document.getElementById('footer-social-linkedin');
+            if (xEl && SOCIAL_LINKS.x) xEl.href = SOCIAL_LINKS.x;
+            if (liEl && SOCIAL_LINKS.linkedin) liEl.href = SOCIAL_LINKS.linkedin;
+        }());
+
+        // ── Contact Type Switcher ─────────────────────────────────────
+        var CONTACT_CONTENT = {
+            en: {
+                general: {
+                    title: "Get in touch",
+                    desc: "Whether you are exploring a collaboration, looking to learn more about our technology and solutions, or simply want to connect — we welcome the conversation. We also look forward to building relationships with exceptional talent and media partners in the built environment.",
+                    hint: "We recommend briefly describing your project background, including building type, scale, and key objectives (e.g., energy optimization, carbon compliance, retrofit planning), so we can prepare in advance. Our team typically responds within 1–2 business days."
+                },
+                careers: {
+                    title: "Join Our Team",
+                    desc: "We are building a team that spans architecture, BIM, data platforms, and AI. If you are passionate about the digitization and decarbonization of the built environment, we welcome you to join us in building the data infrastructure for this industry.",
+                    hint: "Share your background and area of interest. Our team typically responds within 1–2 business days."
+                },
+                media: {
+                    title: "Media & Press",
+                    desc: "For press inquiries, reporting collaborations, or industry exchange, please reach out. We are happy to share our thinking and practice on the digitization and low-carbon transition of the built environment.",
+                    hint: "Please describe your media organization and the nature of your inquiry. Our team typically responds within 1–2 business days."
+                }
+            },
+            jp: {
+                general: {
+                    title: "お問い合わせ",
+                    desc: "ソリューションに関するご相談、技術・製品の詳細についてのお問い合わせ、あるいは単純なご連絡まで、いつでもお気軽にご連絡ください。建成環境分野の優秀な人材やメディアパートナーとのつながりも歓迎しています。",
+                    hint: "プロジェクト概要（建物種類・規模・目的など）をご記入ください。通常1〜2営業日以内にご連絡いたします"
+                },
+                careers: {
+                    title: "採用情報",
+                    desc: "建築・BIM・データプラットフォーム・AIにまたがるチームを構築しています。建成環境のデジタル化と脱炭素化に情熱をお持ちの方は、ぜひ私たちとともにこの業界のデータインフラ構築に参加してください。",
+                    hint: "ご経歴と希望する職種・分野（施工技術・エネルギー・データエンジニアリング・AIなど）をご記入ください。通常1〜2営業日以内にご連絡いたします"
+                },
+                media: {
+                    title: "メディア・取材",
+                    desc: "取材・報道連携・業界交流に関するお問い合わせはこちらからどうぞ。建成環境のデジタル化と低炭素転換に関する私たちの考えと実践を喜んでお伝えします。",
+                    hint: "メディア名・お問い合わせ内容・掲載予定時期をご記入ください。通常1〜2営業日以内にご連絡いたします"
+                }
+            }
+        };
+
+        var SELECT_LABELS = {
+            en: { general: "General", careers: "Careers", media: "Media" },
+            jp: { general: "その他", careers: "採用情報", media: "メディア" }
+        };
+
+        function getLang() {
+            return (window.SA && window.SA.currentLanguage) || 'en';
+        }
+
+        function applyType(type) {
+            var lang = getLang();
+            var content = CONTACT_CONTENT[lang] && CONTACT_CONTENT[lang][type]
+                ? CONTACT_CONTENT[lang][type]
+                : CONTACT_CONTENT['en'][type] || CONTACT_CONTENT['en']['general'];
+
+            var titleEl = document.getElementById('contact-title');
+            var descEl  = document.getElementById('contact-desc');
+            var hintEl  = document.getElementById('contact-hint');
+            if (titleEl) titleEl.textContent = content.title;
+            if (descEl)  descEl.textContent  = content.desc;
+            if (hintEl)  hintEl.textContent  = content.hint;
+
+            // Update nav dropdown labels for current language
+            var labels = SELECT_LABELS[lang] || SELECT_LABELS['en'];
+            var navG = document.getElementById('cnav-general');
+            var navC = document.getElementById('cnav-careers');
+            var navM = document.getElementById('cnav-media');
+            if (navG) navG.textContent = labels.general;
+            if (navC) navC.textContent = labels.careers;
+            if (navM) navM.textContent = labels.media;
+
+            // Update URL without reload
+            var url = new URL(window.location.href);
+            url.searchParams.set('type', type);
+            history.replaceState(null, '', url.toString());
+        }
+
+        // Read initial type from query param
+        var initType = (new URLSearchParams(window.location.search).get('type') || 'general').toLowerCase();
+        if (!['general', 'careers', 'media'].includes(initType)) initType = 'general';
+        applyType(initType);
+        // Fallback: re-apply after all scripts have settled (ensures no overwrites)
+        setTimeout(function() { applyType(initType); }, 50);
+
+        // Expose applyType globally so lang buttons can call it directly
+        window._contactApplyType = applyType;
+
+        // Also hook SA.onRender as secondary fallback
+        var _origOnRender = window.SA && window.SA.onRender;
+        window.SA.onRender = function(lang, content) {
+            if (typeof _origOnRender === 'function') _origOnRender(lang, content);
+            var currentType = (new URLSearchParams(window.location.search).get('type') || 'general').toLowerCase();
+            if (!['general', 'careers', 'media'].includes(currentType)) currentType = 'general';
+            applyType(currentType);
+        };
+    });
+</script>
+</body></html>

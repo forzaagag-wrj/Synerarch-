@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title id="page-title">Low-carbon Materials — SynerArch Intelligence</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --nav-bg-scroll: rgba(255,255,255,0.95);
+    --color-black:  #111111;
+    --color-mid:    #444444;
+    --color-light:  #555555;
+    --color-border: #E5E5E5;
+    --color-bg-card:#F7F7F7;
+    --accent: #fb923c;
+  }
+
+  body { background-color:#FFFFFF; color:#111111; font-family:'Times New Roman',Times,serif; margin:0; overflow-x:hidden; }
+  *:not(iconify-icon):not(iconify-icon *),*::before,*::after { font-family:'Times New Roman',Times,serif !important; }
+  html[lang="jp"] *:not(iconify-icon):not(iconify-icon *),
+  html[lang="jp"] *::before,
+  html[lang="jp"] *::after { font-family:'Kozuka Gothic Pro','Kozuka Gothic','Noto Sans JP','Hiragino Kaku Gothic ProN',sans-serif !important; }
+
+  nav { height:64px; border-bottom:1px solid transparent; transition:all 0.35s cubic-bezier(0.4,0,0.2,1); z-index:1000; }
+  nav.scrolled { background-color:var(--nav-bg-scroll); backdrop-filter:blur(8px); box-shadow:0 1px 0 #E5E5E5,0 4px 16px rgba(0,0,0,0.04); }
+
+  h1,h2,h3,h4,h5 { letter-spacing:-0.02em; line-height:1.15; }
+  p,li { line-height:1.75; }
+
+  .stage-tag { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:#111; font-weight:600; }
+
+  /* Lifecycle Mini-Map — vertical */
+  .lc-node { display:flex; align-items:center; gap:14px; text-decoration:none; padding:7px 0; }
+  .lc-node-dot { width:9px; height:9px; border-radius:50%; background:#D0D0D0; transition:background 0.2s; flex-shrink:0; }
+  .lc-node.active .lc-node-dot { background:var(--accent); box-shadow:0 0 0 3px rgba(251,146,60,0.2); }
+  .lc-node-label { font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#888; font-weight:500; white-space:nowrap; }
+  .lc-node.active .lc-node-label { color:#111; font-weight:600; }
+  .lc-node:hover .lc-node-dot { background:#BBB; }
+  .lc-node.active:hover .lc-node-dot { background:var(--accent); }
+  .lc-connector-v { width:1px; height:22px; background:#DCDCDC; margin-left:4px; }
+
+  /* Buttons */
+  .btn-primary { background:#111; color:#fff; padding:14px 40px; font-size:0.875rem; letter-spacing:0.06em; text-transform:uppercase; display:inline-block; transition:background 0.2s,transform 0.15s; cursor:pointer; border:none; text-decoration:none; }
+  .btn-primary:hover { background:#2A2A2A; transform:translateY(-1px); }
+  .btn-text-link { font-size:0.875rem; letter-spacing:0.04em; text-transform:uppercase; color:#111; text-decoration:none; border-bottom:1px solid #CCC; padding-bottom:2px; transition:border-color 0.2s; }
+  .btn-text-link:hover { border-color:#111; }
+
+  /* Tags */
+  .data-tag { display:inline-block; font-size:10px; letter-spacing:0.08em; text-transform:uppercase; color:#111; border:1px solid #888; font-weight:500; padding:3px 9px; border-radius:2px; }
+  .std-badge { display:inline-block; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; color:#444; border:1px solid #CCC; font-weight:500; padding:3px 9px; border-radius:2px; background:#FAFAFA; }
+
+  /* Accent bar */
+  .accent-bar { width:3px; background:var(--accent); border-radius:2px; flex-shrink:0; }
+
+  /* Capability rows */
+  .cap-row { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; padding:56px 0; border-top:1px solid #E8E8E8; }
+  .cap-row:first-of-type { border-top:none; padding-top:0; }
+  .cap-screenshot { background:#E8E8E8; width:100%; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .cap-screenshot img { width:100%; height:100%; object-fit:cover; display:block; }
+  .cap-ph { font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:#AAA; font-weight:500; }
+
+  /* Persona */
+  .persona-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .persona-card { border:1px solid #E5E5E5; padding:28px; background:#FAFAFA; display:flex; flex-direction:column; gap:10px; }
+
+  .section-rule { border:none; border-top:1px solid #E5E5E5; margin:0; }
+  .fade-in { animation:fadeIn 0.8s ease-out forwards; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  ::-webkit-scrollbar{width:5px} ::-webkit-scrollbar-track{background:#F5F5F5} ::-webkit-scrollbar-thumb{background:#CCC}
+
+  [data-i18n-jp]{display:none}
+  html[lang="jp"] [data-i18n-en]{display:none}
+  html[lang="jp"] [data-i18n-jp]{display:block}
+
+  @media(max-width:767px){
+    .hero-inner{flex-direction:column!important;}
+    .lc-map-col{display:none!important;}
+    .cap-row{grid-template-columns:1fr;gap:32px;}
+    .cap-row-rev{direction:ltr!important;}
+    .persona-grid{grid-template-columns:1fr;}
+    .data-grid{grid-template-columns:1fr!important;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 w-full flex items-center px-6 sm:px-10 md:px-16" id="main-nav">
+  <a href="index.html">
+    <img src="logo-nav.png" alt="SynerArch" id="sa-logo-nav" style="height:44px;width:auto;display:block;">
+  </a>
+  <div style="position:relative;margin-left:auto;">
+    <button id="sa-hamburger-btn" aria-label="Menu"
+      style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px;background:none;border:none;cursor:pointer;">
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+      <span style="display:block;width:22px;height:1.5px;background:#111;"></span>
+    </button>
+    <div id="sa-nav-dropdown"
+      style="display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:200px;background:white;border:1px solid #E5E5E5;box-shadow:0 8px 24px rgba(0,0,0,0.08);z-index:999;padding:8px 0;">
+      <span class="sa-nav-item" id="sa-nav-lifecycle" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;" onclick="window.location.href='index.html'">Lifecycle</span>
+      <span class="sa-nav-item" id="sa-nav-databank" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;" onclick="window.location.href='data-bank.html'">Data Bank</span>
+      <span class="sa-nav-item" id="sa-nav-intelligence" style="display:block;padding:12px 24px;font-size:14px;font-weight:500;color:#111;cursor:pointer;border-top:1px solid #F0F0F0;" onclick="window.location.href='intelligence.html'">Intelligence</span>
+      <span class="sa-nav-item" id="sa-nav-about" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;" onclick="window.location.href='about.html'">About</span>
+      <span class="sa-nav-item" id="sa-nav-contact" style="display:block;padding:12px 24px;font-size:14px;font-weight:300;color:#333;cursor:pointer;border-top:1px solid #F0F0F0;" onclick="window.location.href='contact.html'">Contact</span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO — identical structure and padding to intelligence.html -->
+<section class="relative overflow-hidden bg-white" style="min-height:380px;">
+
+  <!-- Background SVG: same as intelligence.html, active stage dot/label highlighted -->
+  <svg
+    id="hero-bg-svg"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:1;"
+    preserveAspectRatio="xMidYMid slice"
+  >
+    <defs>
+      <pattern id="fine-grid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+        <path d="M40 0H0V40" fill="none" stroke="#E8E8E8" stroke-width="0.5"/>
+      </pattern>
+      <pattern id="coarse-grid" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+        <rect width="200" height="200" fill="url(#fine-grid)"/>
+        <path d="M200 0H0V200" fill="none" stroke="#DEDEDE" stroke-width="0.8"/>
+      </pattern>
+      <linearGradient id="fade-mask-x" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="white" stop-opacity="1"/>
+        <stop offset="35%"  stop-color="white" stop-opacity="0"/>
+        <stop offset="100%" stop-color="white" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="fade-mask-y" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stop-color="white" stop-opacity="0"/>
+        <stop offset="60%"  stop-color="white" stop-opacity="0"/>
+        <stop offset="100%" stop-color="white" stop-opacity="1"/>
+      </linearGradient>
+      <mask id="grid-mask">
+        <rect width="100%" height="100%" fill="white"/>
+        <rect width="100%" height="100%" fill="url(#fade-mask-x)"/>
+        <rect width="100%" height="100%" fill="url(#fade-mask-y)"/>
+      </mask>
+    </defs>
+
+    <!-- Grid layer -->
+    <rect width="100%" height="100%" fill="url(#coarse-grid)" mask="url(#grid-mask)"/>
+
+    <!-- Vertical dashed stage lines -->
+    <g opacity="0.28" stroke="#111111" stroke-width="0.6">
+      <line x1="62%" y1="0" x2="62%" y2="100%" stroke-dasharray="4 8"/>
+      <line x1="70%" y1="0" x2="70%" y2="100%" stroke-dasharray="4 8"/>
+      <line x1="78%" y1="0" x2="78%" y2="100%" stroke-dasharray="4 8"/>
+      <line x1="86%" y1="0" x2="86%" y2="100%" stroke-dasharray="4 8"/>
+      <line x1="94%" y1="0" x2="94%" y2="100%" stroke-dasharray="4 8"/>
+    </g>
+
+    <!-- Horizontal data flow line -->
+    <line x1="58%" y1="50%" x2="97%" y2="50%"
+      stroke="#999999" stroke-width="0.8" stroke-dasharray="2 6" opacity="0.8"/>
+
+    <!-- Phase dots — active stage (URBAN MINING = cx 86%) accent colour, rest default -->
+    <g fill="#444444" opacity="0.8">
+      <circle cx="62%" cy="50%" r="3"/>
+      <circle cx="70%" cy="50%" r="3"/>
+      <circle cx="78%" cy="50%" r="3"/>
+      <circle cx="94%" cy="50%" r="3"/>
+    </g>
+    <circle cx="86%" cy="50%" r="3" fill="#fb923c" opacity="1"/>
+
+    <!-- Phase labels — active stage bold black, rest default grey -->
+    <g font-family="'Times New Roman',Times,serif" font-size="8" fill="#444444"
+       letter-spacing="1.5" text-anchor="middle">
+      <text x="62%" y="44%">DESIGN</text>
+      <text x="70%" y="44%">CONSTRUCTION</text>
+      <text x="78%" y="44%">OPERATIONS</text>
+      <text x="94%" y="44%">COMPLIANCE</text>
+    </g>
+    <!-- Active label: same font-size as others, fill black -->
+    <text x="86%" y="44%"
+      font-family="'Times New Roman',Times,serif" font-size="8"
+      fill="#111111" letter-spacing="1.5" text-anchor="middle">URBAN MINING</text>
+
+    <!-- Corner accent -->
+    <g stroke="#CCCCCC" stroke-width="0.8" fill="none" opacity="0.5">
+      <path d="M 97% 8 L 97% 20% L calc(97% - 48px) 20%" vector-effect="non-scaling-stroke"/>
+    </g>
+
+    <!-- Bottom-right decorative nodes -->
+    <g stroke="#D8D8D8" stroke-width="0.6" fill="none" opacity="0.5">
+      <rect x="89%" y="68%" width="20" height="12" rx="1"/>
+      <rect x="92%" y="68%" width="20" height="12" rx="1"/>
+    </g>
+  </svg>
+
+  <!-- Hero text content — identical structure to intelligence.html -->
+  <div class="relative z-10 max-w-[1200px] mx-auto px-6 sm:px-12 md:px-20 pt-40 pb-24 fade-in">
+    <p class="stage-tag mb-5" id="hero-stage"></p>
+    <h1 class="text-4xl md:text-[52px] font-light tracking-tight leading-tight max-w-[680px] mb-7"
+        id="hero-title"></h1>
+    <p class="text-base font-light text-[#333] leading-relaxed max-w-[560px] mb-7"
+       id="hero-value"></p>
+    <p style="font-size:0.8125rem;color:#777;font-weight:300;line-height:1.75;max-width:480px;margin-top:10px;margin-bottom:20px;"
+       id="hero-desc"></p>
+    <div style="margin-top:8px;">
+      <a href="request-demo.html" class="btn-primary" id="hero-cta"></a>
+    </div>
+  </div>
+
+</section>
+
+<hr class="section-rule">
+
+<!-- KEY CAPABILITIES -->
+<section class="py-20 px-6 sm:px-12 md:px-20 bg-white">
+  <div class="max-w-[1200px] mx-auto">
+
+    <div style="margin-bottom:56px;">
+      <p class="stage-tag mb-3" id="cap-eyebrow"></p>
+      <h2 class="text-3xl md:text-4xl font-light tracking-tight mb-5" id="cap-title"></h2>
+      <p style="font-size:0.875rem;color:#444;font-weight:300;line-height:1.75;max-width:680px;" id="cap-hint"></p>
+    </div>
+
+    <!-- Cap 1: text left, image right -->
+    <div class="cap-row">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="accent-bar" style="height:22px;margin-top:2px;"></div>
+          <h3 class="text-xl font-light tracking-tight" id="cap1-title"></h3>
+        </div>
+        <p style="font-size:0.875rem;color:#444;font-weight:300;line-height:1.75;" id="cap1-desc"></p>
+      </div>
+      <div class="cap-screenshot" id="cap1-img-wrap">
+        <img src="" alt="" id="cap1-img" style="display:none;">
+        <span class="cap-ph">UI · Dashboard</span>
+      </div>
+    </div>
+
+    <!-- Cap 2: image left, text right -->
+    <div class="cap-row cap-row-rev" style="direction:rtl;">
+      <div style="direction:ltr;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="accent-bar" style="height:22px;margin-top:2px;"></div>
+          <h3 class="text-xl font-light tracking-tight" id="cap2-title"></h3>
+        </div>
+        <p style="font-size:0.875rem;color:#444;font-weight:300;line-height:1.75;" id="cap2-desc"></p>
+      </div>
+      <div class="cap-screenshot" id="cap2-img-wrap" style="direction:ltr;">
+        <img src="" alt="" id="cap2-img" style="display:none;">
+        <span class="cap-ph">UI · Dashboard</span>
+      </div>
+    </div>
+
+    <!-- Cap 3: text left, image right -->
+    <div class="cap-row">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div class="accent-bar" style="height:22px;margin-top:2px;"></div>
+          <h3 class="text-xl font-light tracking-tight" id="cap3-title"></h3>
+        </div>
+        <p style="font-size:0.875rem;color:#444;font-weight:300;line-height:1.75;" id="cap3-desc"></p>
+      </div>
+      <div class="cap-screenshot" id="cap3-img-wrap">
+        <img src="" alt="" id="cap3-img" style="display:none;">
+        <span class="cap-ph">UI · Dashboard</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- PERSONA -->
+<section class="py-20 px-6 sm:px-12 md:px-20 bg-white">
+  <div class="max-w-[1200px] mx-auto">
+    <div style="margin-bottom:48px;">
+      <p class="stage-tag mb-3" id="persona-eyebrow"></p>
+      <h2 class="text-3xl md:text-4xl font-light tracking-tight" id="persona-title"></h2>
+    </div>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <p style="font-size:0.875rem;font-weight:500;color:#111;" id="p1-role"></p>
+        <p style="font-size:0.875rem;color:#444;font-weight:300;line-height:1.75;" id="p1-desc"></p>
+        <p style="font-size:0.875rem;color:#333;font-weight:400;line-height:1.65;border-left:2px solid var(--accent);padding-left:12px;margin-top:4px;" id="p1-hook"></p>
+        <!-- TODO: link to persona-specific page when ready -->
+        <div style="margin-top:10px;display:flex;justify-content:flex-end;"><a href="#" class="btn-text-link" id="p1-cta">View</a></div>
+
+      </div>
+      <div class="persona-card">
+        <p style="font-size:0.875rem;font-weight:500;color:#111;" id="p2-role"></p>
+        <p style="font-size:0.875rem;color:#444;font-weight:300;line-height:1.75;" id="p2-desc"></p>
+        <p style="font-size:0.875rem;color:#333;font-weight:400;line-height:1.65;border-left:2px solid var(--accent);padding-left:12px;margin-top:4px;" id="p2-hook"></p>
+        <!-- TODO: link to persona-specific page when ready -->
+        <div style="margin-top:10px;display:flex;justify-content:flex-end;"><a href="#" class="btn-text-link" id="p2-cta">View</a></div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- DATA SIGNALS -->
+<section class="py-20 px-6 sm:px-12 md:px-20" style="background:#F7F7F7;">
+  <div class="max-w-[1200px] mx-auto">
+    <div class="data-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;">
+      <div>
+        <p class="stage-tag mb-3" id="data-eyebrow"></p>
+        <h2 class="text-3xl font-light tracking-tight mb-5" id="data-title"></h2>
+        <p style="font-size:0.875rem;color:#444;font-weight:300;line-height:1.75;" id="data-desc"></p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div>
+          <p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#555;font-weight:500;margin-bottom:10px;" id="data-types-label"></p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;" id="data-tags-wrap"></div>
+        </div>
+        <div>
+          <p style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#555;font-weight:500;margin-bottom:10px;" id="data-standards-label"></p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;" id="data-standards-wrap"></div>
+        </div>
+        <div style="padding-top:4px;display:flex;justify-content:flex-end;">
+          <a href="data-bank.html" class="btn-text-link" id="data-cta"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- CTA -->
+<section class="pt-16 pb-16 text-center px-6" style="background:#F5F5F5;">
+  <div class="max-w-2xl mx-auto" style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+    <h2 class="text-3xl md:text-4xl font-light tracking-tight" id="cta-title"></h2>
+    <p style="font-size:0.875rem;color:#555;font-weight:300;line-height:1.75;max-width:480px;text-align:center;" id="cta-desc"></p>
+    <div style="display:flex;align-items:center;gap:32px;margin-top:16px;flex-wrap:wrap;justify-content:center;">
+      <a href="request-demo.html" id="cta-demo"
+        style="background:#111;color:#fff;padding:16px 48px;font-size:0.875rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:background 0.2s;"
+        onmouseover="this.style.background='#333'"
+        onmouseout="this.style.background='#111'"></a>
+      <a href="intelligence.html" class="btn-text-link" id="cta-back"></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-white border-t border-[#E5E5E5] py-20 px-6 sm:px-12 md:px-20 text-gray-500 text-sm font-light">
+  <div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 md:gap-8">
+    <div class="space-y-6">
+      <a href="index.html"><img src="logo-rect.png" alt="SynerArch" id="sa-logo-footer" style="height:110px;width:auto;display:block;"></a>
+      <div class="flex items-center gap-4">
+        <a href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="X">
+          <iconify-icon icon="ph:x-logo-light" width="18"></iconify-icon>
+        </a>
+        <a href="#" onclick="return false;" class="text-gray-400 hover:text-black transition-colors" aria-label="LinkedIn">
+          <iconify-icon icon="ph:linkedin-logo-light" width="18"></iconify-icon>
+        </a>
+      </div>
+    </div>
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]">Use Cases</h5>
+      <ul class="space-y-3">
+        <li><a class="hover:text-black transition-colors" href="intelligence-materials.html">Low-carbon Materials</a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-construction.html">Construction Decarbonization</a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-operations.html">Energy Optimization</a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-urban-mining.html">Circular Renovation</a></li>
+        <li><a class="hover:text-black transition-colors" href="intelligence-compliance.html">LCA Compliance</a></li>
+      </ul>
+    </div>
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]">Company</h5>
+      <ul class="space-y-3">
+        <li><a class="hover:text-black transition-colors" href="about.html">About</a></li>
+        <li><a class="hover:text-black transition-colors" href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="space-y-6">
+      <h5 class="text-black text-xs font-medium uppercase tracking-[0.2em]">Contact</h5>
+      <div class="text-[10px] text-gray-500 leading-relaxed font-mono">
+        <span class="block font-medium text-black text-xs" id="sa-contact-name"></span>
+        <span class="block text-xs mt-1"><a id="sa-contact-email" href="#" class="hover:text-black transition-colors"></a></span>
+      </div>
+    </div>
+  </div>
+  <div class="max-w-[1200px] mx-auto mt-20 pt-8 border-t border-gray-100 flex justify-between items-center text-[10px] uppercase tracking-widest text-gray-500">
+    <div><span>© 2026 SynerArch. All rights reserved.</span></div>
+    <div class="flex gap-6 italic">
+      <a class="hover:text-black" href="privacy.html">Privacy Policy</a>
+      <span class="opacity-20">|</span>
+      <a class="hover:text-black" href="terms.html">Terms</a>
+    </div>
+  </div>
+</footer>
+
+<!-- SCRIPTS -->
+<script src="global.js"></script>
+<script src="product-pages.js"></script>
+<script>
+(function(){
+  var PAGE_ID='urban-mining', lang='en';
+  function d(id){return document.getElementById(id);}
+  function t(id,key){
+    var el=d(id); if(!el)return;
+    var data=window.PRODUCT_PAGES&&window.PRODUCT_PAGES[PAGE_ID]&&window.PRODUCT_PAGES[PAGE_ID][lang];
+    if(data&&data[key]!==undefined)el.innerHTML=data[key];
+  }
+  function setImg(imgId,srcKey,altKey){
+    var data=window.PRODUCT_PAGES&&window.PRODUCT_PAGES[PAGE_ID]&&window.PRODUCT_PAGES[PAGE_ID][lang];
+    if(!data)return;
+    var src=data[srcKey],img=d(imgId);
+    if(src&&img){img.src=src;img.alt=data[altKey]||'';img.style.display='block';}
+  }
+  function setTags(wrapId,key,cls){
+    var wrap=d(wrapId);
+    var data=window.PRODUCT_PAGES&&window.PRODUCT_PAGES[PAGE_ID]&&window.PRODUCT_PAGES[PAGE_ID][lang];
+    if(!wrap||!data||!data[key])return;
+    wrap.innerHTML='';
+    data[key].forEach(function(tag){var s=document.createElement('span');s.className=cls;s.textContent=tag;wrap.appendChild(s);});
+  }
+  function render(){
+    t('hero-stage','hero-stage');t('hero-title','hero-title');t('hero-value','hero-value');t('hero-desc','hero-desc');t('hero-cta','hero-cta');
+    t('lc-label-1','lc-1');t('lc-label-2','lc-2');t('lc-label-3','lc-3');t('lc-label-4','lc-4');t('lc-label-5','lc-5');
+    t('cap-eyebrow','cap-eyebrow');t('cap-title','cap-title');t('cap-hint','cap-hint');
+    t('cap1-title','cap1-title');t('cap1-desc','cap1-desc');setImg('cap1-img','cap1-img-src','cap1-img-alt');
+    t('cap2-title','cap2-title');t('cap2-desc','cap2-desc');setImg('cap2-img','cap2-img-src','cap2-img-alt');
+    t('cap3-title','cap3-title');t('cap3-desc','cap3-desc');setImg('cap3-img','cap3-img-src','cap3-img-alt');
+    t('persona-eyebrow','persona-eyebrow');t('persona-title','persona-title');
+    t('p1-role','p1-role');t('p1-desc','p1-desc');t('p1-hook','p1-hook');t('p1-cta','p1-cta');
+    t('p2-role','p2-role');t('p2-desc','p2-desc');t('p2-hook','p2-hook');t('p2-cta','p2-cta');
+    t('data-eyebrow','data-eyebrow');t('data-title','data-title');t('data-desc','data-desc');t('data-cta','data-cta');
+    t('data-types-label','data-types-label');t('data-standards-label','data-standards-label');
+    setTags('data-tags-wrap','data-tags','data-tag');
+    setTags('data-standards-wrap','data-standards','std-badge');
+    t('cta-title','cta-title');t('cta-desc','cta-desc');t('cta-demo','cta-demo');t('cta-back','cta-back');
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    render();
+    var nav=d('main-nav');
+    window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>10);});
+    var btn=d('sa-hamburger-btn'),dd=d('sa-nav-dropdown');
+    if(btn&&dd){
+      btn.addEventListener('click',function(e){e.stopPropagation();dd.style.display=dd.style.display==='block'?'none':'block';});
+      document.addEventListener('click',function(){dd.style.display='none';});
+    }
+  });
+})();
+</script>
+</body>
+</html>
